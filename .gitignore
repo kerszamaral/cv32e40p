@@ -12,9 +12,14 @@ TAGS
 *.map
 *.out
 *.json
+*.jou
+*.str
 .build-rtl
 .lib-rtl
 .opt-rtl
 /build
 /Bender.lock
 /Bender.local
+/cv32e40p.*
+!cv32e40p.xpr
+/.Xil
