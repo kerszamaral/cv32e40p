@@ -23,3 +23,4 @@ TAGS
 /cv32e40p.*
 !cv32e40p.xpr
 /.Xil
+!/programs/*
