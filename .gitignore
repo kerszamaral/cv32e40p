@@ -24,3 +24,4 @@ TAGS
 !cv32e40p.xpr
 /.Xil
 !/programs/*
+!/cv32e40p.ip_user_files

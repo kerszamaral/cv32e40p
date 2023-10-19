@@ -1,5 +1,5 @@
 ..
-   Copyright (c) 2020 OpenHW Group
+   Copyright (c) 2023 OpenHW Group
    
    Licensed under the Solderpad Hardware Licence, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,29 +17,26 @@
 
 OpenHW Group CV32E40P User Manual
 =================================
-Editor: **Davide Schiavone**
-`davide@openhwgroup.org <mailto:davide@openhwgroup.org?subject=CV32E40P%20User%20Manual>`__
 
 .. toctree::
    :maxdepth: 3
    :caption: Contents:
 
+   preface
    intro
-   getting_started
    integration
+   fpu
+   verification
+   corev_hw_loop
+   instruction_set_extensions
+   perf_counters
+   control_status_registers
+   exceptions_interrupts
+   debug
    pipeline
    instruction_fetch
    load_store_unit
    register_file
-   apu
-   fpu
    sleep
-   corev_hw_loop
-   control_status_registers
-   perf_counters
-   exceptions_interrupts
-   debug
-   tracer
-   instruction_set_extensions
    core_versions
    glossary
