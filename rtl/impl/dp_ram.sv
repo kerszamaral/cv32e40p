@@ -10,9 +10,27 @@
 // specific language governing permissions and limitations under the License.
 
 /*
-Need to use a dual port BRAM with
-128 bit width 
-256 positions for the depth
+This modules makes a LUT Memory with 256 positions and 32 bit width
+But we need to substitute to a BRAM. So we need to accounts for non-instant access.
+Instructions read instantly 128 bits from the memory
+Data is written in 32 bit width with 4 bytes enable
+For that we need a BRAM with 128 bit width and 64 positions
+And we need to remap the addresses to the BRAM
+
+BRAM Stats:
+128 bit Width
+64 Depth
+
+Port A:
+128 bit width
+64 Depth
+The addr is given as the offset for a 256 depth memory, so we need to divide by 4
+
+Port B:
+32 bit width
+256 Depth
+That we subdivide in 4 8 bit width accesses with masks with the input and current data.
+
 With enable pins for each port
 Common clock
 */
@@ -40,20 +58,19 @@ module dp_ram #(
 
   localparam bytes = 2 ** ADDR_WIDTH;
 
-impl_dp_mem_bram blk_mem (
-  .clka(clk_i),    // input wire clka
-  .ena(en_a_i),      // input wire ena
-  .wea(we_a_i),      // input wire [0 : 0] wea
-  .addra(addr_a_i),  // input wire [7 : 0] addra
-  .dina('0),    // input wire [127 : 0] dina //! Unused
-  .douta(rdata_a_o),  // output wire [127 : 0] douta
-
-  .clkb(clk_i),    // input wire clkb
-  .enb(en_b_i),      // input wire enb
-  .web(we_b_i),      // input wire [0 : 0] web
-  .addrb(addr_b_i),  // input wire [7 : 0] addrb
-  .dinb(dinb),    // input wire [127 : 0] dinb //TODO
-  .doutb(doutb)  // output wire [127 : 0] doutb //TODO
+impl_dp_ram_blk your_instance_name (
+  .clka(clka),    // input wire clka
+  .ena(ena),      // input wire ena
+  .wea(wea),      // input wire [0 : 0] wea
+  .addra(addra),  // input wire [5 : 0] addra
+  .dina(dina),    // input wire [127 : 0] dina
+  .douta(douta),  // output wire [127 : 0] douta
+  .clkb(clkb),    // input wire clkb
+  .enb(enb),      // input wire enb
+  .web(web),      // input wire [0 : 0] web
+  .addrb(addrb),  // input wire [7 : 0] addrb
+  .dinb(dinb),    // input wire [31 : 0] dinb
+  .doutb(doutb)  // output wire [31 : 0] doutb
 );
 
   logic [           7:0] mem        [bytes];
@@ -91,21 +108,5 @@ impl_dp_mem_bram blk_mem (
       end
     end
   end
-
-  export "DPI-C"
-  function read_byte
-  ; export "DPI-C"
-  task write_byte
-  ;
-
-  function int read_byte(input logic [ADDR_WIDTH-1:0] byte_addr);
-    read_byte = mem[byte_addr];
-  endfunction
-
-  task write_byte(input integer byte_addr, logic [7:0] val, output logic [7:0] other);
-    mem[byte_addr] = val;
-    other          = mem[byte_addr];
-
-  endtask
 
 endmodule  // dp_ram

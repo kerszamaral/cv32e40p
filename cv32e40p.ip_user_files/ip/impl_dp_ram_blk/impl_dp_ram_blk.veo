@@ -54,23 +54,23 @@
 // (in parentheses) to your own signal names.
 
 //----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
-impl_dp_mem_bram your_instance_name (
+impl_dp_ram_blk your_instance_name (
   .clka(clka),    // input wire clka
   .ena(ena),      // input wire ena
   .wea(wea),      // input wire [0 : 0] wea
-  .addra(addra),  // input wire [7 : 0] addra
+  .addra(addra),  // input wire [5 : 0] addra
   .dina(dina),    // input wire [127 : 0] dina
   .douta(douta),  // output wire [127 : 0] douta
   .clkb(clkb),    // input wire clkb
   .enb(enb),      // input wire enb
   .web(web),      // input wire [0 : 0] web
   .addrb(addrb),  // input wire [7 : 0] addrb
-  .dinb(dinb),    // input wire [127 : 0] dinb
-  .doutb(doutb)  // output wire [127 : 0] doutb
+  .dinb(dinb),    // input wire [31 : 0] dinb
+  .doutb(doutb)  // output wire [31 : 0] doutb
 );
 // INST_TAG_END ------ End INSTANTIATION Template ---------
 
-// You must compile the wrapper file impl_dp_mem_bram.v when simulating
-// the core, impl_dp_mem_bram. When compiling the wrapper file, be sure to
+// You must compile the wrapper file impl_dp_ram_blk.v when simulating
+// the core, impl_dp_ram_blk. When compiling the wrapper file, be sure to
 // reference the Verilog simulation library.
 

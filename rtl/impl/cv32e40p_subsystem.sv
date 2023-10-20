@@ -11,10 +11,10 @@
 // Wrapper for a RI5CY testbench, containing RI5CY, Memory and stdout peripheral
 // Contributor: Robert Balas <balasr@student.ethz.ch>
 
-module cv32e40p_tb_subsystem #(
+module cv32e40p_subsystem #(
     parameter INSTR_RDATA_WIDTH = 32,
     parameter RAM_ADDR_WIDTH = 20,
-    parameter BOOT_ADDR = 'h180,
+    parameter BOOT_ADDR = 'h80,
     parameter PULP_XPULP = 0,
     parameter PULP_CLUSTER = 0,
     parameter FPU = 0,
@@ -51,9 +51,6 @@ module cv32e40p_tb_subsystem #(
   logic [                 31:0]       data_wdata;
   logic [                  5:0]       data_atop = 6'b0;
 
-  // signals to debug unit
-  logic                               debug_req_i;
-
   // irq signals
   logic                               irq_ack;
   logic [                  4:0]       irq_id_out;
@@ -65,14 +62,10 @@ module cv32e40p_tb_subsystem #(
   logic                               core_sleep_o;
 
 
-
-
-  assign debug_req_i = 1'b0;
-
   // instantiate the core
   cv32e40p_top #(
-      .PULP_XPULP      (PULP_XPULP),
-      .PULP_CLUSTER    (PULP_CLUSTER),
+      .COREV_PULP      (PULP_XPULP),
+      .COREV_CLUSTER    (PULP_CLUSTER),
       .FPU             (FPU),
       .FPU_ADDMUL_LAT  (FPU_ADDMUL_LAT),
       .FPU_OTHERS_LAT  (FPU_OTHERS_LAT),
@@ -110,7 +103,7 @@ module cv32e40p_tb_subsystem #(
       .irq_ack_o(irq_ack),
       .irq_id_o (irq_id_out),
 
-      .debug_req_i      (debug_req_i),
+      .debug_req_i      ('0), // Unused
       .debug_havereset_o(),
       .debug_running_o  (),
       .debug_halted_o   (),
@@ -162,4 +155,4 @@ module cv32e40p_tb_subsystem #(
       .exit_value_o  (exit_value_o)
   );
 
-endmodule  // cv32e40p_tb_subsystem
+endmodule  // cv32e40p_subsystem
