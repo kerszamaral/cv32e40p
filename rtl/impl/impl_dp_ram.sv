@@ -35,7 +35,7 @@ With enable pins for each port
 Common clock
 */
 
-module dp_ram #(
+module impl_dp_ram #(
     parameter ADDR_WIDTH = 8,
     parameter INSTR_RDATA_WIDTH = 128
 ) (
@@ -58,55 +58,38 @@ module dp_ram #(
 
   localparam bytes = 2 ** ADDR_WIDTH;
 
-impl_dp_ram_blk your_instance_name (
-  .clka(clka),    // input wire clka
-  .ena(ena),      // input wire ena
-  .wea(wea),      // input wire [0 : 0] wea
-  .addra(addra),  // input wire [5 : 0] addra
-  .dina(dina),    // input wire [127 : 0] dina
-  .douta(douta),  // output wire [127 : 0] douta
-  .clkb(clkb),    // input wire clkb
-  .enb(enb),      // input wire enb
-  .web(web),      // input wire [0 : 0] web
-  .addrb(addrb),  // input wire [7 : 0] addrb
-  .dinb(dinb),    // input wire [31 : 0] dinb
-  .doutb(doutb)  // output wire [31 : 0] doutb
-);
+  logic [           5:0] addr_a;
 
-  logic [           7:0] mem        [bytes];
-  logic [ADDR_WIDTH-1:0] addr_a_int;
-  logic [ADDR_WIDTH-1:0] addr_b_int;
+  always_comb addr_a = {addr_a_i[ADDR_WIDTH-1:2], 2'b0}; //Divide by 4 
+  // (we recive the offset for a 256 depth memory and remap to a 64 depth memory)
 
-  always_comb addr_a_int = {addr_a_i[ADDR_WIDTH-1:2], 2'b0};
-  always_comb addr_b_int = {addr_b_i[ADDR_WIDTH-1:2], 2'b0};
+  logic [           31:0] rdata_b; // Because we need to read the output of the BRAM
+  logic [           31:0] wdata_b; // For masking the data and writing it back
 
-  always @(posedge clk_i) begin
-    for (int i = 0; i < INSTR_RDATA_WIDTH / 8; i++) begin
-      rdata_a_o[(i*8)+:8] <= mem[addr_a_int+i];
-    end
+  always_comb wdata_b = {
+    be_b_i[0] ? wdata_b_i[0+:8] : rdata_b[0+:8], // If the mask is 1, we write the input data, else we write the current data
+    be_b_i[1] ? wdata_b_i[8+:8] : rdata_b[8+:8], // We do this for each byte
+    be_b_i[2] ? wdata_b_i[16+:8] : rdata_b[16+:8], 
+    be_b_i[3] ? wdata_b_i[24+:8] : rdata_b[24+:8]
+  };
 
-    /* addr_b_i is the actual memory address referenced */
-    if (en_b_i) begin
-      /* handle writes */
-      if (we_b_i) begin
-        if (be_b_i[0]) mem[addr_b_int] <= wdata_b_i[0+:8];
-        if (be_b_i[1]) mem[addr_b_int+1] <= wdata_b_i[8+:8];
-        if (be_b_i[2]) mem[addr_b_int+2] <= wdata_b_i[16+:8];
-        if (be_b_i[3]) mem[addr_b_int+3] <= wdata_b_i[24+:8];
-      end
-            /* handle reads */
-            else
-      begin
-        if ($test$plusargs("verbose"))
-          $display("read  addr=0x%08x: data=0x%08x", addr_b_int, {
-                   mem[addr_b_int+3], mem[addr_b_int+2], mem[addr_b_int+1], mem[addr_b_int+0]});
+  always_comb rdata_b_o = rdata_b; // Output the data read from the BRAM
 
-        rdata_b_o[7:0]   <= mem[addr_b_int];
-        rdata_b_o[15:8]  <= mem[addr_b_int+1];
-        rdata_b_o[23:16] <= mem[addr_b_int+2];
-        rdata_b_o[31:24] <= mem[addr_b_int+3];
-      end
-    end
-  end
+  impl_dp_ram_blk mem (
+    .clka(clk_i),    // input wire clka
+    .ena(en_a_i),      // input wire ena
+    .wea(we_a_i),      // input wire [0 : 0] wea
+    .addra(addr_a),  // input wire [5 : 0] addra
+    .dina('0),    // input wire [127 : 0] dina //Always Disabled
+    .douta(rdata_a_o),  // output wire [127 : 0] douta
+
+
+    .clkb(clk_i),    // input wire clkb
+    .enb(en_b_i),      // input wire enb
+    .web(we_b_i),      // input wire [0 : 0] web
+    .addrb(addr_b_i),  // input wire [7 : 0] addrb
+    .dinb(dinb),    // input wire [31 : 0] dinb
+    .doutb(rdata_b)  // output wire [31 : 0] doutb
+  );
 
 endmodule  // dp_ram
