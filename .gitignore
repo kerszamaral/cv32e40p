@@ -25,3 +25,4 @@ TAGS
 /.Xil
 !/programs/*
 !/cv32e40p.ip_user_files
+!/cv32e40p.srcs
