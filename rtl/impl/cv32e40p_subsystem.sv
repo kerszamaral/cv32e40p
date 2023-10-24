@@ -13,7 +13,7 @@
 
 module cv32e40p_subsystem #(
     parameter INSTR_RDATA_WIDTH = 32,
-    parameter RAM_ADDR_WIDTH = 20,
+    parameter RAM_ADDR_WIDTH = 22,
     parameter BOOT_ADDR = 'h80,
     parameter PULP_XPULP = 0,
     parameter PULP_CLUSTER = 0,
@@ -115,7 +115,7 @@ module cv32e40p_subsystem #(
 
 
   // this handles read to RAM and memory mapped pseudo peripherals
-  mm_ram #(
+  impl_mm_ram #(
       .RAM_ADDR_WIDTH(RAM_ADDR_WIDTH),
       .INSTR_RDATA_WIDTH(INSTR_RDATA_WIDTH)
   ) ram_i (
