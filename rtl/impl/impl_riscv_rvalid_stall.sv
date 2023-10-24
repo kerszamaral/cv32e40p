@@ -135,6 +135,8 @@ always @(posedge clk_i or negedge rst_ni) begin
 
         if (rvalid_i_q) begin
             fifo[wptr_rdata][31:0] <= fifo[wptr_rdata][FIFO_WE_LSB] ? 32'h0 : rdata_i;
+        end else if (!fifo_empty && current_delay > 0) begin
+            fifo[rptr[FIFO_PTR_WL-2:0]][FIFO_DELAY_LSB +: FIFO_DELAY_WL] <= current_delay - 1;
         end
     end
 end
@@ -154,17 +156,6 @@ always @(*) begin
                 rdata_o = rdata_i;
         else
             rdata_o = fifo[rptr[FIFO_PTR_WL-2:0]][FIFO_DATA_LSB +: FIFO_DATA_WL];
-    end
-end
-
-// Manage current delay counter
-always @(posedge clk_i or negedge rst_ni) begin
-    if (!rst_ni) begin
-    end
-    else begin
-        if (!fifo_empty && current_delay > 0) begin
-            fifo[rptr[FIFO_PTR_WL-2:0]][FIFO_DELAY_LSB +: FIFO_DELAY_WL] <= current_delay - 1;
-        end
     end
 end
 

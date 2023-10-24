@@ -45,16 +45,16 @@ module impl_dp_ram #(
       rdata_a_o[(i*8)+:8] <= mem[addr_a_int+i];
     end
 
-    /* addr_b_i is the actual memory address referenced */
+    // addr_b_i is the actual memory address referenced
     if (en_b_i) begin
-      /* handle writes */
+      // handle writes
       if (we_b_i) begin
         if (be_b_i[0]) mem[addr_b_int] <= wdata_b_i[0+:8];
         if (be_b_i[1]) mem[addr_b_int+1] <= wdata_b_i[8+:8];
         if (be_b_i[2]) mem[addr_b_int+2] <= wdata_b_i[16+:8];
         if (be_b_i[3]) mem[addr_b_int+3] <= wdata_b_i[24+:8];
       end
-            /* handle reads */
+            // handle reads
             else
       begin
 
@@ -65,5 +65,5 @@ module impl_dp_ram #(
       end
     end
   end
-  
+
 endmodule  // dp_ram
