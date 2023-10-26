@@ -73,7 +73,7 @@ module tb_impl_top #(
     if ($value$plusargs("firmware=%s", firmware)) begin
       if ($test$plusargs("verbose"))
         $display("[TESTBENCH] %t: loading firmware %0s ...", $time, firmware);
-      $readmemh(firmware, wrapper_i.ram_i.dp_ram_i.mem);
+      // $readmemh(firmware, wrapper_i.ram_i.dp_ram_i.mem);
 
     end else begin
       $display("No firmware specified");
