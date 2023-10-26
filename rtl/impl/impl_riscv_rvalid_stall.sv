@@ -89,7 +89,8 @@ integer i;
 // Tasks and functions
 // -----------------------------------------------------------------------------------------------
 function logic [FIFO_DELAY_WL-1:0] get_random_delay();
-        get_random_delay = valid_stall_i;
+    get_random_delay = valid_stall_i;
+    // get_random_delay = 2;
 endfunction : get_random_delay
 
 // -----------------------------------------------------------------------------------------------

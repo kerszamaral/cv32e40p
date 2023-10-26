@@ -91,14 +91,12 @@ module impl_riscv_gnt_stall #(
 
       // When request is removed, remove grant
       if (!req_core_i) begin
-        grant_core_o <= $urandom;
-      end
-
-    // New request coming in
-    else
-      if (grant_core_o_q || !req_core_i_q) begin
+        grant_core_o <= 1'b0;
+      end  // New request coming in
+      else if (grant_core_o_q || !req_core_i_q) begin
         // Initialize stall here
-        delay_value = gnt_stall_i;
+        // delay_value = gnt_stall_i;
+        delay_value = 2;
         if (delay_value == 0) begin
           grant_delay_cnt <= 0;
           grant_core_o <= 1'b1;
