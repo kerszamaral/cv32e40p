@@ -39,6 +39,19 @@ module dp_ram #(
   always_comb addr_a_int = {addr_a_i[ADDR_WIDTH-1:2], 2'b0};
   always_comb addr_b_int = {addr_b_i[ADDR_WIDTH-1:2], 2'b0};
 
+  localparam MAXBLKSIZE = 17;
+  always @(posedge clk_i) begin
+    if ($test$plusargs("verbose")) begin
+      if (we_b_i) $display("write addr=0x%08x: data=0x%08x", addr_b_int, wdata_b_i);
+      $display("addr_A=0x%08x: data_A=0x%08x addr_B=0x%08x: data_B=0x%08x", addr_a_int, {
+               mem[addr_a_int+3], mem[addr_a_int+2], mem[addr_a_int+1], mem[addr_a_int]},
+               addr_b_int, {
+               mem[addr_b_int+3], mem[addr_b_int+2], mem[addr_b_int+1], mem[addr_b_int]});
+      if ((addr_a_int >= 2 ** MAXBLKSIZE) || (addr_b_int >= 2 ** MAXBLKSIZE))
+        $display("Out of Bounds Access!!");
+    end
+  end
+
   always @(posedge clk_i) begin
     for (int i = 0; i < INSTR_RDATA_WIDTH / 8; i++) begin
       rdata_a_o[(i*8)+:8] <= mem[addr_a_int+i];
@@ -52,13 +65,8 @@ module dp_ram #(
         if (be_b_i[1]) mem[addr_b_int+1] <= wdata_b_i[8+:8];
         if (be_b_i[2]) mem[addr_b_int+2] <= wdata_b_i[16+:8];
         if (be_b_i[3]) mem[addr_b_int+3] <= wdata_b_i[24+:8];
-      end
-            /* handle reads */
-            else
-      begin
-        if ($test$plusargs("verbose"))
-          $display("read  addr=0x%08x: data=0x%08x", addr_b_int, {
-                   mem[addr_b_int+3], mem[addr_b_int+2], mem[addr_b_int+1], mem[addr_b_int+0]});
+      end            /* handle reads */
+      else begin
 
         rdata_b_o[7:0]   <= mem[addr_b_int];
         rdata_b_o[15:8]  <= mem[addr_b_int+1];
