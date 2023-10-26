@@ -62,10 +62,20 @@ module cv32e40p_subsystem #(
   logic                               core_sleep_o;
 
 
+  logic clk_delayed;
+  reg[27:0] counter=28'd0;
+
+  parameter DIVISOR = 28'd2;
+  always_ff @(posedge clk_i) begin
+    counter <= counter + 28'd1;
+    if (counter >= (DIVISOR - 1)) counter <= 28'd0;
+    clk_delayed <= (counter < DIVISOR / 2) ? 1'b1 : 1'b0;
+  end
+
   // instantiate the core
   cv32e40p_top #(
       .COREV_PULP      (PULP_XPULP),
-      .COREV_CLUSTER    (PULP_CLUSTER),
+      .COREV_CLUSTER   (PULP_CLUSTER),
       .FPU             (FPU),
       .FPU_ADDMUL_LAT  (FPU_ADDMUL_LAT),
       .FPU_OTHERS_LAT  (FPU_OTHERS_LAT),
