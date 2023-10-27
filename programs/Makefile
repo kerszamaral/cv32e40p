@@ -1,22 +1,14 @@
 ###############################################################################
 # Common variables
 BANNER=*******************************************************************************************
-TEST_TEST_DIR	  = 
-TEST_FILES        = $(filter %.c %.S,$(wildcard  $(TEST_TEST_DIR)/*))
-BIN_PATH		  = programs/bin
+dir	  			 ?= $*
+TEST_FILES        = $(filter %.c %.S,$(wildcard  $(dir)/*))
+BIN_PATH		  = bin
 
 
 RISCV            = $(CV_SW_TOOLCHAIN)
 RISCV_PREFIX     = $(CV_SW_PREFIX)
 RISCV_EXE_PREFIX = $(RISCV)/bin/$(RISCV_PREFIX)
-
-RISCV_MARCH      = $(CV_SW_MARCH)
-RISCV_CC         = $(CV_SW_CC)
-RISCV_CFLAGS     = $(CV_SW_CFLAGS)
-
-CFLAGS ?= -Os -g -static -mabi=ilp32 -march=$(RISCV_MARCH) -Wall -pedantic $(RISCV_CFLAGS)
-
-SIM_TEST_PROGRAM_RESULTS
 
 ###############################################################################
 # Rule to generate hex (loadable by simulators) from elf
@@ -30,7 +22,7 @@ SIM_TEST_PROGRAM_RESULTS
 	@echo "$(BANNER)"
 	$(RISCV_EXE_PREFIX)objcopy -O verilog \
 		$< \
-		$@
+		prog.hex
 	$(RISCV_EXE_PREFIX)readelf -a $< > $*.readelf
 	$(RISCV_EXE_PREFIX)objdump \
 		-d \
@@ -50,45 +42,39 @@ SIM_TEST_PROGRAM_RESULTS
 #
 .PRECIOUS : %.elf
 
+RISCV_MARCH      = $(CV_SW_MARCH)
+RISCV_CC         = gcc
+RISCV_CFLAGS     = $(CV_SW_CFLAGS)
+TEST_CFLAGS 	+=  -Wall -pedantic -Wl,--no-warn-rwx-segments
+MAP_FILE 		 = -Xlinker -Map=$*.map
 
-# If a test defines "default_cflags" in its yaml, then it is responsible to define ALL flags
-# Otherwise add the default cflags in the variable CFLAGS defined above
-ifneq ($(TEST_DEFAULT_CFLAGS),)
-TEST_CFLAGS += $(TEST_DEFAULT_CFLAGS)
-else
-TEST_CFLAGS += $(CFLAGS)
-endif
+LD_LIBRARY 	= bsp/crt0.S bsp/handlers.S bsp/syscalls.c bsp/vectors.S
+LD_FILE 	= bsp/link.ld
 
-# Optionally use linker script provided in test directory
-# this must be evaluated at access time, so ifeq/ifneq does
-# not get parsed correctly
-TEST_RESULTS_LD = $(addprefix $(SIM_TEST_PROGRAM_RESULTS)/, link.ld)
-TEST_LD         = $(addprefix $(TEST_TEST_DIR)/, link.ld)
-
-LD_LIBRARY 	= $(if $(wildcard $(TEST_RESULTS_LD)),-L $(SIM_TEST_PROGRAM_RESULTS),$(if $(wildcard $(TEST_LD)),-L $(TEST_TEST_DIR),))
-LD_FILE 	= $(if $(wildcard $(TEST_RESULTS_LD)),$(TEST_RESULTS_LD),$(if $(wildcard $(TEST_LD)),$(TEST_LD),$(BSP)/link.ld))
-LD_LIBRARY += -L $(SIM_BSP_RESULTS)
+ASM = asm
+BSP = bsp
 
 %.elf: $(TEST_FILES)
-	mkdir -p $(SIM_TEST_PROGRAM_RESULTS)
-	make bsp
 	@echo "$(BANNER)"
 	@echo "* Compiling test-program $@"
 	@echo "$(BANNER)"
 	$(RISCV_EXE_PREFIX)$(RISCV_CC) \
-		$(CFG_CFLAGS) \
-		$(TEST_CFLAGS) \
+		-march=$(RISCV_MARCH) \
+		-o $@ \
+		-w -Os \
+		-g -static \
+		-nostartfiles -nostdlib \
 		$(RISCV_CFLAGS) \
+		$(TEST_CFLAGS) \
+		$(MAP_FILE) \
+		$(TEST_FILES) \
 		-I $(ASM) \
 		-I $(BSP) \
-		-o $@ \
-		-nostartfiles \
-		$(TEST_FILES) \
+		-I $(RISCV)/riscv32-unknown-elf/include \
 		-T $(LD_FILE) \
 		$(LD_LIBRARY) \
-		-lcv-verif
+		-L $(RISCV)/riscv32-unknown-elf/lib \
+		-lc -lm -lgcc
 
-.PHONY: hex
-
-# Shorthand target to only build the firmware using the hex and elf suffix rules above
-hex: $(SIM_TEST_PROGRAM_RESULTS)/$(TEST_PROGRAM)$(OPT_RUN_INDEX_SUFFIX).hex
+clean:
+	rm -rf *.elf *.hex *.readelf *.objdump *.map *.itb
