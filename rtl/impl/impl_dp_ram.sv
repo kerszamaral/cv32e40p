@@ -73,12 +73,12 @@ module impl_dp_ram #(
     end
   end
 
-  dp_dist_ram #(
+  dp_blk_ram #(
       .NB_COL(4),  // Specify number of columns (number of bytes)
       .COL_WIDTH(8),  // Specify column width (byte width, typically 8 or 9)
       .RAM_DEPTH((2 ** MAXBLKSIZE)),  // Specify RAM depth (number of entries)
-      .RAM_PERFORMANCE("LOW_LATENCY"),  // Select "HIGH_PERFORMANCE" or "LOW_LATENCY" 
-      .INIT_FILE("C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.hex")                        // Specify name/location of RAM initialization file if using one (leave blank if not)
+      .RAM_PERFORMANCE("HIGH_PERFORMANCE"),  // Select "HIGH_PERFORMANCE" or "LOW_LATENCY" 
+      .INIT_FILE("C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.mem")                        // Specify name/location of RAM initialization file if using one (leave blank if not)
   ) mem (
       .clka(clk_i),  // Port A clock
 
@@ -99,8 +99,8 @@ module impl_dp_ram #(
       // Other
       .rsta  ('0),  // Port A output reset (does not affect memory contents)
       .rstb  ('0),  // Port B output reset (does not affect memory contents)
-      .regcea('0),  // Port A output register enable //Unused
-      .regceb('0)   // Port B output register enable //Unused
+      .regcea('1),  // Port A output register enable //Unused
+      .regceb('1)   // Port B output register enable //Unused
   );
 
 endmodule  // dp_ram

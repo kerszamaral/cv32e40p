@@ -553,14 +553,11 @@ module impl_mm_ram #(
     ram_data_we      = data_we_dec;
     ram_data_be      = data_be_dec;
 
-    if (rnd_stall_regs[0]) begin
-      ram_instr_req = rnd_stall_instr_req;
-      ram_instr_gnt = rnd_stall_instr_gnt;
-    end
-    if (rnd_stall_regs[1]) begin
-      ram_data_req = rnd_stall_data_req;
-      ram_data_gnt = rnd_stall_data_gnt;
-    end
+    ram_instr_req = rnd_stall_instr_req;
+    ram_instr_gnt = rnd_stall_instr_gnt;
+    ram_data_req = rnd_stall_data_req;
+    ram_data_gnt = rnd_stall_data_gnt;
+
   end
 
   // IRQ SIGNALS ROUTING
