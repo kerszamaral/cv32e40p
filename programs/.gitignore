@@ -4,3 +4,4 @@
 *.readelf
 *.hex
 *.map
+__pycache__

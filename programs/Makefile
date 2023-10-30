@@ -22,6 +22,7 @@ RISCV_EXE_PREFIX = $(RISCV)/bin/$(RISCV_PREFIX)
 	@echo "$(BANNER)"
 	$(RISCV_EXE_PREFIX)objcopy -O verilog \
 		$< \
+		--verilog-data-width 4 \
 		prog.hex
 	$(RISCV_EXE_PREFIX)readelf -a $< > $*.readelf
 	$(RISCV_EXE_PREFIX)objdump \
