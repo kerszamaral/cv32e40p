@@ -39,6 +39,13 @@ module impl_dp_ram #(
   always_comb addr_a_aligned = {addr_a_i[MAXBLKSIZE-1:2], 2'b0};
   always_comb addr_b_aligned = {addr_b_i[MAXBLKSIZE-1:2], 2'b0};
 
+  logic [MAXBLKSIZE-1:0] addr_a_shifted;
+  logic [MAXBLKSIZE-1:0] addr_b_shifted;
+
+  always_comb addr_a_shifted = {addr_a_i[MAXBLKSIZE+1:2]};
+  always_comb addr_b_shifted = {addr_b_i[MAXBLKSIZE+1:2]};
+
+
   logic [3:0] we_a;
   logic [3:0] we_b;
 
@@ -78,21 +85,21 @@ module impl_dp_ram #(
       .COL_WIDTH(8),  // Specify column width (byte width, typically 8 or 9)
       .RAM_DEPTH((2 ** MAXBLKSIZE)),  // Specify RAM depth (number of entries)
       .RAM_PERFORMANCE("HIGH_PERFORMANCE"),  // Select "HIGH_PERFORMANCE" or "LOW_LATENCY" 
-      .INIT_FILE("C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.mem")                        // Specify name/location of RAM initialization file if using one (leave blank if not)
+      .INIT_FILE("/home/kersz/Documents/cv32e40p/programs/prog.hex")                        // Specify name/location of RAM initialization file if using one (leave blank if not)
   ) mem (
       .clka(clk_i),  // Port A clock
 
       // Port A 
       .ena('1),  // Port A RAM Enable, for additional power savings, disable port when not in use
       .wea(we_a),  // Port A write enable, width determined from NB_COL
-      .addra(addr_a_aligned),  // Port A address bus, width determined from RAM_DEPTH
+      .addra(addr_a_shifted),  // Port A address bus, width determined from RAM_DEPTH
       .dina(wdata_a_i),  // Port A RAM input data, width determined from NB_COL*COL_WIDTH
       .douta(rdata_a),  // Port A RAM output data, width determined from NB_COL*COL_WIDTH
 
       // Port B
       .enb('1),  // Port B RAM Enable, for additional power savings, disable port when not in use
       .web(we_b),  // Port B write enable, width determined from NB_COL
-      .addrb(addr_b_aligned),  // Port B address bus, width determined from RAM_DEPTH
+      .addrb(addr_b_shifted),  // Port B address bus, width determined from RAM_DEPTH
       .dinb(wdata_b_i),  // Port B RAM input data, width determined from NB_COL*COL_WIDTH
       .doutb(rdata_b),  // Port B RAM output data, width determined from NB_COL*COL_WIDTH
 
