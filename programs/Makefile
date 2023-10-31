@@ -10,6 +10,8 @@ RISCV            = $(CV_SW_TOOLCHAIN)
 RISCV_PREFIX     = $(CV_SW_PREFIX)
 RISCV_EXE_PREFIX = $(RISCV)/bin/$(RISCV_PREFIX)
 
+DATA_WIDTH 		?= 4
+
 ###############################################################################
 # Rule to generate hex (loadable by simulators) from elf
 #    $@ is the file being generated.
@@ -22,7 +24,7 @@ RISCV_EXE_PREFIX = $(RISCV)/bin/$(RISCV_PREFIX)
 	@echo "$(BANNER)"
 	$(RISCV_EXE_PREFIX)objcopy -O verilog \
 		$< \
-		--verilog-data-width 4 \
+		--verilog-data-width $(DATA_WIDTH) \
 		prog.hex
 	$(RISCV_EXE_PREFIX)readelf -a $< > $*.readelf
 	$(RISCV_EXE_PREFIX)objdump \
