@@ -31,46 +31,37 @@ module cv32e40p_subsystem #(
     output logic        tests_passed_o,
     output logic        tests_failed_o,
     output logic [31:0] exit_value_o,
-    output logic        exit_valid_o
+    output logic        exit_valid_o,
+    output logic [31:0] print_wdata_o,
+    output logic print_valid_o
 );
 
   // signals connecting core to memory
-  logic                               instr_req;
-  logic                               instr_gnt;
-  logic                               instr_rvalid;
-  logic [                 31:0]       instr_addr;
-  logic [INSTR_RDATA_WIDTH-1:0]       instr_rdata;
+  logic                         instr_req;
+  logic                         instr_gnt;
+  logic                         instr_rvalid;
+  logic [                 31:0] instr_addr;
+  logic [INSTR_RDATA_WIDTH-1:0] instr_rdata;
 
-  logic                               data_req;
-  logic                               data_gnt;
-  logic                               data_rvalid;
-  logic [                 31:0]       data_addr;
-  logic                               data_we;
-  logic [                  3:0]       data_be;
-  logic [                 31:0]       data_rdata;
-  logic [                 31:0]       data_wdata;
-  logic [                  5:0]       data_atop = 6'b0;
+  logic                         data_req;
+  logic                         data_gnt;
+  logic                         data_rvalid;
+  logic [                 31:0] data_addr;
+  logic                         data_we;
+  logic [                  3:0] data_be;
+  logic [                 31:0] data_rdata;
+  logic [                 31:0] data_wdata;
+  logic [                  5:0] data_atop = 6'b0;
 
   // irq signals
-  logic                               irq_ack;
-  logic [                  4:0]       irq_id_out;
-  logic                               irq_software;
-  logic                               irq_timer;
-  logic                               irq_external;
-  logic [                 15:0]       irq_fast;
+  logic                         irq_ack;
+  logic [                  4:0] irq_id_out;
+  logic                         irq_software;
+  logic                         irq_timer;
+  logic                         irq_external;
+  logic [                 15:0] irq_fast;
 
-  logic                               core_sleep_o;
-
-
-  logic clk_delayed;
-  reg[27:0] counter=28'd0;
-
-  parameter DIVISOR = 28'd2;
-  always_ff @(posedge clk_i) begin
-    counter <= counter + 28'd1;
-    if (counter >= (DIVISOR - 1)) counter <= 28'd0;
-    clk_delayed <= (counter < DIVISOR / 2) ? 1'b1 : 1'b0;
-  end
+  logic                         core_sleep_o;
 
   // instantiate the core
   cv32e40p_top #(
@@ -113,7 +104,7 @@ module cv32e40p_subsystem #(
       .irq_ack_o(irq_ack),
       .irq_id_o (irq_id_out),
 
-      .debug_req_i      ('0), // Unused
+      .debug_req_i      ('0),  // Unused
       .debug_havereset_o(),
       .debug_running_o  (),
       .debug_halted_o   (),
@@ -162,7 +153,10 @@ module cv32e40p_subsystem #(
       .tests_passed_o(tests_passed_o),
       .tests_failed_o(tests_failed_o),
       .exit_valid_o  (exit_valid_o),
-      .exit_value_o  (exit_value_o)
+      .exit_value_o  (exit_value_o),
+
+      .print_wdata_o(print_wdata_o),
+      .print_valid_o(print_valid_o)
   );
 
 endmodule  // cv32e40p_subsystem

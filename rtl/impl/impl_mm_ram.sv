@@ -51,7 +51,10 @@ module impl_mm_ram #(
     output logic        tests_passed_o,
     output logic        tests_failed_o,
     output logic        exit_valid_o,
-    output logic [31:0] exit_value_o
+    output logic [31:0] exit_value_o,
+
+    output logic [31:0] print_wdata_o,
+    output logic print_valid_o
 );
 
   localparam int TIMER_IRQ_ID = 7;
@@ -114,10 +117,6 @@ module impl_mm_ram #(
   logic ram_instr_gnt;
 
   logic perip_gnt;
-
-  // signals to print peripheral
-  logic [31:0] print_wdata;
-  logic print_valid;
 
   // signature data
   logic [31:0] sig_end_d, sig_end_q;
@@ -196,8 +195,8 @@ module impl_mm_ram #(
     data_we_dec     = '0;
     data_be_dec     = '0;
     data_atop_dec   = '0;
-    print_wdata     = '0;
-    print_valid     = '0;
+    print_wdata_o   = '0;
+    print_valid_o   = '0;
     timer_wdata     = '0;
     timer_reg_valid = '0;
     timer_val_valid = '0;
@@ -220,9 +219,9 @@ module impl_mm_ram #(
           data_atop_dec  = data_atop_i;
           transaction    = T_RAM;
         end else if (data_addr_i == 32'h1000_0000) begin
-          print_wdata = data_wdata_i;
-          print_valid = data_req_i;
-          perip_gnt   = 1'b1;
+          print_wdata_o = data_wdata_i;
+          print_valid_o = data_req_i;
+          perip_gnt = 1'b1;
 
         end else if (data_addr_i == 32'h2000_0000) begin
           if (data_wdata_i == 123456789) tests_passed_o = '1;
@@ -354,15 +353,6 @@ module impl_mm_ram #(
       // perip_gnt    = 1'b1;
     end
   end
-
-  // print to stdout pseudo peripheral
-  always_ff @(posedge clk_i, negedge rst_ni) begin : print_peripheral
-    if (print_valid) begin
-      $write("%c", print_wdata[7:0]);
-    end
-  end
-
-
 
   // Control timer. We need one to have some kind of timeout for tests that
   // get stuck in some loop. The riscv-tests also mandate that. Enable timer

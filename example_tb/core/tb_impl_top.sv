@@ -53,6 +53,11 @@ module tb_impl_top #(
   // signals for ri5cy
   logic               fetch_enable;
 
+  // stdout pseudo peripheral
+  logic [31:0]       print_wdata;
+  logic              print_valid;
+
+
   // make the core start fetching instruction immediately
   assign fetch_enable = '1;
 
@@ -141,6 +146,13 @@ module tb_impl_top #(
     end
   end
 
+  // print to stdout pseudo peripheral
+  always_ff @(posedge clk, negedge rst_n) begin : print_peripheral
+    if (print_valid) begin
+      $write("%c", print_wdata[7:0]);
+    end
+  end
+
   // wrapper for riscv, the memory system and stdout peripheral
   cv32e40p_subsystem #(
       .INSTR_RDATA_WIDTH(INSTR_RDATA_WIDTH),
@@ -159,7 +171,9 @@ module tb_impl_top #(
       .tests_passed_o(tests_passed),
       .tests_failed_o(tests_failed),
       .exit_valid_o  (exit_valid),
-      .exit_value_o  (exit_value)
+      .exit_value_o  (exit_value),
+      .print_wdata_o (print_wdata),
+      .print_valid_o (print_valid)
   );
 
 endmodule  // tb_top
