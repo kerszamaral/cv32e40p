@@ -1,9 +1,9 @@
 
 
-def byte_to_word(coe: bool = False):
-    outName = "prog.coe"
+def byte_to_word():
+    outName = "programs/prog.coe"
     with open(outName, "w") as out:
-        with open("prog.hex", "r") as f:
+        with open("programs/prog.hex", "r") as f:
             startString = "memory_initialization_radix=16;\nmemory_initialization_vector=\n"
             out.write(startString)
             startIndex = out.tell()
@@ -27,4 +27,4 @@ def byte_to_word(coe: bool = False):
             out.seek(out.tell()-2)
             out.write(";")
     
-byte_to_word(False)
+byte_to_word()
