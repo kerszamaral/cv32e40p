@@ -5,9 +5,18 @@ dir	  			 ?= $*
 TEST_FILES        = $(filter %.c %.S,$(wildcard  $(dir)/*))
 BIN_PATH		  = bin
 
+if eq ($(CV_SW_TOOLCHAIN),) 
+RISCV 		  = /opt/riscv
+else
+RISCV 		  = $(CV_SW_TOOLCHAIN)
+endif
 
-RISCV            = $(CV_SW_TOOLCHAIN)
-RISCV_PREFIX     = $(CV_SW_PREFIX)
+if eq ($(CV_SW_PREFIX),)
+RISCV_PREFIX  = riscv32-unknown-elf-
+else
+RISCV_PREFIX  = $(CV_SW_PREFIX)
+endif
+
 RISCV_EXE_PREFIX = $(RISCV)/bin/$(RISCV_PREFIX)
 
 DATA_WIDTH 		?= 4
@@ -45,7 +54,13 @@ DATA_WIDTH 		?= 4
 #
 .PRECIOUS : %.elf
 
+
+if eq ($(CV_SW_MARCH),)
+RISCV_MARCH      = rv32imczicsr
+else
 RISCV_MARCH      = $(CV_SW_MARCH)
+endif
+
 RISCV_CC         = gcc
 RISCV_CFLAGS     = $(CV_SW_CFLAGS)
 TEST_CFLAGS 	+=  -Wall -pedantic -Wl,--no-warn-rwx-segments
