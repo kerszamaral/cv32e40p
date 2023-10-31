@@ -4,7 +4,6 @@ module dp_dist_ram #(
     parameter NB_COL = 4,  // Specify number of columns (number of bytes)
     parameter COL_WIDTH = 8,  // Specify column width (byte width, typically 8 or 9)
     parameter RAM_DEPTH = 131072,  // Specify RAM depth (number of entries)
-    parameter RAM_PERFORMANCE = "LOW_LATENCY",  // Select "HIGH_PERFORMANCE" or "LOW_LATENCY" 
     parameter INIT_FILE = ""                        // Specify name/location of RAM initialization file if using one (leave blank if not)
 ) (
     input [clogb2(RAM_DEPTH-1)-1:0] addra,  // Port A address bus, width determined from RAM_DEPTH
@@ -16,10 +15,6 @@ module dp_dist_ram #(
     input [NB_COL-1:0] web,  // Port B write enable
     input ena,  // Port A RAM Enable, for additional power savings, disable BRAM when not in use
     input enb,  // Port B RAM Enable, for additional power savings, disable BRAM when not in use
-    input rsta,  // Port A output reset (does not affect memory contents)
-    input rstb,  // Port B output reset (does not affect memory contents)
-    input regcea,  // Port A output register enable
-    input regceb,  // Port B output register enable
     output [(NB_COL*COL_WIDTH)-1:0] douta,  // Port A RAM output data
     output [(NB_COL*COL_WIDTH)-1:0] doutb  // Port B RAM output data
 );
