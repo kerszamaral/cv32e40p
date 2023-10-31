@@ -1,30 +1,40 @@
 
+from io import TextIOWrapper
 
-def byte_to_word():
-    outName = "programs/prog.coe"
-    with open(outName, "w") as out:
-        with open("programs/prog.hex", "r") as f:
-            startString = "memory_initialization_radix=16;\nmemory_initialization_vector=\n"
-            out.write(startString)
-            startIndex = out.tell()
-            line = f.readline()
+
+def place_in_file(file: TextIOWrapper, offset: int, lineWidth: int) -> int:
+    current_pos = file.tell()
+    actual_pos = current_pos - offset
+    return actual_pos // lineWidth
+
+def hex_to_coe(in_file: str, out_file: str):
+    with open(out_file, "w") as out:
+        with open(in_file, "r") as inF:
+            start_string = "memory_initialization_radix=16;\nmemory_initialization_vector=\n"
+            out.write(start_string)
+            
+            separator = "00000000,\n"
+            start_index = out.tell()
+            
+            line = inF.readline()
+            
             while line:
                 if line.startswith("@"):
-                    nextoffset = eval("0x"+line[1:])
-                    separator = "00000000,\n"
-                    while int((out.tell() - startIndex) / (len(separator)+1)) < nextoffset:
+                    next_offset = eval("0x"+line[1:])
+                    
+                    while place_in_file(out, start_index, len(separator)+1) < next_offset:
                         out.write(separator)
                     
-                    line = f.readline()
+                    line = inF.readline()
                     continue
                 
                 bytes = line.replace("\n", "").split(" ")
                 
-                outLine = ",\n".join(bytes)
+                outLine = ",\n".join(bytes) + ",\n"
                 out.write(outLine)
-                out.write(",\n")
-                line = f.readline()
+                line = inF.readline()
+
             out.seek(out.tell()-2)
             out.write(";")
     
-byte_to_word()
+hex_to_coe("programs/prog.hex", "programs/prog.coe")
