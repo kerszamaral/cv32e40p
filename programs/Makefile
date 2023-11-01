@@ -21,6 +21,12 @@ RISCV_EXE_PREFIX = $(RISCV)/bin/$(RISCV_PREFIX)
 
 DATA_WIDTH 		?= 4
 
+%.coe: %.hex
+	@echo "$(BANNER)"
+	@echo "* Generating coe file"
+	@echo "$(BANNER)"
+	$(BIN_PATH)/hex2coe prog.hex prog.coe
+
 ###############################################################################
 # Rule to generate hex (loadable by simulators) from elf
 #    $@ is the file being generated.
@@ -95,4 +101,4 @@ BSP = bsp
 		-lc -lm -lgcc
 
 clean:
-	rm -rf *.elf *.hex *.readelf *.objdump *.map *.itb
+	rm -rf *.elf *.hex *.readelf *.objdump *.map *.itb *.coe

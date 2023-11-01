@@ -1,5 +1,6 @@
-
+#!/usr/bin/env python
 from io import TextIOWrapper
+import sys
 
 
 def place_in_file(file: TextIOWrapper, offset: int, lineWidth: int) -> int:
@@ -36,5 +37,9 @@ def hex_to_coe(in_file: str, out_file: str):
 
             out.seek(out.tell()-2)
             out.write(";")
-    
-hex_to_coe("programs/prog.hex", "programs/prog.coe")
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print("Usage: python3 elf2coe.py <input_file> <output_file>")
+    else:
+        hex_to_coe(sys.argv[1], sys.argv[2])
