@@ -22,6 +22,7 @@ module cv32e40p_impl_top #(
     output logic tests_passed_o,
     output logic tests_failed_o,
     output logic exit_valid_o,
+    output logic [31:0] exit_value_o,
 
     input logic Rx,
     output logic Tx
@@ -45,6 +46,9 @@ module cv32e40p_impl_top #(
         clk <= (counter<DIVISOR/2)?1'b1:1'b0;
     end
 
+    wire [31:0] print_wdata;
+    wire print_valid;
+
     cv32e40p_subsystem #(
       .INSTR_RDATA_WIDTH(INSTR_RDATA_WIDTH),
       .RAM_ADDR_WIDTH   (RAM_ADDR_WIDTH),
@@ -62,14 +66,10 @@ module cv32e40p_impl_top #(
       .tests_passed_o(tests_passed_o),
       .tests_failed_o(tests_failed_o),
       .exit_valid_o  (exit_valid_o),
-      .exit_value_o  (exit_value),
+      .exit_value_o  (exit_value_o),
       .print_wdata_o (print_wdata),
       .print_valid_o (print_valid)
   ) ;
-
-    wire [31:0] print_wdata;
-    wire print_valid;
-    wire [31:0] exit_value;
 
     Uart8 #(
     .CLOCK_RATE(CLOCK_RATE),
