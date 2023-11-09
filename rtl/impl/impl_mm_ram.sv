@@ -17,7 +17,8 @@
 
 module impl_mm_ram #(
     parameter RAM_ADDR_WIDTH = 22,
-    parameter INSTR_RDATA_WIDTH = 32
+    parameter INSTR_RDATA_WIDTH = 32,
+    parameter FILE = "C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.hex"
 ) (
     input logic clk_i,
     input logic rst_ni,
@@ -471,7 +472,8 @@ module impl_mm_ram #(
   // instantiate the ram
   impl_dp_ram #(
       .ADDR_WIDTH(RAM_ADDR_WIDTH),
-      .INSTR_RDATA_WIDTH(INSTR_RDATA_WIDTH)
+      .INSTR_RDATA_WIDTH(INSTR_RDATA_WIDTH),
+      .FILE(FILE)
   ) dp_ram_i (
       .clk_i(clk_i),
 
@@ -543,10 +545,10 @@ module impl_mm_ram #(
     ram_data_we      = data_we_dec;
     ram_data_be      = data_be_dec;
 
-    ram_instr_req = rnd_stall_instr_req;
-    ram_instr_gnt = rnd_stall_instr_gnt;
-    ram_data_req = rnd_stall_data_req;
-    ram_data_gnt = rnd_stall_data_gnt;
+    ram_instr_req    = rnd_stall_instr_req;
+    ram_instr_gnt    = rnd_stall_instr_gnt;
+    ram_data_req     = rnd_stall_data_req;
+    ram_data_gnt     = rnd_stall_data_gnt;
 
   end
 

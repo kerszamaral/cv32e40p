@@ -22,7 +22,8 @@ module cv32e40p_subsystem #(
     parameter FPU_OTHERS_LAT = 0,
     parameter ZFINX = 0,
     parameter NUM_MHPMCOUNTERS = 1,
-    parameter DM_HALTADDRESS = 32'h1A110800
+    parameter DM_HALTADDRESS = 32'h1A110800,
+    parameter FILE = "C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.hex"
 ) (
     input logic clk_i,
     input logic rst_ni,
@@ -33,7 +34,7 @@ module cv32e40p_subsystem #(
     output logic [31:0] exit_value_o,
     output logic        exit_valid_o,
     output logic [31:0] print_wdata_o,
-    output logic print_valid_o
+    output logic        print_valid_o
 );
 
   // signals connecting core to memory
@@ -114,11 +115,11 @@ module cv32e40p_subsystem #(
   );
 
 
-
   // this handles read to RAM and memory mapped pseudo peripherals
   impl_mm_ram #(
       .RAM_ADDR_WIDTH(RAM_ADDR_WIDTH),
-      .INSTR_RDATA_WIDTH(INSTR_RDATA_WIDTH)
+      .INSTR_RDATA_WIDTH(INSTR_RDATA_WIDTH),
+      .FILE(FILE)
   ) ram_i (
       .clk_i (clk_i),
       .rst_ni(rst_ni),

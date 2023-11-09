@@ -34,7 +34,7 @@ module impl_dp_ram #(
 );
   // `define DISTRIBUTED
   // `define IPGEN_RAM
-  // `define LOGGING
+  `define LOGGING
 
   logic [3:0] we_a;
   logic [3:0] we_b;
@@ -105,7 +105,7 @@ module impl_dp_ram #(
       .doutb(rdata_b_o)  // output wire [31 : 0] doutb
   );
 `else
-  dp_blk_ram #(
+  dp_2clk_blk_ram #(
       .NB_COL(4),  // Specify number of columns (number of bytes)
       .COL_WIDTH(8),  // Specify column width (byte width, typically 8 or 9)
       .RAM_DEPTH((2 ** MAXBLKSIZE)),  // Specify RAM depth (number of entries)
@@ -113,6 +113,7 @@ module impl_dp_ram #(
       .INIT_FILE(FILE)                        // Specify name/location of RAM initialization file if using one (leave blank if not)
   ) mem (
       .clka(clk_i),  // Port A clock
+      .clkb(clk_i),  // Port B clock
 
       // Port A 
       .ena(en_a_i),  // Port A RAM Enable, for additional power savings, disable port when not in use
@@ -140,12 +141,16 @@ module impl_dp_ram #(
 `ifdef LOGGING
   logic [MAXBLKSIZE-1:0] addr_a_log;
   logic [MAXBLKSIZE-1:0] addr_b_log;
-  always_comb addr_a_log = {addr_a_i[MAXBLKSIZE-1:2], 2'b0};
-  always_comb addr_b_log = {addr_b_i[MAXBLKSIZE-1:2], 2'b0};
+  always_comb addr_a_log = {addr_a_aligned};
+  always_comb addr_b_log = {addr_b_aligned};
 
   always @(posedge clk_i) begin
     if (we_b_i) $display("write addr=0x%08x: data=0x%08x", addr_b_log, wdata_b_i);
-    $display("addr_A=0x%08x: data_A=0x%08x addr_B=0x%08x: data_B=0x%08x", addr_a_log, rdata_a_o,
+    if (en_a_i || en_b_i)
+      $display(
+          "addr_A=0x%08x: data_A=0x%08x addr_B=0x%08x: data_B=0x%08x",
+          addr_a_log,
+          rdata_a_o,
              addr_b_log, rdata_b_o);
     if ((addr_a_log >= 2 ** MAXBLKSIZE) || (addr_b_log >= 2 ** MAXBLKSIZE))
       $display("Out of Bounds Access!!");
