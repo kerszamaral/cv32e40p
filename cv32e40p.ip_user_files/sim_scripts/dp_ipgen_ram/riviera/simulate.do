@@ -3,7 +3,7 @@ onbreak {quit -force}
 onerror {quit -force}
 transcript on
 
-asim +access +r +m+dp_ipgen_ram  -L blk_mem_gen_v8_4_6 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip -O5 xil_defaultlib.dp_ipgen_ram xil_defaultlib.glbl
+asim +access +r +m+dp_ipgen_ram  -L xpm -L blk_mem_gen_v8_4_6 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip -O5 xil_defaultlib.dp_ipgen_ram xil_defaultlib.glbl
 
 do {dp_ipgen_ram.udo}
 
