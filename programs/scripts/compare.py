@@ -1,3 +1,5 @@
+import sys
+
 def removeunchangedLines(filePath: str, outfile: str):
     startString = "addr_A="
     stringSize = "0x00000000"
@@ -31,9 +33,10 @@ def checkDiff(file1: str, file2: str, outFile: str):
                 out.write(f"                               {file1}                                      ||                                 {file2}                                        \n")
                 lineNumbr = 1
                 
-                while not line2.startswith("reset"):
+                startWord = "reset"
+                while not line2.startswith(startWord):
                     line2 = f2.readline()
-                while not line1.startswith("reset"):
+                while not line1.startswith(startWord):
                     line1 = f1.readline()
                 
                 while line1 and line2:
@@ -57,12 +60,27 @@ def removeExes(file1: str, file2: str):
                     line = line.replace(remove, replace)
                 f2.write(line)
                 line = f1.readline()
-    
-removeunchangedLines("programs/bram.log", "programs/bramLight.log")
-removeunchangedLines("programs/dist.log", "programs/distLight.log")
-removeunchangedLines("programs/ipgen.log", "programs/ipgenLight.log")
 
-removeExes("programs/bramLight.log", "programs/bramLight1.log")
 
-checkDiff("programs/bramLight.log", "programs/distLight.log", "programs/diff.log")
-checkDiff("programs/bramLight1.log", "programs/ipgenLight.log", "programs/diff2.log")
+
+name1 = "normal"
+name2 = "test"
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print("Usage: python3 compare.py <input_file1> <input_file1>")
+    else:
+        name1 = sys.argv[1]
+        name1Light = name1.replace(".log", "Light.log")
+        removeunchangedLines(name1, name1Light)
+        name2 = sys.argv[2]
+        name2Light = name2.replace(".log", "Light.log")
+        removeunchangedLines(name2, name2Light)
+        
+        name1Light1 = name1.replace(".log", "Light1.log")
+        removeExes(name1Light, name1Light1)
+        name2Light1 = name2.replace(".log", "Light1.log")
+        removeExes(name2Light, name2Light1)
+        
+        checkDiff(name1Light1, name2Light, "diff.log")
+
