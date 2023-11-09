@@ -24,12 +24,15 @@ module axi_subsystem #(
 );
 
   localparam MAXBLKSIZE = 17;
+  localparam BYTES = 4;
   localparam AXI4_ADDRESS_WIDTH = 32;
   localparam AXI4_RDATA_WIDTH = 32;
   localparam AXI4_WDATA_WIDTH = 32;
   localparam AXI4_ID_WIDTH = 16;
   localparam AXI4_USER_WIDTH = 10;
   localparam REGISTERED_GRANT = "FALSE";  // "TRUE"|"FALSE"
+  localparam FILE = "C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.hex";
+  localparam LOGGING = 0;
 
   cv32e40p_axi #(
       .COREV_PULP        (PULP_XPULP),
@@ -204,11 +207,14 @@ module axi_subsystem #(
 
   axi_mm_ram #(
       .MAXBLKSIZE        (MAXBLKSIZE),
+      .BYTES             (BYTES),
       .AXI4_ADDRESS_WIDTH(AXI4_ADDRESS_WIDTH),
       .AXI4_RDATA_WIDTH  (AXI4_RDATA_WIDTH),
       .AXI4_WDATA_WIDTH  (AXI4_WDATA_WIDTH),
       .AXI4_ID_WIDTH     (AXI4_ID_WIDTH),
-      .AXI4_USER_WIDTH   (AXI4_USER_WIDTH)
+      .AXI4_USER_WIDTH   (AXI4_USER_WIDTH),
+      .FILE              (FILE),
+      .LOGGING           (LOGGING)
   ) u_axi_mm_ram (
       .clk_i            (clk_i),
       .rst_ni           (rst_ni),

@@ -1,10 +1,13 @@
 module axi_mm_ram #(
     parameter MAXBLKSIZE = 17,
+    parameter BYTES = 4,
     parameter AXI4_ADDRESS_WIDTH = 32,
     parameter AXI4_RDATA_WIDTH = 32,
     parameter AXI4_WDATA_WIDTH = 32,
     parameter AXI4_ID_WIDTH = 16,
-    parameter AXI4_USER_WIDTH = 10
+    parameter AXI4_USER_WIDTH = 10,
+    parameter FILE = "C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.hex",
+    parameter LOGGING = 0
 ) (
     input  logic                          clk_i,
     input  logic                          rst_ni,
@@ -317,12 +320,12 @@ module axi_mm_ram #(
   assign addr_b_aligned = {bram_addr_b[2+:MAXBLKSIZE]};
 
   dp_2clk_blk_ram #(
-      .NB_COL(4),  // Specify number of columns (number of bytes)
-      .COL_WIDTH(8),  // Specify column width (byte width, typically 8 or 9)
-      .RAM_DEPTH((2 ** MAXBLKSIZE)),  // Specify RAM depth (number of entries)
+      .NB_COL(BYTES),  // Specify number of columns (number of bytes)
+      .COL_WIDTH(AXI4_RDATA_WIDTH / BYTES),  // Specify column width (byte width, typically 8 or 9)
+      .RAM_DEPTH(2 ** MAXBLKSIZE),  // Specify RAM depth (number of entries)
       .RAM_PERFORMANCE("LOW_LATENCY"),  // Select "HIGH_PERFORMANCE" or "LOW_LATENCY" 
-      .INIT_FILE("C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.hex")                        // Specify name/location of RAM initialization file if using one (leave blank if not)
-  ) your_instance_name (
+      .INIT_FILE(FILE)                        // Specify name/location of RAM initialization file if using one (leave blank if not)
+  ) mem (
       .clka(bram_clk_a),  // Port A clock
       .ena(bram_en_a),  // Port A RAM Enable, for additional power savings, disable port when not in use
       .wea(bram_we_a),  // Port A write enable, width determined from NB_COL
@@ -343,17 +346,16 @@ module axi_mm_ram #(
       .regceb('1)  // Port B output register enable //Unused
   );
 
-  `define LOGGING
-
-`ifdef LOGGING
-
-  always @(posedge clk_i) begin
-    if (bram_we_b) $display("write addr=0x%08x: data=0x%08x", addr_b_aligned, bram_wrdata_b);
-    $display("addr_A=0x%08x: data_A=0x%08x addr_B=0x%08x: data_B=0x%08x", addr_a_aligned,
-             bram_rddata_a, addr_b_aligned, bram_rddata_b);
-    if ((addr_a_aligned >= 2 ** MAXBLKSIZE) || (addr_b_aligned >= 2 ** MAXBLKSIZE))
-      $display("Out of Bounds Access!!");
-  end
-`endif
+  generate
+    if (LOGGING) begin
+      always @(posedge clk_i) begin
+        if (bram_we_b) $display("write addr=0x%08x: data=0x%08x", addr_b_aligned, bram_wrdata_b);
+        $display("addr_A=0x%08x: data_A=0x%08x addr_B=0x%08x: data_B=0x%08x", addr_a_aligned,
+                 bram_rddata_a, addr_b_aligned, bram_rddata_b);
+        if ((addr_a_aligned >= 2 ** MAXBLKSIZE) || (addr_b_aligned >= 2 ** MAXBLKSIZE))
+          $display("Out of Bounds Access!!");
+      end
+    end
+  endgenerate
 
 endmodule
