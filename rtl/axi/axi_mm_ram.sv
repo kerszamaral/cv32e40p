@@ -188,19 +188,19 @@ module axi_mm_ram #(
     if (data_aw_valid_i) begin  // handle writes
       if (data_aw_addr_i == 32'h1000_0000) begin
         if (data_w_valid_i) begin
-          $display("%c", data_wdata_o[7:0]);
-          print_wdata_o  = data_wdata_o[7:0];
-          print_valid_o  = data_awvalid_o;
+          $display("%c", data_w_data_i[7:0]);
+          print_wdata_o  = data_w_data_i[7:0];
+          print_valid_o  = data_w_valid_i;
           data_w_ready_o = '1;
-          data_b_ready_o = '1;
+          data_b_valid_o = '1;
         end
         data_aw_ready_o = '1;
       end else if (data_aw_addr_i == 32'h2000_0004) begin
         if (data_w_valid_i) begin
           exit_valid_o   = '1;
-          exit_value_o   = data_wdata_o;
+          exit_value_o   = data_w_data_i;
           data_w_ready_o = '1;
-          data_b_ready_o = '1;
+          data_b_valid_o = '1;
         end
         data_aw_ready_o = '1;
       end else if (data_aw_addr_i == 32'h2000_0010) begin
@@ -209,7 +209,7 @@ module axi_mm_ram #(
           exit_valid_o   = '1;
           exit_value_o   = '0;
           data_w_ready_o = '1;
-          data_b_ready_o = '1;
+          data_b_valid_o = '1;
         end
         data_aw_ready_o = '1;
       end else begin
@@ -218,7 +218,7 @@ module axi_mm_ram #(
         data_aw_ready_o = data_aw_ready_dec;
         data_w_valid_dec = data_w_valid_i;
         data_w_ready_o = data_w_ready_dec;
-        data_b_ready_o = data_b_ready_dec;
+        data_b_valid_o = data_b_ready_dec;
         data_b_ready_dec = data_b_ready_i;
       end
     end
