@@ -14,8 +14,6 @@
 //              Jeremy Bennett <jeremy.bennett@embecosm.com>
 
 module tb_axi #(
-    parameter INSTR_RDATA_WIDTH = 32,
-    parameter RAM_ADDR_WIDTH = 22,
     parameter BOOT_ADDR = 'h80,
     parameter PULP_XPULP = 0,
     parameter PULP_CLUSTER = 0,
@@ -28,14 +26,16 @@ module tb_axi #(
   // comment to record execution trace
   //`define TRACE_EXECUTION
 
-  const time          CLK_PHASE_HI = 5ns;
-  const time          CLK_PHASE_LO = 5ns;
-  const time          CLK_PERIOD = CLK_PHASE_HI + CLK_PHASE_LO;
+  const time CLK_PHASE_HI = 20ns;
+  const time CLK_PHASE_LO = 20ns;
+  const time CLK_PERIOD = CLK_PHASE_HI + CLK_PHASE_LO;
 
-  const time          STIM_APPLICATION_DEL = CLK_PERIOD * 0.1;
-  const time          RESP_ACQUISITION_DEL = CLK_PERIOD * 0.9;
-  const time          RESET_DEL = STIM_APPLICATION_DEL;
-  const int           RESET_WAIT_CYCLES = 4;
+  const time STIM_APPLICATION_DEL = CLK_PERIOD * 0.1;
+  const time RESP_ACQUISITION_DEL = CLK_PERIOD * 0.9;
+  const time RESET_DEL = STIM_APPLICATION_DEL;
+  const int  RESET_WAIT_CYCLES = 4;
+  localparam FILE = "C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.hex";
+  localparam LOGGING = 1;
 
   // clock and reset for tb
   logic               clk = 'b1;
@@ -138,15 +138,15 @@ module tb_axi #(
 
   // wrapper for riscv, the memory system and stdout peripheral
   axi_subsystem #(
-      .INSTR_RDATA_WIDTH(INSTR_RDATA_WIDTH),
-      .RAM_ADDR_WIDTH   (RAM_ADDR_WIDTH),
-      .BOOT_ADDR        (BOOT_ADDR),
-      .PULP_XPULP       (PULP_XPULP),
-      .PULP_CLUSTER     (PULP_CLUSTER),
-      .FPU              (FPU),
-      .ZFINX            (ZFINX),
-      .NUM_MHPMCOUNTERS (NUM_MHPMCOUNTERS),
-      .DM_HALTADDRESS   (DM_HALTADDRESS)
+      .BOOT_ADDR       (BOOT_ADDR),
+      .PULP_XPULP      (PULP_XPULP),
+      .PULP_CLUSTER    (PULP_CLUSTER),
+      .FPU             (FPU),
+      .ZFINX           (ZFINX),
+      .NUM_MHPMCOUNTERS(NUM_MHPMCOUNTERS),
+      .DM_HALTADDRESS  (DM_HALTADDRESS),
+      .FILE            (FILE),
+      .LOGGING         (LOGGING)
   ) u_axi_subsystem (
       .clk_i         (clk),
       .rst_ni        (rst_n),

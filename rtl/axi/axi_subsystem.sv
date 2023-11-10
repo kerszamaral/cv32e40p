@@ -1,6 +1,4 @@
 module axi_subsystem #(
-    parameter INSTR_RDATA_WIDTH = 32,
-    parameter RAM_ADDR_WIDTH = 22,
     parameter BOOT_ADDR = 'h80,
     parameter PULP_XPULP = 0,
     parameter PULP_CLUSTER = 0,
@@ -9,7 +7,17 @@ module axi_subsystem #(
     parameter FPU_OTHERS_LAT = 0,
     parameter ZFINX = 0,
     parameter NUM_MHPMCOUNTERS = 1,
-    parameter DM_HALTADDRESS = 32'h1A110800
+    parameter DM_HALTADDRESS = 32'h1A110800,
+    parameter MAXBLKSIZE = 20,
+    parameter BYTES = 4,
+    parameter AXI4_ADDRESS_WIDTH = 32,
+    parameter AXI4_RDATA_WIDTH = 32,
+    parameter AXI4_WDATA_WIDTH = 32,
+    parameter AXI4_ID_WIDTH = 16,
+    parameter AXI4_USER_WIDTH = 10,
+    parameter REGISTERED_GRANT = "FALSE",  // "TRUE"|"FALSE"
+    parameter FILE = "C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.hex",
+    parameter LOGGING = 0
 ) (
     input logic clk_i,
     input logic rst_ni,
@@ -23,16 +31,129 @@ module axi_subsystem #(
     output logic        print_valid_o
 );
 
-  localparam MAXBLKSIZE = 17;
-  localparam BYTES = 4;
-  localparam AXI4_ADDRESS_WIDTH = 32;
-  localparam AXI4_RDATA_WIDTH = 32;
-  localparam AXI4_WDATA_WIDTH = 32;
-  localparam AXI4_ID_WIDTH = 16;
-  localparam AXI4_USER_WIDTH = 10;
-  localparam REGISTERED_GRANT = "FALSE";  // "TRUE"|"FALSE"
-  localparam FILE = "C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.hex";
-  localparam LOGGING = 0;
+  //AXI write address bus -------------- // USED// -----------
+  logic [AXI4_ID_WIDTH-1:0] instr_aw_id;
+  logic [AXI4_ADDRESS_WIDTH-1:0] instr_aw_addr;
+  logic [7:0] instr_aw_len;
+  logic [2:0] instr_aw_size;
+  logic [1:0] instr_aw_burst;
+  logic instr_aw_lock;
+  logic [3:0] instr_aw_cache;
+  logic [2:0] instr_aw_prot;
+  logic [3:0] instr_aw_region;
+  logic [AXI4_USER_WIDTH-1:0] instr_aw_user;
+  logic [3:0] instr_aw_qos;
+  logic instr_aw_valid;
+  logic instr_aw_ready;
+  // ---------------------------------------------------------
+
+  //AXI write data bus -------------- // USED// --------------
+  logic [AXI4_WDATA_WIDTH-1:0] instr_w_data;
+  logic [AXI4_WDATA_WIDTH/8-1:0] instr_w_strb;
+  logic instr_w_last;
+  logic [AXI4_USER_WIDTH-1:0] instr_w_user;
+  logic instr_w_valid;
+  logic instr_w_ready;
+  // ---------------------------------------------------------
+
+  //AXI write response bus -------------- // USED// ----------
+  logic [AXI4_ID_WIDTH-1:0] instr_b_id;
+  logic [1:0] instr_b_resp;
+  logic instr_b_valid;
+  logic [AXI4_USER_WIDTH-1:0] instr_b_user;
+  logic instr_b_ready;
+  // ---------------------------------------------------------
+
+  //AXI read address bus -------------------------------------
+  logic [AXI4_ID_WIDTH-1:0] instr_ar_id;
+  logic [AXI4_ADDRESS_WIDTH-1:0] instr_ar_addr;
+  logic [7:0] instr_ar_len;
+  logic [2:0] instr_ar_size;
+  logic [1:0] instr_ar_burst;
+  logic instr_ar_lock;
+  logic [3:0] instr_ar_cache;
+  logic [2:0] instr_ar_prot;
+  logic [3:0] instr_ar_region;
+  logic [AXI4_USER_WIDTH-1:0] instr_ar_user;
+  logic [3:0] instr_ar_qos;
+  logic instr_ar_valid;
+  logic instr_ar_ready;
+  // ---------------------------------------------------------
+
+  //AXI read data bus ----------------------------------------
+  logic [AXI4_ID_WIDTH-1:0] instr_r_id;
+  logic [AXI4_RDATA_WIDTH-1:0] instr_r_data;
+  logic [1:0] instr_r_resp;
+  logic instr_r_last;
+  logic [AXI4_USER_WIDTH-1:0] instr_r_user;
+  logic instr_r_valid;
+  logic instr_r_ready;
+  // ---------------------------------------------------------
+
+  //! AXI4 Data Interface
+  //AXI write address bus -------------- // USED// -----------
+  logic [AXI4_ID_WIDTH-1:0] data_aw_id;
+  logic [AXI4_ADDRESS_WIDTH-1:0] data_aw_addr;
+  logic [7:0] data_aw_len;
+  logic [2:0] data_aw_size;
+  logic [1:0] data_aw_burst;
+  logic data_aw_lock;
+  logic [3:0] data_aw_cache;
+  logic [2:0] data_aw_prot;
+  logic [3:0] data_aw_region;
+  logic [AXI4_USER_WIDTH-1:0] data_aw_user;
+  logic [3:0] data_aw_qos;
+  logic data_aw_valid;
+  logic data_aw_ready;
+  // ---------------------------------------------------------
+
+  //AXI write data bus -------------- // USED// --------------
+  logic [AXI4_WDATA_WIDTH-1:0] data_w_data;
+  logic [AXI4_WDATA_WIDTH/8-1:0] data_w_strb;
+  logic data_w_last;
+  logic [AXI4_USER_WIDTH-1:0] data_w_user;
+  logic data_w_valid;
+  logic data_w_ready;
+  // ---------------------------------------------------------
+
+  //AXI write response bus -------------- // USED// ----------
+  logic [AXI4_ID_WIDTH-1:0] data_b_id;
+  logic [1:0] data_b_resp;
+  logic data_b_valid;
+  logic [AXI4_USER_WIDTH-1:0] data_b_user;
+  logic data_b_ready;
+  // ---------------------------------------------------------
+
+  //AXI read address bus -------------------------------------
+  logic [AXI4_ID_WIDTH-1:0] data_ar_id;
+  logic [AXI4_ADDRESS_WIDTH-1:0] data_ar_addr;
+  logic [7:0] data_ar_len;
+  logic [2:0] data_ar_size;
+  logic [1:0] data_ar_burst;
+  logic data_ar_lock;
+  logic [3:0] data_ar_cache;
+  logic [2:0] data_ar_prot;
+  logic [3:0] data_ar_region;
+  logic [AXI4_USER_WIDTH-1:0] data_ar_user;
+  logic [3:0] data_ar_qos;
+  logic data_ar_valid;
+  logic data_ar_ready;
+  // ---------------------------------------------------------
+
+  //AXI read data bus ----------------------------------------
+  logic [AXI4_ID_WIDTH-1:0] data_r_id;
+  logic [AXI4_RDATA_WIDTH-1:0] data_r_data;
+  logic [1:0] data_r_resp;
+  logic data_r_last;
+  logic [AXI4_USER_WIDTH-1:0] data_r_user;
+  logic data_r_valid;
+  logic data_r_ready;
+  // ---------------------------------------------------------
+
+  // Interrupt s
+  logic [31:0] irq;  // CLINT interrupts + CLINT extension interrupts
+  logic irq_ack;
+  logic [4:0] irq_id;
 
   cv32e40p_axi #(
       .COREV_PULP        (PULP_XPULP),
