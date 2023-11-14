@@ -142,6 +142,9 @@ module axi_mm_ram #(
     output logic        exit_valid_o,
     output logic [31:0] exit_value_o,
 
+    input  logic rx_i,
+    output logic tx_o,
+
     output logic [7:0] print_wdata_o,
     output logic print_valid_o
 );
@@ -353,20 +356,14 @@ module axi_mm_ram #(
     end
   endgenerate
 
-  logic uart_clk;
-  logic uart_en;
-  logic [BYTES-1:0] uart_we;
-  logic [MAXBLKSIZE-1:0] uart_addr;
-  logic [AXI4_WDATA_WIDTH-1:0] uart_wrdata;
-  logic [AXI4_RDATA_WIDTH-1:0] uart_rddata = '0;
-
   // UART AXI Access
-  axi_to_bram uart_axi_ctrl (
+  axi_uartlite_0 uart (
       .s_axi_aclk   (clk_i),     // input wire s_axi_aclk
       .s_axi_aresetn(rst_ni),  // input wire s_axi_aresetn
 
-      .s_axi_awaddr(m_axi_awaddr[(UART*ADDRSIZE)+:MAXBLKSIZE]),  // input wire [16 : 0] s_axi_awaddr
-      .s_axi_awprot(m_axi_awprot[(UART*PROTSIZE)+:PROTSIZE]),  // input wire [2 : 0] s_axi_awprot
+      .interrupt(interrupt),  // output wire interrupt
+
+      .s_axi_awaddr('h4),  // input wire [3 : 0] s_axi_awaddr m_axi_awaddr[(UART*ADDRSIZE)+:4]
       .s_axi_awvalid(m_axi_awvalid[(UART*VALIDSIZE)+:VALIDSIZE]),  // input wire s_axi_awvalid
       .s_axi_awready(m_axi_awready[(UART*READYSIZE)+:READYSIZE]),  // output wire s_axi_awready
       .s_axi_wdata(m_axi_wdata[(UART*DATASIZE)+:DATASIZE]),  // input wire [31 : 0] s_axi_wdata
@@ -376,8 +373,7 @@ module axi_mm_ram #(
       .s_axi_bresp(m_axi_bresp[(UART*RESPSIZE)+:RESPSIZE]),  // output wire [1 : 0] s_axi_bresp
       .s_axi_bvalid(m_axi_bvalid[(UART*VALIDSIZE)+:VALIDSIZE]),  // output wire s_axi_bvalid
       .s_axi_bready(m_axi_bready[(UART*READYSIZE)+:READYSIZE]),  // input wire s_axi_bready
-      .s_axi_araddr(m_axi_araddr[(UART*ADDRSIZE)+:MAXBLKSIZE]),  // input wire [16 : 0] s_axi_araddr
-      .s_axi_arprot(m_axi_arprot[(UART*PROTSIZE)+:PROTSIZE]),  // input wire [2 : 0] s_axi_arprot
+      .s_axi_araddr(m_axi_araddr[(UART*ADDRSIZE)+:4]),  // input wire [3 : 0] s_axi_araddr
       .s_axi_arvalid(m_axi_arvalid[(UART*VALIDSIZE)+:VALIDSIZE]),  // input wire s_axi_arvalid
       .s_axi_arready(m_axi_arready[(UART*READYSIZE)+:READYSIZE]),  // output wire s_axi_arready
       .s_axi_rdata(m_axi_rdata[(UART*DATASIZE)+:DATASIZE]),  // output wire [31 : 0] s_axi_rdata
@@ -385,21 +381,17 @@ module axi_mm_ram #(
       .s_axi_rvalid(m_axi_rvalid[(UART*VALIDSIZE)+:VALIDSIZE]),  // output wire s_axi_rvalid
       .s_axi_rready(m_axi_rready[(UART*READYSIZE)+:READYSIZE]),  // input wire s_axi_rready
 
-      .bram_rst_a   (uart_rst),     // output wire bram_rst_a
-      .bram_clk_a   (uart_clk),     // output wire bram_clk_a
-      .bram_en_a    (uart_en),      // output wire bram_en_a
-      .bram_we_a    (uart_we),      // output wire [3 : 0] bram_we_a
-      .bram_addr_a  (uart_addr),    // output wire [16 : 0] bram_addr_a
-      .bram_wrdata_a(uart_wrdata),  // output wire [31 : 0] bram_wrdata_a
-      .bram_rddata_a(uart_rddata)   // input wire [31 : 0] bram_rddata_a
+      .rx(rx_i),  // input wire rx
+      .tx(tx_o)   // output wire tx
   );
+
 
   always_comb begin
     print_valid_o = 0;
     print_wdata_o = '0;
 
-    if (uart_en && (uart_we[3] || uart_we[2] || uart_we[1] || uart_we[0])) begin
-      print_wdata_o = uart_wrdata[7:0];
+    if ((m_axi_wvalid[(UART*VALIDSIZE)+:VALIDSIZE])) begin
+      print_wdata_o = m_axi_wdata[(UART*DATASIZE)+:8];
       print_valid_o = 1;
     end
   end

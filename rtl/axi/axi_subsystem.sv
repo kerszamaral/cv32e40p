@@ -28,7 +28,9 @@ module axi_subsystem #(
     output logic [31:0] exit_value_o,
     output logic        exit_valid_o,
     output logic [ 7:0] print_wdata_o,
-    output logic        print_valid_o
+    output logic        print_valid_o,
+    input logic rx_i,
+    output logic tx_o
 );
 
   //AXI write address bus -------------- // USED// -----------
@@ -471,7 +473,9 @@ module axi_subsystem #(
       .exit_valid_o  (exit_valid_o),
       .exit_value_o  (exit_value_o),
       .print_valid_o (print_valid_o),
-      .print_wdata_o (print_wdata_o)
+      .print_wdata_o (print_wdata_o),
+      .rx_i          (rx_i),
+      .tx_o          (tx_o)
   );
 
 endmodule

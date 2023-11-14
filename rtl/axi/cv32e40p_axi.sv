@@ -48,6 +48,7 @@ module cv32e40p_axi #(
     // ---------------------------------------------------------
 
     //AXI write data bus -------------- // USED// --------------
+    output logic [     AXI4_ID_WIDTH-1:0] instr_w_id_o,
     output logic [  AXI4_WDATA_WIDTH-1:0] instr_w_data_o,
     output logic [AXI4_WDATA_WIDTH/8-1:0] instr_w_strb_o,
     output logic                          instr_w_last_o,
@@ -108,6 +109,7 @@ module cv32e40p_axi #(
     // ---------------------------------------------------------
 
     //AXI write data bus -------------- // USED// --------------
+    output logic [     AXI4_ID_WIDTH-1:0] data_w_id_o,
     output logic [  AXI4_WDATA_WIDTH-1:0] data_w_data_o,
     output logic [AXI4_WDATA_WIDTH/8-1:0] data_w_strb_o,
     output logic                          data_w_last_o,

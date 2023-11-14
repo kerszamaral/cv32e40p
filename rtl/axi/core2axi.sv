@@ -54,6 +54,7 @@ module core2axi #(
     // ---------------------------------------------------------
 
     //AXI write data bus -------------- // USED// --------------
+    output logic [     AXI4_ID_WIDTH-1:0] w_id_o,
     output logic [  AXI4_WDATA_WIDTH-1:0] w_data_o,
     output logic [AXI4_WDATA_WIDTH/8-1:0] w_strb_o,
     output logic                          w_last_o,
@@ -291,6 +292,7 @@ module core2axi #(
   assign ar_qos_o    = '0;
   assign ar_user_o   = '0;
 
+  assign w_id_o      = '0;
   assign w_last_o    = 1'b1;
   assign w_user_o    = '0;
 

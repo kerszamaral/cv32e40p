@@ -56,6 +56,8 @@ module tb_axi #(
   // stdout pseudo peripheral
   logic        [7:0] print_wdata;
   logic               print_valid;
+  logic rx;
+  logic tx;
 
 
   // make the core start fetching instruction immediately
@@ -129,10 +131,51 @@ module tb_axi #(
     end
   end
 
+  logic [31:0] out;
+  logic rxDone;
+  logic rxBusy;
+  logic rxErr;
+
+  axi_uartlite_0 uart (
+      .s_axi_aclk   (clk),     // input wire s_axi_aclk
+      .s_axi_aresetn(rst_n),  // input wire s_axi_aresetn
+
+      .interrupt(rxDone),  // output wire interrupt
+
+      .s_axi_awaddr ('0),  // input wire [3 : 0] s_axi_awaddr
+      .s_axi_awvalid('0),  // input wire s_axi_awvalid
+      .s_axi_awready(),    // output wire s_axi_awready
+      .s_axi_wdata  ('0),  // input wire [31 : 0] s_axi_wdata
+      .s_axi_wstrb  ('0),  // input wire [3 : 0] s_axi_wstrb
+      .s_axi_wvalid ('0),  // input wire s_axi_wvalid
+      .s_axi_wready (),    // output wire s_axi_wready
+      .s_axi_bresp  (),    // output wire [1 : 0] s_axi_bresp
+      .s_axi_bvalid (),    // output wire s_axi_bvalid
+      .s_axi_bready ('0),  // input wire s_axi_bready
+
+      .s_axi_araddr('0),  // input wire [3 : 0] s_axi_araddr
+      .s_axi_arvalid('1),  // input wire s_axi_arvalid
+      .s_axi_arready(),  // output wire s_axi_arready
+      .s_axi_rdata(out),  // output wire [31 : 0] s_axi_rdata
+      .s_axi_rresp(),  // output wire [1 : 0] s_axi_rresp
+      .s_axi_rvalid(rxBusy),  // output wire s_axi_rvalid
+      .s_axi_rready('1),  // input wire s_axi_rready
+
+      .rx(tx),  // input wire rx
+      .tx(rx)   // output wire tx
+  );
+
   // print to stdout pseudo peripheral
   always_ff @(posedge clk, negedge rst_n) begin : print_peripheral
     if (print_valid) begin
-      $write("%c", print_wdata[7:0]);
+      // $write("%c", print_wdata[7:0]);
+    end
+  end
+
+  // print to stdout pseudo peripheral
+  always_ff @(posedge clk, negedge rst_n) begin : print_peripheral2
+    if (rxDone) begin
+      $write("%c", out[7:0]);
     end
   end
 
@@ -156,7 +199,9 @@ module tb_axi #(
       .exit_value_o  (exit_value),
       .exit_valid_o  (exit_valid),
       .print_wdata_o (print_wdata),
-      .print_valid_o (print_valid)
+      .print_valid_o (print_valid),
+      .rx_i          (rx),
+      .tx_o          (tx)
   );
 
 endmodule  // tb_top
