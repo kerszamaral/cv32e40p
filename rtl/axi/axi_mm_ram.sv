@@ -161,7 +161,7 @@ module axi_mm_ram #(
   logic [AXI4_WDATA_WIDTH-1:0] bram_wrdata_b;
   logic [AXI4_RDATA_WIDTH-1:0] bram_rddata_b;
 
-  axi_bram_ctrl_2 instr_axi_ctrl (
+  axi_to_bram instr_axi_ctrl (
       .s_axi_aclk   (clk_i),  // input wire s_axi_aclk
       .s_axi_aresetn(rst_ni), // input wire s_axi_aresetn
 
@@ -272,7 +272,7 @@ module axi_mm_ram #(
   );
 
   // BRAM AXI Access
-  axi_bram_ctrl_2 data_axi_ctrl (
+  axi_to_bram data_axi_ctrl (
       .s_axi_aclk   (clk_i),     // input wire s_axi_aclk
       .s_axi_aresetn(rst_ni),  // input wire s_axi_aresetn
 
@@ -361,7 +361,7 @@ module axi_mm_ram #(
   logic [AXI4_RDATA_WIDTH-1:0] uart_rddata = '0;
 
   // UART AXI Access
-  axi_bram_ctrl_2 uart_axi_ctrl (
+  axi_to_bram uart_axi_ctrl (
       .s_axi_aclk   (clk_i),     // input wire s_axi_aclk
       .s_axi_aresetn(rst_ni),  // input wire s_axi_aresetn
 
@@ -411,10 +411,10 @@ module axi_mm_ram #(
   logic [BYTES-1:0] exit_we;
   logic [MAXBLKSIZE-1:0] exit_addr;
   logic [AXI4_WDATA_WIDTH-1:0] exit_wrdata;
-  logic [AXI4_RDATA_WIDTH-1:0] exit_rddata;
+  logic [AXI4_RDATA_WIDTH-1:0] exit_rddata = '0;
 
   // EXIT AXI Access
-  axi_bram_ctrl_2 exit_axi_ctrl (
+  axi_to_bram exit_axi_ctrl (
       .s_axi_aclk   (clk_i),     // input wire s_axi_aclk
       .s_axi_aresetn(rst_ni),  // input wire s_axi_aresetn
 

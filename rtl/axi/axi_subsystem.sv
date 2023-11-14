@@ -322,7 +322,7 @@ module axi_subsystem #(
       .debug_running_o  (debug_running),
       .debug_halted_o   (debug_halted),
       // CPU Control Signals
-      .fetch_enable_i   (fetch_enable),
+      .fetch_enable_i   (fetch_enable_i),
       .core_sleep_o     (core_sleep)
   );
 

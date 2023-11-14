@@ -35,7 +35,7 @@ module tb_axi #(
   const time RESET_DEL = STIM_APPLICATION_DEL;
   const int  RESET_WAIT_CYCLES = 4;
   localparam FILE = "C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.hex";
-  localparam LOGGING = 1;
+  localparam LOGGING = 0;
 
   // clock and reset for tb
   logic               clk = 'b1;
@@ -54,7 +54,7 @@ module tb_axi #(
   logic               fetch_enable;
 
   // stdout pseudo peripheral
-  logic        [31:0] print_wdata;
+  logic        [7:0] print_wdata;
   logic               print_valid;
 
 

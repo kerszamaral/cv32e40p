@@ -61,11 +61,6 @@ def removeExes(file1: str, file2: str):
                 f2.write(line)
                 line = f1.readline()
 
-
-
-name1 = "normal"
-name2 = "test"
-
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         print("Usage: python3 compare.py <input_file1> <input_file1>")

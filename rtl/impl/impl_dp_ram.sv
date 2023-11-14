@@ -32,8 +32,6 @@ module impl_dp_ram #(
     input  logic                  we_b_i,
     input  logic [           3:0] be_b_i
 );
-  // `define DISTRIBUTED
-  // `define IPGEN_RAM
   `define LOGGING
 
   logic [3:0] we_a;
@@ -56,55 +54,11 @@ module impl_dp_ram #(
 
   logic [MAXBLKSIZE-1:0] addr_a_aligned;
   logic [MAXBLKSIZE-1:0] addr_b_aligned;
-`ifdef DISTRIBUTED
-  always_comb addr_a_aligned = {addr_a_i[MAXBLKSIZE-1:2], 2'b0};
-  always_comb addr_b_aligned = {addr_b_i[MAXBLKSIZE-1:2], 2'b0};
-`else
+
   always_comb addr_a_aligned = {addr_a_i[MAXBLKSIZE+1:2]};
   always_comb addr_b_aligned = {addr_b_i[MAXBLKSIZE+1:2]};
-`endif
 
-`ifdef DISTRIBUTED
-  dp_dist_ram #(
-      .NB_COL(4),  // Specify number of columns (number of bytes)
-      .COL_WIDTH(8),  // Specify column width (byte width, typically 8 or 9)
-      .RAM_DEPTH((2 ** MAXBLKSIZE)),  // Specify RAM depth (number of entries)
-      .INIT_FILE(FILE)                        // Specify name/location of RAM initialization file if using one (leave blank if not)
-  ) mem (
-      .clka(clk_i),  // Port A clock
 
-      // Port A 
-      .ena(en_a_i),  // Port A RAM Enable, for additional power savings, disable port when not in use
-      .wea(we_a),  // Port A write enable, width determined from NB_COL
-      .addra(addr_a_aligned),  // Port A address bus, width determined from RAM_DEPTH
-      .dina(wdata_a_i),  // Port A RAM input data, width determined from NB_COL*COL_WIDTH
-      .douta(rdata_a_o),  // Port A RAM output data, width determined from NB_COL*COL_WIDTH
-
-      // Port B
-      .enb(en_b_i),  // Port B RAM Enable, for additional power savings, disable port when not in use
-      .web(we_b),  // Port B write enable, width determined from NB_COL
-      .addrb(addr_b_aligned),  // Port B address bus, width determined from RAM_DEPTH
-      .dinb(wdata_b_i),  // Port B RAM input data, width determined from NB_COL*COL_WIDTH
-      .doutb(rdata_b_o)  // Port B RAM output data, width determined from NB_COL*COL_WIDTH
-  );
-`else
-`ifdef IPGEN_RAM
-  dp_ipgen_ram mem (
-      .clka(clk_i),  // input wire clka
-      .ena(en_a_i),  // input wire ena
-      .wea(we_a),  // input wire [3 : 0] wea
-      .addra(addr_a_aligned),  // input wire [16 : 0] addra
-      .dina(wdata_a_i),  // input wire [31 : 0] dina
-      .douta(rdata_a_o),  // output wire [31 : 0] douta
-
-      .clkb(clk_i),  // input wire clkb
-      .enb(en_b_i),  // input wire enb
-      .web(we_b),  // input wire [3 : 0] web
-      .addrb(addr_b_aligned),  // input wire [16 : 0] addrb
-      .dinb(wdata_b_i),  // input wire [31 : 0] dinb
-      .doutb(rdata_b_o)  // output wire [31 : 0] doutb
-  );
-`else
   dp_2clk_blk_ram #(
       .NB_COL(4),  // Specify number of columns (number of bytes)
       .COL_WIDTH(8),  // Specify column width (byte width, typically 8 or 9)
@@ -135,8 +89,6 @@ module impl_dp_ram #(
       .regcea('1),  // Port A output register enable //Unused
       .regceb('1)   // Port B output register enable //Unused
   );
-`endif
-`endif
 
 `ifdef LOGGING
   logic [MAXBLKSIZE-1:0] addr_a_log;
