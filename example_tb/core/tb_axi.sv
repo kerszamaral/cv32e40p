@@ -36,29 +36,25 @@ module tb_axi #(
   const int  RESET_WAIT_CYCLES = 4;
   localparam FILE = "C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.hex";
   localparam LOGGING = 0;
+  byte unsigned        LASTCHAR = "\n";
 
   // clock and reset for tb
-  logic               clk = 'b1;
-  logic               rst_n = 'b0;
+  logic                clk = 'b1;
+  logic                rst_n = 'b0;
 
   // cycle counter
-  int unsigned        cycle_cnt_q;
+  int unsigned         cycle_cnt_q;
 
   // testbench result
-  logic               tests_passed;
-  logic               tests_failed;
-  logic               exit_valid;
-  logic        [31:0] exit_value;
+  logic                exit_valid;
+  logic         [31:0] exit_value;
 
   // signals for ri5cy
-  logic               fetch_enable;
+  logic                fetch_enable;
 
   // stdout pseudo peripheral
-  logic        [7:0] print_wdata;
-  logic               print_valid;
-  logic rx;
-  logic tx;
-
+  logic                rx;
+  logic                tx;
 
   // make the core start fetching instruction immediately
   assign fetch_enable = '1;
@@ -114,33 +110,14 @@ module tb_axi #(
     end
   end
 
-  // check if we succeded
-  always_ff @(posedge clk, negedge rst_n) begin
-    if (tests_passed) begin
-      $display("ALL TESTS PASSED");
-      $finish;
-    end
-    if (tests_failed) begin
-      $display("TEST(S) FAILED!");
-      $finish;
-    end
-    if (exit_valid) begin
-      if (exit_value == 0) $display("EXIT SUCCESS");
-      else $display("EXIT FAILURE: %d", exit_value);
-      $finish;
-    end
-  end
-
-  logic [31:0] out;
-  logic rxDone;
-  logic rxBusy;
-  logic rxErr;
+  logic [7:0] rxData;
+  logic rxValid;
 
   axi_uartlite_0 uart (
       .s_axi_aclk   (clk),     // input wire s_axi_aclk
       .s_axi_aresetn(rst_n),  // input wire s_axi_aresetn
 
-      .interrupt(rxDone),  // output wire interrupt
+      .interrupt(),  // output wire interrupt
 
       .s_axi_awaddr ('0),  // input wire [3 : 0] s_axi_awaddr
       .s_axi_awvalid('0),  // input wire s_axi_awvalid
@@ -155,10 +132,10 @@ module tb_axi #(
 
       .s_axi_araddr('0),  // input wire [3 : 0] s_axi_araddr
       .s_axi_arvalid('1),  // input wire s_axi_arvalid
-      .s_axi_arready(),  // output wire s_axi_arready
-      .s_axi_rdata(out),  // output wire [31 : 0] s_axi_rdata
+      .s_axi_arready(),  // output wire   s_axi_arready
+      .s_axi_rdata(rxData),  // output wire [31 : 0] s_axi_rdata
       .s_axi_rresp(),  // output wire [1 : 0] s_axi_rresp
-      .s_axi_rvalid(rxBusy),  // output wire s_axi_rvalid
+      .s_axi_rvalid(rxValid),  // output wire s_axi_rvalid
       .s_axi_rready('1),  // input wire s_axi_rready
 
       .rx(tx),  // input wire rx
@@ -167,15 +144,17 @@ module tb_axi #(
 
   // print to stdout pseudo peripheral
   always_ff @(posedge clk, negedge rst_n) begin : print_peripheral
-    if (print_valid) begin
-      // $write("%c", print_wdata[7:0]);
-    end
-  end
+    if (rxValid && rxData) begin
+      $write("%c", rxData);
 
-  // print to stdout pseudo peripheral
-  always_ff @(posedge clk, negedge rst_n) begin : print_peripheral2
-    if (rxDone) begin
-      $write("%c", out[7:0]);
+      // Because of the way the UART works, the string may arrive after the program has finished
+      if (rxData == LASTCHAR) begin
+        if (exit_valid) begin
+          if (exit_value == 0) $display("EXIT SUCCESS");
+          else $display("EXIT FAILURE: %d", exit_value);
+          $finish;
+        end
+      end
     end
   end
 
@@ -194,12 +173,8 @@ module tb_axi #(
       .clk_i         (clk),
       .rst_ni        (rst_n),
       .fetch_enable_i(fetch_enable),
-      .tests_passed_o(tests_passed),
-      .tests_failed_o(tests_failed),
       .exit_value_o  (exit_value),
       .exit_valid_o  (exit_valid),
-      .print_wdata_o (print_wdata),
-      .print_valid_o (print_valid),
       .rx_i          (rx),
       .tx_o          (tx)
   );

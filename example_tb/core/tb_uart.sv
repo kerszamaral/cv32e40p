@@ -13,7 +13,7 @@
 // Contributor: Robert Balas <balasr@student.ethz.ch>
 //              Jeremy Bennett <jeremy.bennett@embecosm.com>
 
-module uart_tb #();
+module tb_uart #();
 
   const time CLK_PHASE_HI = 20ns;
   const time CLK_PHASE_LO = 20ns;

@@ -137,16 +137,11 @@ module axi_mm_ram #(
     input  logic [ 4:0] irq_id_o,
 
     input  logic [31:0] pc_core_id_i,
-    output logic        tests_passed_o,
-    output logic        tests_failed_o,
     output logic        exit_valid_o,
     output logic [31:0] exit_value_o,
 
     input  logic rx_i,
-    output logic tx_o,
-
-    output logic [7:0] print_wdata_o,
-    output logic print_valid_o
+    output logic tx_o
 );
 
   logic bram_clk_a;
@@ -385,19 +380,6 @@ module axi_mm_ram #(
       .tx(tx_o)   // output wire tx
   );
 
-
-  always_comb begin
-    print_valid_o = 0;
-    print_wdata_o = '0;
-
-    if ((m_axi_wvalid[(UART*VALIDSIZE)+:VALIDSIZE])) begin
-      print_wdata_o = m_axi_wdata[(UART*DATASIZE)+:8];
-      print_valid_o = 1;
-    end
-  end
-
-
-
   logic exit_clk;
   logic exit_en;
   logic [BYTES-1:0] exit_we;
@@ -439,25 +421,32 @@ module axi_mm_ram #(
       .bram_rddata_a(exit_rddata)   // input wire [31 : 0] bram_rddata_a
   );
 
+  logic [31:0] exit_value;
+  logic exit_valid;
+
   always_comb begin
-    exit_valid_o   = 0;
-    exit_value_o   = '0;
-    tests_failed_o = '0;
-    tests_passed_o = '0;
+    exit_valid = 0;
+    exit_value = '0;
 
     if (exit_en && (exit_we[3] || exit_we[2] || exit_we[1] || exit_we[0])) begin
-      if (exit_addr == 'h0) begin
-        if (exit_wrdata == 123456789) tests_passed_o = '1;
-        else if (exit_wrdata == 1) tests_failed_o = '1;
-
-      end else if (exit_addr == 'h4) begin
-        exit_valid_o = '1;
-        exit_value_o = exit_wrdata;
-
+      if (exit_addr == 'h4) begin
+        exit_valid = '1;
+        exit_value = exit_wrdata;
       end else if (exit_addr == 'h10) begin
-        exit_valid_o = '1;
-        exit_value_o = '0;
+        exit_valid = '1;
+        exit_value = '0;
+      end
+    end
+  end
 
+  always_ff @(posedge clk_i or negedge rst_ni) begin
+    if (~rst_ni) begin
+      exit_valid_o <= 0;
+      exit_value_o <= '0;
+    end else if (clk_i) begin
+      if (exit_valid) begin
+        exit_valid_o <= exit_valid;
+        exit_value_o <= exit_value;
       end
     end
   end
