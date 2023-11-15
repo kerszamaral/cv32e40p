@@ -23,12 +23,10 @@ module axi_subsystem #(
     input logic rst_ni,
 
     input  logic        fetch_enable_i,
-    output logic        tests_passed_o,
-    output logic        tests_failed_o,
     output logic [31:0] exit_value_o,
     output logic        exit_valid_o,
-    output logic [ 7:0] print_wdata_o,
-    output logic        print_valid_o
+    input  logic        rx_i,
+    output logic        tx_o
 );
 
   //AXI write address bus -------------- // USED// -----------
@@ -209,10 +207,11 @@ module axi_subsystem #(
       // ---------------------------------------------------------
 
       //AXI write data bus -------------- // USED// --------------
-      .instr_w_data_o (instr_w_data),
-      .instr_w_strb_o (instr_w_strb),
-      .instr_w_last_o (instr_w_last),
-      .instr_w_user_o (instr_w_user),
+      .instr_w_id_o(),
+      .instr_w_data_o(instr_w_data),
+      .instr_w_strb_o(instr_w_strb),
+      .instr_w_last_o(instr_w_last),
+      .instr_w_user_o(instr_w_user),
       .instr_w_valid_o(instr_w_valid),
       .instr_w_ready_i(instr_w_ready),
       // ---------------------------------------------------------
@@ -269,10 +268,11 @@ module axi_subsystem #(
       // ---------------------------------------------------------
 
       //AXI write data bus -------------- // USED// --------------
-      .data_w_data_o (data_w_data),
-      .data_w_strb_o (data_w_strb),
-      .data_w_last_o (data_w_last),
-      .data_w_user_o (data_w_user),
+      .data_w_id_o(),
+      .data_w_data_o(data_w_data),
+      .data_w_strb_o(data_w_strb),
+      .data_w_last_o(data_w_last),
+      .data_w_user_o(data_w_user),
       .data_w_valid_o(data_w_valid),
       .data_w_ready_i(data_w_ready),
       // ---------------------------------------------------------
@@ -466,12 +466,10 @@ module axi_subsystem #(
       .irq_id_o      (irq_id),
       // Debug Interface
       .pc_core_id_i  (top_i.core_i.pc_id),
-      .tests_passed_o(tests_passed_o),
-      .tests_failed_o(tests_failed_o),
       .exit_valid_o  (exit_valid_o),
       .exit_value_o  (exit_value_o),
-      .print_valid_o (print_valid_o),
-      .print_wdata_o (print_wdata_o)
+      .rx_i          (rx_i),
+      .tx_o          (tx_o)
   );
 
 endmodule

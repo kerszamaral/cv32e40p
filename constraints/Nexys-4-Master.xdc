@@ -63,13 +63,13 @@ set_property PACKAGE_PIN U8 [get_ports fetch_enable_i]
 
 ## LEDs
 ##Bank = 34, Pin name = IO_L24N_T3_34,						Sch name = LED0
-set_property PACKAGE_PIN T8 [get_ports tests_passed_o]					
+set_property PACKAGE_PIN T8 [get_ports exit_valid_o]					
 	#set_property IOSTANDARD LVCMOS33 [get_ports {led[0]}]
 ##Bank = 34, Pin name = IO_L21N_T3_DQS_34,					Sch name = LED1
-set_property PACKAGE_PIN V9 [get_ports tests_failed_o]					
+#set_property PACKAGE_PIN V9 [get_ports {led[1]}]					
 	#set_property IOSTANDARD LVCMOS33 [get_ports {led[1]}]
 ##Bank = 34, Pin name = IO_L24P_T3_34,						Sch name = LED2
-set_property PACKAGE_PIN R8 [get_ports exit_valid_o]					
+#set_property PACKAGE_PIN R8 [get_ports exit_valid_o]					
 	#set_property IOSTANDARD LVCMOS33 [get_ports {led[2]}]
 ##Bank = 34, Pin name = IO_L23N_T3_34,						Sch name = LED3
 #set_property PACKAGE_PIN T6 [get_ports {led[3]}]					
@@ -484,10 +484,10 @@ set_property PACKAGE_PIN R8 [get_ports exit_valid_o]
 
 ##USB-RS232 Interface
 ##Bank = 35, Pin name = IO_L7P_T1_AD6P_35,					Sch name = UART_TXD_IN
-#set_property PACKAGE_PIN C4 [get_ports Rx]						
+set_property PACKAGE_PIN C4 [get_ports rx_i]						
 	#set_property IOSTANDARD LVCMOS33 [get_ports RsRx]
 ##Bank = 35, Pin name = IO_L11N_T1_SRCC_35,					Sch name = UART_RXD_OUT
-#set_property PACKAGE_PIN D4 [get_ports Tx]						
+set_property PACKAGE_PIN D4 [get_ports tx_o]						
 	#set_property IOSTANDARD LVCMOS33 [get_ports RsTx]
 ##Bank = 35, Pin name = IO_L12N_T1_MRCC_35,					Sch name = UART_CTS
 #set_property PACKAGE_PIN D3 [get_ports RsCts]						

@@ -1,0 +1,2 @@
+axi_uartlite_0_sim_netlist.v,verilog,xil_defaultlib,../../../../cv32e40p.gen/sources_1/ip/axi_uartlite_0/axi_uartlite_0_sim_netlist.v,
+glbl.v,Verilog,xil_defaultlib,glbl.v

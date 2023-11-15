@@ -48,6 +48,7 @@ module cv32e40p_axi #(
     // ---------------------------------------------------------
 
     //AXI write data bus -------------- // USED// --------------
+    output logic [     AXI4_ID_WIDTH-1:0] instr_w_id_o,
     output logic [  AXI4_WDATA_WIDTH-1:0] instr_w_data_o,
     output logic [AXI4_WDATA_WIDTH/8-1:0] instr_w_strb_o,
     output logic                          instr_w_last_o,
@@ -108,6 +109,7 @@ module cv32e40p_axi #(
     // ---------------------------------------------------------
 
     //AXI write data bus -------------- // USED// --------------
+    output logic [     AXI4_ID_WIDTH-1:0] data_w_id_o,
     output logic [  AXI4_WDATA_WIDTH-1:0] data_w_data_o,
     output logic [AXI4_WDATA_WIDTH/8-1:0] data_w_strb_o,
     output logic                          data_w_last_o,
@@ -337,10 +339,11 @@ module cv32e40p_axi #(
       // ---------------------------------------------------------
 
       //AXI write data bus -------------- // USED// --------------
-      .w_data_o (instr_w_data_o),
-      .w_strb_o (instr_w_strb_o),
-      .w_last_o (instr_w_last_o),
-      .w_user_o (instr_w_user_o),
+      .w_id_o(instr_w_id_o),
+      .w_data_o(instr_w_data_o),
+      .w_strb_o(instr_w_strb_o),
+      .w_last_o(instr_w_last_o),
+      .w_user_o(instr_w_user_o),
       .w_valid_o(instr_w_valid_o),
       .w_ready_i(instr_w_ready_i),
       // ---------------------------------------------------------
@@ -421,10 +424,11 @@ module cv32e40p_axi #(
       // ---------------------------------------------------------
 
       //AXI write data bus -------------- // USED// --------------
-      .w_data_o (data_w_data_o),
-      .w_strb_o (data_w_strb_o),
-      .w_last_o (data_w_last_o),
-      .w_user_o (data_w_user_o),
+      .w_id_o(data_w_id_o),
+      .w_data_o(data_w_data_o),
+      .w_strb_o(data_w_strb_o),
+      .w_last_o(data_w_last_o),
+      .w_user_o(data_w_user_o),
       .w_valid_o(data_w_valid_o),
       .w_ready_i(data_w_ready_i),
       // ---------------------------------------------------------
