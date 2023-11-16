@@ -34,36 +34,36 @@ package cv32e40p_pkg;
   //        |_|                                 //
   ////////////////////////////////////////////////
 
-  parameter OPCODE_SYSTEM = 7'h73;
-  parameter OPCODE_FENCE = 7'h0f;
-  parameter OPCODE_OP = 7'h33;
-  parameter OPCODE_OPIMM = 7'h13;
-  parameter OPCODE_STORE = 7'h23;
-  parameter OPCODE_LOAD = 7'h03;
-  parameter OPCODE_BRANCH = 7'h63;
-  parameter OPCODE_JALR = 7'h67;
-  parameter OPCODE_JAL = 7'h6f;
-  parameter OPCODE_AUIPC = 7'h17;
-  parameter OPCODE_LUI = 7'h37;
-  parameter OPCODE_OP_FP = 7'h53;
-  parameter OPCODE_OP_FMADD = 7'h43;
-  parameter OPCODE_OP_FNMADD = 7'h4f;
-  parameter OPCODE_OP_FMSUB = 7'h47;
-  parameter OPCODE_OP_FNMSUB = 7'h4b;
-  parameter OPCODE_STORE_FP = 7'h27;
-  parameter OPCODE_LOAD_FP = 7'h07;
-  parameter OPCODE_AMO = 7'h2F;
+  localparam OPCODE_SYSTEM = 7'h73;
+  localparam OPCODE_FENCE = 7'h0f;
+  localparam OPCODE_OP = 7'h33;
+  localparam OPCODE_OPIMM = 7'h13;
+  localparam OPCODE_STORE = 7'h23;
+  localparam OPCODE_LOAD = 7'h03;
+  localparam OPCODE_BRANCH = 7'h63;
+  localparam OPCODE_JALR = 7'h67;
+  localparam OPCODE_JAL = 7'h6f;
+  localparam OPCODE_AUIPC = 7'h17;
+  localparam OPCODE_LUI = 7'h37;
+  localparam OPCODE_OP_FP = 7'h53;
+  localparam OPCODE_OP_FMADD = 7'h43;
+  localparam OPCODE_OP_FNMADD = 7'h4f;
+  localparam OPCODE_OP_FMSUB = 7'h47;
+  localparam OPCODE_OP_FNMSUB = 7'h4b;
+  localparam OPCODE_STORE_FP = 7'h27;
+  localparam OPCODE_LOAD_FP = 7'h07;
+  localparam OPCODE_AMO = 7'h2F;
 
   // Those custom opcodes are used for PULP custom instructions
-  parameter OPCODE_CUSTOM_0 = 7'h0b;
-  parameter OPCODE_CUSTOM_1 = 7'h2b;
-  parameter OPCODE_CUSTOM_2 = 7'h5b;
-  parameter OPCODE_CUSTOM_3 = 7'h7b;
+  localparam OPCODE_CUSTOM_0 = 7'h0b;
+  localparam OPCODE_CUSTOM_1 = 7'h2b;
+  localparam OPCODE_CUSTOM_2 = 7'h5b;
+  localparam OPCODE_CUSTOM_3 = 7'h7b;
 
-  parameter REGC_S1 = 2'b10;
-  parameter REGC_S4 = 2'b00;
-  parameter REGC_RD = 2'b01;
-  parameter REGC_ZERO = 2'b11;
+  localparam REGC_S1 = 2'b10;
+  localparam REGC_S4 = 2'b00;
+  localparam REGC_RD = 2'b01;
+  localparam REGC_ZERO = 2'b11;
 
   //////////////////////////////////////////////////////////////////////////////
   //      _    _    _   _    ___                       _   _                  //
@@ -74,7 +74,7 @@ package cv32e40p_pkg;
   //                             |_|                                          //
   //////////////////////////////////////////////////////////////////////////////
 
-  parameter ALU_OP_WIDTH = 7;
+  localparam ALU_OP_WIDTH = 7;
 
   typedef enum logic [ALU_OP_WIDTH-1:0] {
 
@@ -160,7 +160,7 @@ package cv32e40p_pkg;
 
   } alu_opcode_e;
 
-  parameter MUL_OP_WIDTH = 3;
+  localparam MUL_OP_WIDTH = 3;
 
   typedef enum logic [MUL_OP_WIDTH-1:0] {
 
@@ -175,9 +175,9 @@ package cv32e40p_pkg;
   } mul_opcode_e;
 
   // vector modes
-  parameter VEC_MODE32 = 2'b00;
-  parameter VEC_MODE16 = 2'b10;
-  parameter VEC_MODE8 = 2'b11;
+  localparam VEC_MODE32 = 2'b00;
+  localparam VEC_MODE16 = 2'b10;
+  localparam VEC_MODE8 = 2'b11;
 
 
   // FSM state encoding
@@ -204,9 +204,9 @@ package cv32e40p_pkg;
   // State encoding done one-hot to ensure that debug_havereset_o, debug_running_o, debug_halted_o
   // will come directly from flip-flops. *_INDEX and debug_state_e encoding must match
 
-  parameter HAVERESET_INDEX = 0;
-  parameter RUNNING_INDEX = 1;
-  parameter HALTED_INDEX = 2;
+  localparam HAVERESET_INDEX = 0;
+  localparam RUNNING_INDEX = 1;
+  localparam HALTED_INDEX = 2;
 
   typedef enum logic [2:0] {
     HAVERESET = 3'b001,
@@ -507,7 +507,7 @@ package cv32e40p_pkg;
 
   // CSR operations
 
-  parameter CSR_OP_WIDTH = 2;
+  localparam CSR_OP_WIDTH = 2;
 
   typedef enum logic [CSR_OP_WIDTH-1:0] {
     CSR_OP_READ  = 2'b00,
@@ -517,22 +517,22 @@ package cv32e40p_pkg;
   } csr_opcode_e;
 
   // CSR interrupt pending/enable bits
-  parameter int unsigned CSR_MSIX_BIT = 3;
-  parameter int unsigned CSR_MTIX_BIT = 7;
-  parameter int unsigned CSR_MEIX_BIT = 11;
-  parameter int unsigned CSR_MFIX_BIT_LOW = 16;
-  parameter int unsigned CSR_MFIX_BIT_HIGH = 31;
+  localparam int unsigned CSR_MSIX_BIT = 3;
+  localparam int unsigned CSR_MTIX_BIT = 7;
+  localparam int unsigned CSR_MEIX_BIT = 11;
+  localparam int unsigned CSR_MFIX_BIT_LOW = 16;
+  localparam int unsigned CSR_MFIX_BIT_HIGH = 31;
 
   // SPR for debugger, not accessible by CPU
-  parameter SP_DVR0 = 16'h3000;
-  parameter SP_DCR0 = 16'h3008;
-  parameter SP_DMR1 = 16'h3010;
-  parameter SP_DMR2 = 16'h3011;
+  localparam SP_DVR0 = 16'h3000;
+  localparam SP_DCR0 = 16'h3008;
+  localparam SP_DMR1 = 16'h3010;
+  localparam SP_DMR2 = 16'h3011;
 
-  parameter SP_DVR_MSB = 8'h00;
-  parameter SP_DCR_MSB = 8'h01;
-  parameter SP_DMR_MSB = 8'h02;
-  parameter SP_DSR_MSB = 8'h04;
+  localparam SP_DVR_MSB = 8'h00;
+  localparam SP_DCR_MSB = 8'h01;
+  localparam SP_DMR_MSB = 8'h02;
+  localparam SP_DSR_MSB = 8'h04;
 
   // Privileged mode
   typedef enum logic [1:0] {
@@ -584,13 +584,13 @@ package cv32e40p_pkg;
   } FS_t;
 
   // Machine Vendor ID - OpenHW JEDEC ID is '2 decimal (bank 13)'
-  parameter MVENDORID_OFFSET = 7'h2;  // Final byte without parity bit
-  parameter MVENDORID_BANK = 25'hC;  // Number of continuation codes
+  localparam MVENDORID_OFFSET = 7'h2;  // Final byte without parity bit
+  localparam MVENDORID_BANK = 25'hC;  // Number of continuation codes
 
   // Machine Architecture ID (https://github.com/riscv/riscv-isa-manual/blob/master/marchid.md)
-  parameter MARCHID = 32'h4;
+  localparam MARCHID = 32'h4;
 
-  parameter MHPMCOUNTER_WIDTH = 64;
+  localparam MHPMCOUNTER_WIDTH = 64;
 
   ///////////////////////////////////////////////
   //   ___ ____    ____  _                     //
@@ -602,88 +602,88 @@ package cv32e40p_pkg;
   ///////////////////////////////////////////////
 
   // forwarding operand mux
-  parameter SEL_REGFILE = 2'b00;
-  parameter SEL_FW_EX = 2'b01;
-  parameter SEL_FW_WB = 2'b10;
+  localparam SEL_REGFILE = 2'b00;
+  localparam SEL_FW_EX = 2'b01;
+  localparam SEL_FW_WB = 2'b10;
 
   // operand a selection
-  parameter OP_A_REGA_OR_FWD = 3'b000;
-  parameter OP_A_CURRPC = 3'b001;
-  parameter OP_A_IMM = 3'b010;
-  parameter OP_A_REGB_OR_FWD = 3'b011;
-  parameter OP_A_REGC_OR_FWD = 3'b100;
+  localparam OP_A_REGA_OR_FWD = 3'b000;
+  localparam OP_A_CURRPC = 3'b001;
+  localparam OP_A_IMM = 3'b010;
+  localparam OP_A_REGB_OR_FWD = 3'b011;
+  localparam OP_A_REGC_OR_FWD = 3'b100;
 
   // immediate a selection
-  parameter IMMA_Z = 1'b0;
-  parameter IMMA_ZERO = 1'b1;
+  localparam IMMA_Z = 1'b0;
+  localparam IMMA_ZERO = 1'b1;
 
   // operand b selection
-  parameter OP_B_REGB_OR_FWD = 3'b000;
-  parameter OP_B_REGC_OR_FWD = 3'b001;
-  parameter OP_B_IMM = 3'b010;
-  parameter OP_B_REGA_OR_FWD = 3'b011;
-  parameter OP_B_BMASK = 3'b100;
+  localparam OP_B_REGB_OR_FWD = 3'b000;
+  localparam OP_B_REGC_OR_FWD = 3'b001;
+  localparam OP_B_IMM = 3'b010;
+  localparam OP_B_REGA_OR_FWD = 3'b011;
+  localparam OP_B_BMASK = 3'b100;
 
   // immediate b selection
-  parameter IMMB_I = 4'b0000;
-  parameter IMMB_S = 4'b0001;
-  parameter IMMB_U = 4'b0010;
-  parameter IMMB_PCINCR = 4'b0011;
-  parameter IMMB_S2 = 4'b0100;
-  parameter IMMB_S3 = 4'b0101;
-  parameter IMMB_VS = 4'b0110;
-  parameter IMMB_VU = 4'b0111;
-  parameter IMMB_SHUF = 4'b1000;
-  parameter IMMB_CLIP = 4'b1001;
-  parameter IMMB_BI = 4'b1011;
+  localparam IMMB_I = 4'b0000;
+  localparam IMMB_S = 4'b0001;
+  localparam IMMB_U = 4'b0010;
+  localparam IMMB_PCINCR = 4'b0011;
+  localparam IMMB_S2 = 4'b0100;
+  localparam IMMB_S3 = 4'b0101;
+  localparam IMMB_VS = 4'b0110;
+  localparam IMMB_VU = 4'b0111;
+  localparam IMMB_SHUF = 4'b1000;
+  localparam IMMB_CLIP = 4'b1001;
+  localparam IMMB_BI = 4'b1011;
 
   // bit mask selection
-  parameter BMASK_A_ZERO = 1'b0;
-  parameter BMASK_A_S3 = 1'b1;
+  localparam BMASK_A_ZERO = 1'b0;
+  localparam BMASK_A_S3 = 1'b1;
 
-  parameter BMASK_B_S2 = 2'b00;
-  parameter BMASK_B_S3 = 2'b01;
-  parameter BMASK_B_ZERO = 2'b10;
-  parameter BMASK_B_ONE = 2'b11;
+  localparam BMASK_B_S2 = 2'b00;
+  localparam BMASK_B_S3 = 2'b01;
+  localparam BMASK_B_ZERO = 2'b10;
+  localparam BMASK_B_ONE = 2'b11;
 
-  parameter BMASK_A_REG = 1'b0;
-  parameter BMASK_A_IMM = 1'b1;
-  parameter BMASK_B_REG = 1'b0;
-  parameter BMASK_B_IMM = 1'b1;
+  localparam BMASK_A_REG = 1'b0;
+  localparam BMASK_A_IMM = 1'b1;
+  localparam BMASK_B_REG = 1'b0;
+  localparam BMASK_B_IMM = 1'b1;
 
 
   // multiplication immediates
-  parameter MIMM_ZERO = 1'b0;
-  parameter MIMM_S3 = 1'b1;
+  localparam MIMM_ZERO = 1'b0;
+  localparam MIMM_S3 = 1'b1;
 
   // operand c selection
-  parameter OP_C_REGC_OR_FWD = 2'b00;
-  parameter OP_C_REGB_OR_FWD = 2'b01;
-  parameter OP_C_JT = 2'b10;
+  localparam OP_C_REGC_OR_FWD = 2'b00;
+  localparam OP_C_REGB_OR_FWD = 2'b01;
+  localparam OP_C_JT = 2'b10;
 
   // branch types
-  parameter BRANCH_NONE = 2'b00;
-  parameter BRANCH_JAL = 2'b01;
-  parameter BRANCH_JALR = 2'b10;
-  parameter BRANCH_COND = 2'b11;  // conditional branches
+  localparam BRANCH_NONE = 2'b00;
+  localparam BRANCH_JAL = 2'b01;
+  localparam BRANCH_JALR = 2'b10;
+  localparam BRANCH_COND = 2'b11;  // conditional branches
 
   // jump target mux
-  parameter JT_JAL = 2'b01;
-  parameter JT_JALR = 2'b10;
-  parameter JT_COND = 2'b11;
+  localparam JT_JAL = 2'b01;
+  localparam JT_JALR = 2'b10;
+  localparam JT_COND = 2'b11;
 
   // Atomic operations
-  parameter AMO_LR = 5'b00010;
-  parameter AMO_SC = 5'b00011;
-  parameter AMO_SWAP = 5'b00001;
-  parameter AMO_ADD = 5'b00000;
-  parameter AMO_XOR = 5'b00100;
-  parameter AMO_AND = 5'b01100;
-  parameter AMO_OR = 5'b01000;
-  parameter AMO_MIN = 5'b10000;
-  parameter AMO_MAX = 5'b10100;
-  parameter AMO_MINU = 5'b11000;
-  parameter AMO_MAXU = 5'b11100;
+  localparam AMO_LR = 5'b00010;
+  localparam AMO_SC = 5'b00011;
+  localparam AMO_SWAP = 5'b00001;
+  localparam AMO_ADD = 5'b00000;
+  localparam AMO_XOR = 5'b00100;
+  localparam AMO_AND = 5'b01100;
+  localparam AMO_OR = 5'b01000;
+  localparam AMO_MIN = 5'b10000;
+  localparam AMO_MAX = 5'b10100;
+  localparam AMO_MINU = 5'b11000;
+  localparam AMO_MAXU = 5'b11100;
 
   ///////////////////////////////////////////////
   //   ___ _____   ____  _                     //
@@ -695,58 +695,58 @@ package cv32e40p_pkg;
   ///////////////////////////////////////////////
 
   // PC mux selector defines
-  parameter PC_BOOT = 4'b0000;
-  parameter PC_JUMP = 4'b0010;
-  parameter PC_BRANCH = 4'b0011;
-  parameter PC_EXCEPTION = 4'b0100;
-  parameter PC_FENCEI = 4'b0001;
-  parameter PC_MRET = 4'b0101;
-  parameter PC_URET = 4'b0110;
-  parameter PC_DRET = 4'b0111;
-  parameter PC_HWLOOP = 4'b1000;
+  localparam PC_BOOT = 4'b0000;
+  localparam PC_JUMP = 4'b0010;
+  localparam PC_BRANCH = 4'b0011;
+  localparam PC_EXCEPTION = 4'b0100;
+  localparam PC_FENCEI = 4'b0001;
+  localparam PC_MRET = 4'b0101;
+  localparam PC_URET = 4'b0110;
+  localparam PC_DRET = 4'b0111;
+  localparam PC_HWLOOP = 4'b1000;
 
   // Exception PC mux selector defines
-  parameter EXC_PC_EXCEPTION = 3'b000;
-  parameter EXC_PC_IRQ = 3'b001;
+  localparam EXC_PC_EXCEPTION = 3'b000;
+  localparam EXC_PC_IRQ = 3'b001;
 
-  parameter EXC_PC_DBD = 3'b010;
-  parameter EXC_PC_DBE = 3'b011;
+  localparam EXC_PC_DBD = 3'b010;
+  localparam EXC_PC_DBE = 3'b011;
 
   // Exception Cause
-  parameter EXC_CAUSE_INSTR_FAULT = 5'h01;
-  parameter EXC_CAUSE_ILLEGAL_INSN = 5'h02;
-  parameter EXC_CAUSE_BREAKPOINT = 5'h03;
-  parameter EXC_CAUSE_LOAD_FAULT = 5'h05;
-  parameter EXC_CAUSE_STORE_FAULT = 5'h07;
-  parameter EXC_CAUSE_ECALL_UMODE = 5'h08;
-  parameter EXC_CAUSE_ECALL_MMODE = 5'h0B;
+  localparam EXC_CAUSE_INSTR_FAULT = 5'h01;
+  localparam EXC_CAUSE_ILLEGAL_INSN = 5'h02;
+  localparam EXC_CAUSE_BREAKPOINT = 5'h03;
+  localparam EXC_CAUSE_LOAD_FAULT = 5'h05;
+  localparam EXC_CAUSE_STORE_FAULT = 5'h07;
+  localparam EXC_CAUSE_ECALL_UMODE = 5'h08;
+  localparam EXC_CAUSE_ECALL_MMODE = 5'h0B;
 
   // Interrupt mask
-  parameter IRQ_MASK = 32'hFFFF0888;
+  localparam IRQ_MASK = 32'hFFFF0888;
 
   // Trap mux selector
-  parameter TRAP_MACHINE = 2'b00;
-  parameter TRAP_USER = 2'b01;
+  localparam TRAP_MACHINE = 2'b00;
+  localparam TRAP_USER = 2'b01;
 
   // Debug Cause
-  parameter DBG_CAUSE_NONE = 3'h0;
-  parameter DBG_CAUSE_EBREAK = 3'h1;
-  parameter DBG_CAUSE_TRIGGER = 3'h2;
-  parameter DBG_CAUSE_HALTREQ = 3'h3;
-  parameter DBG_CAUSE_STEP = 3'h4;
-  parameter DBG_CAUSE_RSTHALTREQ = 3'h5;
+  localparam DBG_CAUSE_NONE = 3'h0;
+  localparam DBG_CAUSE_EBREAK = 3'h1;
+  localparam DBG_CAUSE_TRIGGER = 3'h2;
+  localparam DBG_CAUSE_HALTREQ = 3'h3;
+  localparam DBG_CAUSE_STEP = 3'h4;
+  localparam DBG_CAUSE_RSTHALTREQ = 3'h5;
 
   // Debug module
-  parameter DBG_SETS_W = 6;
+  localparam DBG_SETS_W = 6;
 
-  parameter DBG_SETS_IRQ = 5;
-  parameter DBG_SETS_ECALL = 4;
-  parameter DBG_SETS_EILL = 3;
-  parameter DBG_SETS_ELSU = 2;
-  parameter DBG_SETS_EBRK = 1;
-  parameter DBG_SETS_SSTE = 0;
+  localparam DBG_SETS_IRQ = 5;
+  localparam DBG_SETS_ECALL = 4;
+  localparam DBG_SETS_EILL = 3;
+  localparam DBG_SETS_ELSU = 2;
+  localparam DBG_SETS_EBRK = 1;
+  localparam DBG_SETS_SSTE = 0;
 
-  parameter DBG_CAUSE_HALT = 6'h1F;
+  localparam DBG_CAUSE_HALT = 6'h1F;
 
   // Constants for the dcsr.xdebugver fields
   typedef enum logic [3:0] {
@@ -764,36 +764,36 @@ package cv32e40p_pkg;
   } trigger_type_e;
 
   // Floating-point extensions configuration
-  parameter bit C_RVF = 1'b1;  // Is F extension enabled
-  parameter bit C_RVD = 1'b0;  // Is D extension enabled - NOT SUPPORTED CURRENTLY
+  localparam bit C_RVF = 1'b1;  // Is F extension enabled
+  localparam bit C_RVD = 1'b0;  // Is D extension enabled - NOT SUPPORTED CURRENTLY
 
   // Transprecision floating-point extensions configuration
-  parameter bit C_XF16 = 1'b0;  // Is half-precision float extension (Xf16) enabled
-  parameter bit C_XF16ALT = 1'b0; // Is alternative half-precision float extension (Xf16alt) enabled
-  parameter bit C_XF8 = 1'b0;  // Is quarter-precision float extension (Xf8) enabled
-  parameter bit C_XFVEC = 1'b0;  // Is vectorial float extension (Xfvec) enabled
+  localparam bit C_XF16 = 1'b0;  // Is half-precision float extension (Xf16) enabled
+  localparam bit C_XF16ALT = 1'b0; // Is alternative half-precision float extension (Xf16alt) enabled
+  localparam bit C_XF8 = 1'b0;  // Is quarter-precision float extension (Xf8) enabled
+  localparam bit C_XFVEC = 1'b0;  // Is vectorial float extension (Xfvec) enabled
 
   // Latency of FP operations: 0 = no pipe registers, 1 = 1 pipe register etc.
-  parameter int unsigned C_LAT_FP64 = 'd0;
-  parameter int unsigned C_LAT_FP32 = 'd0;
-  parameter int unsigned C_LAT_FP16 = 'd0;
-  parameter int unsigned C_LAT_FP16ALT = 'd0;
-  parameter int unsigned C_LAT_FP8 = 'd0;
-  parameter int unsigned C_LAT_DIVSQRT = 'd1;  // divsqrt post-processing pipe
-  parameter int unsigned C_LAT_CONV = 'd0;
-  parameter int unsigned C_LAT_NONCOMP = 'd0;
+  localparam int unsigned C_LAT_FP64 = 'd0;
+  localparam int unsigned C_LAT_FP32 = 'd0;
+  localparam int unsigned C_LAT_FP16 = 'd0;
+  localparam int unsigned C_LAT_FP16ALT = 'd0;
+  localparam int unsigned C_LAT_FP8 = 'd0;
+  localparam int unsigned C_LAT_DIVSQRT = 'd1;  // divsqrt post-processing pipe
+  localparam int unsigned C_LAT_CONV = 'd0;
+  localparam int unsigned C_LAT_NONCOMP = 'd0;
 
   // General FPU-specific defines
 
   // Length of widest floating-point format = width of fp regfile
-  parameter C_FLEN = C_RVD ? 64 :  // D ext.
+  localparam C_FLEN = C_RVD ? 64 :  // D ext.
   C_RVF ? 32 :  // F ext.
   C_XF16 ? 16 :  // Xf16 ext.
   C_XF16ALT ? 16 :  // Xf16alt ext.
   C_XF8 ? 8 :  // Xf8 ext.
   0;  // Unused in case of no FP
 
-  parameter C_FFLAG = 5;
-  parameter C_RM = 3;
+  localparam C_FFLAG = 5;
+  localparam C_RM = 3;
 
 endpackage

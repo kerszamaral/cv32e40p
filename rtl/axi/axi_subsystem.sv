@@ -22,12 +22,19 @@ module axi_subsystem #(
     input logic clk_i,
     input logic rst_ni,
 
-    input  logic        fetch_enable_i,
-    output logic [31:0] exit_value_o,
-    output logic        exit_valid_o,
-    input  logic        rx_i,
-    output logic        tx_o
+    input  logic fetch_enable_i,
+    output logic exit_zero_o,
+    output logic exit_valid_o,
+    input  logic rx_i,
+    output logic tx_o
 );
+
+  logic [31:0] exit_value;
+
+  always_comb begin
+    if (exit_valid_o) exit_zero_o = (exit_value == 0);
+    else exit_zero_o = 1'b0;
+  end
 
   //AXI write address bus -------------- // USED// -----------
   logic [AXI4_ID_WIDTH-1:0] instr_aw_id;
@@ -152,6 +159,8 @@ module axi_subsystem #(
   logic [31:0] irq;  // CLINT interrupts + CLINT extension interrupts
   logic irq_ack;
   logic [4:0] irq_id;
+
+  logic debug_req = 1'b0;
 
   cv32e40p_axi #(
       .COREV_PULP        (PULP_XPULP),
@@ -460,16 +469,16 @@ module axi_subsystem #(
       // ---------------------------------------------------------
 
       // Interrupt outputs
-      .irq_i         (irq),
+      .irq_o       (irq),
       // CLINT interrupts + CLINT extension interrupts
-      .irq_ack_o     (irq_ack),
-      .irq_id_o      (irq_id),
+      .irq_ack_i   (irq_ack),
+      .irq_id_i    (irq_id),
       // Debug Interface
-      .pc_core_id_i  (top_i.core_i.pc_id),
-      .exit_valid_o  (exit_valid_o),
-      .exit_value_o  (exit_value_o),
-      .rx_i          (rx_i),
-      .tx_o          (tx_o)
+      .pc_core_id_i(top_i.core_i.pc_id),
+      .exit_valid_o(exit_valid_o),
+      .exit_value_o(exit_value),
+      .rx_i        (rx_i),
+      .tx_o        (tx_o)
   );
 
 endmodule

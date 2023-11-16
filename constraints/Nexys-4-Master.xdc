@@ -6,16 +6,16 @@
 ## Clock signal
 ##Bank = 35, Pin name = IO_L12P_T1_MRCC_35,					Sch name = CLK100MHZ
 set_property PACKAGE_PIN E3 [get_ports clk_i]							
-	#set_property IOSTANDARD LVCMOS33 [get_ports clk_i]
+	set_property IOSTANDARD LVCMOS33 [get_ports clk_i]
 	create_clock -add -name sys_clk_pin -period 20.00 -waveform {0 5} [get_ports clk_i]
  
 ## Switches
 ##Bank = 34, Pin name = IO_L21P_T3_DQS_34,					Sch name = SW0
 set_property PACKAGE_PIN U9 [get_ports rst_ni]					
-	#set_property IOSTANDARD LVCMOS33 [get_ports {sw[0]}]
+	set_property IOSTANDARD LVCMOS33 [get_ports rst_ni]
 ##Bank = 34, Pin name = IO_25_34,							Sch name = SW1
 set_property PACKAGE_PIN U8 [get_ports fetch_enable_i]					
-	#set_property IOSTANDARD LVCMOS33 [get_ports {sw[1]}]
+	set_property IOSTANDARD LVCMOS33 [get_ports fetch_enable_i]
 ##Bank = 34, Pin name = IO_L23P_T3_34,						Sch name = SW2
 #set_property PACKAGE_PIN R7 [get_ports {sw[2]}]					
 	#set_property IOSTANDARD LVCMOS33 [get_ports {sw[2]}]
@@ -64,12 +64,12 @@ set_property PACKAGE_PIN U8 [get_ports fetch_enable_i]
 ## LEDs
 ##Bank = 34, Pin name = IO_L24N_T3_34,						Sch name = LED0
 set_property PACKAGE_PIN T8 [get_ports exit_valid_o]					
-	#set_property IOSTANDARD LVCMOS33 [get_ports {led[0]}]
+	set_property IOSTANDARD LVCMOS33 [get_ports exit_valid_o]
 ##Bank = 34, Pin name = IO_L21N_T3_DQS_34,					Sch name = LED1
-#set_property PACKAGE_PIN V9 [get_ports {led[1]}]					
-	#set_property IOSTANDARD LVCMOS33 [get_ports {led[1]}]
+set_property PACKAGE_PIN V9 [get_ports exit_zero_o]					
+	set_property IOSTANDARD LVCMOS33 [get_ports exit_zero_o]
 ##Bank = 34, Pin name = IO_L24P_T3_34,						Sch name = LED2
-#set_property PACKAGE_PIN R8 [get_ports exit_valid_o]					
+#set_property PACKAGE_PIN R8 [get_ports {led[2]}]					
 	#set_property IOSTANDARD LVCMOS33 [get_ports {led[2]}]
 ##Bank = 34, Pin name = IO_L23N_T3_34,						Sch name = LED3
 #set_property PACKAGE_PIN T6 [get_ports {led[3]}]					
@@ -485,10 +485,10 @@ set_property PACKAGE_PIN T8 [get_ports exit_valid_o]
 ##USB-RS232 Interface
 ##Bank = 35, Pin name = IO_L7P_T1_AD6P_35,					Sch name = UART_TXD_IN
 set_property PACKAGE_PIN C4 [get_ports rx_i]						
-	#set_property IOSTANDARD LVCMOS33 [get_ports RsRx]
+	set_property IOSTANDARD LVCMOS33 [get_ports rx_i]
 ##Bank = 35, Pin name = IO_L11N_T1_SRCC_35,					Sch name = UART_RXD_OUT
 set_property PACKAGE_PIN D4 [get_ports tx_o]						
-	#set_property IOSTANDARD LVCMOS33 [get_ports RsTx]
+	set_property IOSTANDARD LVCMOS33 [get_ports tx_o]
 ##Bank = 35, Pin name = IO_L12N_T1_MRCC_35,					Sch name = UART_CTS
 #set_property PACKAGE_PIN D3 [get_ports RsCts]						
 	#set_property IOSTANDARD LVCMOS33 [get_ports RsCts]

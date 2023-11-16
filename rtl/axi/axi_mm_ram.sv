@@ -132,9 +132,9 @@ module axi_mm_ram #(
     // ---------------------------------------------------------
 
     // Interrupt outputs
-    output logic [31:0] irq_i,      // CLINT interrupts + CLINT extension interrupts
-    input  logic        irq_ack_o,
-    input  logic [ 4:0] irq_id_o,
+    output logic [31:0] irq_o,      // CLINT interrupts + CLINT extension interrupts
+    input  logic        irq_ack_i,
+    input  logic [ 4:0] irq_id_i,
 
     input  logic [31:0] pc_core_id_i,
     output logic        exit_valid_o,
@@ -450,5 +450,20 @@ module axi_mm_ram #(
       end
     end
   end
+
+  // Unused
+  assign instr_b_id_o = '0;
+  assign instr_b_user_o = '0;
+  assign instr_r_id_o = '0;
+  assign instr_r_user_o = '0;
+  assign instr_r_last_o = '0;
+
+  assign data_b_id_o = '0;
+  assign data_b_user_o = '0;
+  assign data_r_id_o = '0;
+  assign data_r_user_o = '0;
+  assign data_r_last_o = '0;
+
+  assign irq_o = '0;
 
 endmodule

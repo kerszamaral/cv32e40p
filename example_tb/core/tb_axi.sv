@@ -36,25 +36,25 @@ module tb_axi #(
   const int  RESET_WAIT_CYCLES = 4;
   localparam FILE = "C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.hex";
   localparam LOGGING = 0;
-  byte unsigned        LASTCHAR = "\n";
+  byte unsigned LASTCHAR = "\n";
 
   // clock and reset for tb
-  logic                clk = 'b1;
-  logic                rst_n = 'b0;
+  logic         clk = 'b1;
+  logic         rst_n = 'b0;
 
   // cycle counter
-  int unsigned         cycle_cnt_q;
+  int unsigned  cycle_cnt_q;
 
   // testbench result
-  logic                exit_valid;
-  logic         [31:0] exit_value;
+  logic         exit_valid;
+  logic         exit_zero;
 
   // signals for ri5cy
-  logic                fetch_enable;
+  logic         fetch_enable;
 
   // stdout pseudo peripheral
-  logic                rx;
-  logic                tx;
+  logic         rx;
+  logic         tx;
 
   // make the core start fetching instruction immediately
   assign fetch_enable = '1;
@@ -150,8 +150,8 @@ module tb_axi #(
       // Because of the way the UART works, the string may arrive after the program has finished
       if (rxData == LASTCHAR) begin
         if (exit_valid) begin
-          if (exit_value == 0) $display("EXIT SUCCESS");
-          else $display("EXIT FAILURE: %d", exit_value);
+          if (exit_zero) $display("EXIT SUCCESS");
+          else $display("EXIT FAILURE");
           $finish;
         end
       end
@@ -173,7 +173,7 @@ module tb_axi #(
       .clk_i         (clk),
       .rst_ni        (rst_n),
       .fetch_enable_i(fetch_enable),
-      .exit_value_o  (exit_value),
+      .exit_zero_o   (exit_zero),
       .exit_valid_o  (exit_valid),
       .rx_i          (rx),
       .tx_o          (tx)
