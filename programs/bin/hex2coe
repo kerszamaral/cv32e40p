@@ -9,8 +9,8 @@ def place_in_file(file: TextIOWrapper, offset: int, lineWidth: int) -> int:
     return actual_pos // lineWidth
 
 def hex_to_coe(in_file: str, out_file: str):
-    with open(out_file, "w") as out:
-        with open(in_file, "r") as inF:
+    with open(in_file, "r") as inF:
+        with open(out_file, "w") as out:
             start_string = "memory_initialization_radix=16;\nmemory_initialization_vector=\n"
             out.write(start_string)
             
