@@ -16,7 +16,6 @@ module axi_subsystem #(
     parameter AXI4_ID_WIDTH = 16,
     parameter AXI4_USER_WIDTH = 10,
     parameter REGISTERED_GRANT = "FALSE",  // "TRUE"|"FALSE"
-    parameter FILE = "C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.hex",
     parameter LOGGING = 0
 ) (
     input logic clk_i,
@@ -343,7 +342,6 @@ module axi_subsystem #(
       .AXI4_WDATA_WIDTH  (AXI4_WDATA_WIDTH),
       .AXI4_ID_WIDTH     (AXI4_ID_WIDTH),
       .AXI4_USER_WIDTH   (AXI4_USER_WIDTH),
-      .FILE              (FILE),
       .LOGGING           (LOGGING)
   ) u_axi_mm_ram (
       .clk_i            (clk_i),

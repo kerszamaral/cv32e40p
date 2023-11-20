@@ -34,7 +34,6 @@ module tb_axi #(
   const time RESP_ACQUISITION_DEL = CLK_PERIOD * 0.9;
   const time RESET_DEL = STIM_APPLICATION_DEL;
   const int  RESET_WAIT_CYCLES = 4;
-  localparam FILE = "C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.hex";
   localparam LOGGING = 0;
   byte unsigned LASTCHAR = "\n";
 
@@ -167,7 +166,6 @@ module tb_axi #(
       .ZFINX           (ZFINX),
       .NUM_MHPMCOUNTERS(NUM_MHPMCOUNTERS),
       .DM_HALTADDRESS  (DM_HALTADDRESS),
-      .FILE            (FILE),
       .LOGGING         (LOGGING)
   ) u_axi_subsystem (
       .clk_i         (clk),

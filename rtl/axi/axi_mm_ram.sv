@@ -6,7 +6,6 @@ module axi_mm_ram #(
     parameter AXI4_WDATA_WIDTH = 32,
     parameter AXI4_ID_WIDTH = 16,
     parameter AXI4_USER_WIDTH = 10,
-    parameter FILE = "C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/prog.hex",
     parameter LOGGING = 0
 ) (
     input  logic                          clk_i,
@@ -310,34 +309,7 @@ module axi_mm_ram #(
 
   assign addr_a_aligned = {bram_addr_a[2+:IMPL_MAXBLKSIZE]};
   assign addr_b_aligned = {bram_addr_b[2+:IMPL_MAXBLKSIZE]};
-
-  // dp_2clk_blk_ram #(
-  //     .NB_COL(BYTES),  // Specify number of columns (number of bytes)
-  //     .COL_WIDTH(AXI4_RDATA_WIDTH / BYTES),  // Specify column width (byte width, typically 8 or 9)
-  //     .RAM_DEPTH(2 ** IMPL_MAXBLKSIZE),  // Specify RAM depth (number of entries)
-  //     .RAM_PERFORMANCE("LOW_LATENCY"),  // Select "HIGH_PERFORMANCE" or "LOW_LATENCY" 
-  //     .INIT_FILE(FILE)                        // Specify name/location of RAM initialization file if using one (leave blank if not)
-  // ) mem (
-  //     .clka(bram_clk_a),  // Port A clock
-  //     .ena(bram_en_a),  // Port A RAM Enable, for additional power savings, disable port when not in use
-  //     .wea(bram_we_a),  // Port A write enable, width determined from NB_COL
-  //     .addra(addr_a_aligned),  // Port A address bus, width determined from RAM_DEPTH
-  //     .dina(bram_wrdata_a),  // Port A RAM input data, width determined from NB_COL*COL_WIDTH
-  //     .douta(bram_rddata_a),  // Port A RAM output data, width determined from NB_COL*COL_WIDTH
-
-  //     .clkb(bram_clk_b),  // Port B clock
-  //     .enb(bram_en_b),  // Port B RAM Enable, for additional power savings, disable port when not in use
-  //     .web(bram_we_b),  // Port B write enable, width determined from NB_COL
-  //     .addrb(addr_b_aligned),  // Port B address bus, width determined from RAM_DEPTH
-  //     .dinb(bram_wrdata_b),  // Port B RAM input data, width determined from NB_COL*COL_WIDTH
-  //     .doutb(bram_rddata_b),  // Port B RAM output data, width determined from NB_COL*COL_WIDTH
-  //     // Other
-  //     .rsta('0),  // Port A output reset (does not affect memory contents)
-  //     .rstb('0),  // Port B output reset (does not affect memory contents)
-  //     .regcea('1),  // Port A output register enable //Unused
-  //     .regceb('1)  // Port B output register enable //Unused
-  // );
-
+  
   dp_blk_ram mem (
       .clka(bram_clk_a),  // input wire clka
       .ena(bram_en_a),  // input wire ena

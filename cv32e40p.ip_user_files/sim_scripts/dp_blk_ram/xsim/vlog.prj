@@ -1,0 +1,7 @@
+verilog xil_defaultlib -i "../../../../example_tb/core/include" \
+"../../../../cv32e40p.gen/sources_1/ip/dp_blk_ram/sim/dp_blk_ram.v" \
+
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort
