@@ -2,41 +2,49 @@
 from io import TextIOWrapper
 import sys
 
+def write_start(file: TextIOWrapper):
+    start_string = "memory_initialization_radix=16;\nmemory_initialization_vector=\n"
+    file.write(start_string)
 
-def place_in_file(file: TextIOWrapper, offset: int, lineWidth: int) -> int:
-    current_pos = file.tell()
-    actual_pos = current_pos - offset
-    return actual_pos // lineWidth
+def write_end(file: TextIOWrapper, char: str):
+    file.seek(file.tell()-2)
+    file.write(";")
+    
+def jump_to_line(file: TextIOWrapper, curr_line: int, next_line: int) -> int:
+    separator = "00000000,\n"
+    
+    if(curr_line < next_line):
+        for _ in range(curr_line, next_line):
+            file.write(separator)
+        return next_line
+    
+    return curr_line
+
+def get_bytes(line: str) -> list(str):
+    return line.replace("\n", "").split(" ")
+
+def write_bytes(file_out: TextIOWrapper, bytes: list(str)) -> int:
+    outLine = ",\n".join(bytes) + ",\n"
+    file_out.write(outLine)
+    return len(bytes)
 
 def hex_to_coe(in_file: str, out_file: str):
     with open(in_file, "r") as inF:
         with open(out_file, "w") as out:
-            start_string = "memory_initialization_radix=16;\nmemory_initialization_vector=\n"
-            out.write(start_string)
+            write_start(out)
             
-            separator = "00000000,\n"
-            start_index = out.tell()
+            current_index = 0
             
             line = inF.readline()
             
             while line:
                 if line.startswith("@"):
-                    next_offset = eval("0x"+line[1:])
-                    
-                    while place_in_file(out, start_index, len(separator)+1) < next_offset:
-                        out.write(separator)
-                    
-                    line = inF.readline()
-                    continue
-                
-                bytes = line.replace("\n", "").split(" ")
-                
-                outLine = ",\n".join(bytes) + ",\n"
-                out.write(outLine)
+                    current_index = jump_to_line(out, current_index, eval("0x"+line[1:]))
+                else:
+                    current_index += write_bytes(out, get_bytes(line))
                 line = inF.readline()
 
-            out.seek(out.tell()-2)
-            out.write(";")
+            write_end(out, ";")
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
