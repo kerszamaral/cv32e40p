@@ -3,6 +3,7 @@
 BANNER=*******************************************************************************************
 dir	  			 ?= $*
 TEST_FILES        = $(filter %.c %.S,$(wildcard  $(dir)/*))
+FILES_DIR 		 ?= $(dir)/
 BIN_PATH		  = bin
 
 ifeq ($(CV_SW_TOOLCHAIN),) 
@@ -25,7 +26,7 @@ DATA_WIDTH 		?= 4
 	@echo "$(BANNER)"
 	@echo "* Generating coe file"
 	@echo "$(BANNER)"
-	$(BIN_PATH)/hex2coe prog.hex prog.coe
+	$(BIN_PATH)/hex2coe $(FILES_DIR)$*.hex $(FILES_DIR)$*.coe
 
 ###############################################################################
 # Rule to generate hex (loadable by simulators) from elf
@@ -38,23 +39,23 @@ DATA_WIDTH 		?= 4
 	@echo "* Generating hexfile, readelf and objdump files"
 	@echo "$(BANNER)"
 	$(RISCV_EXE_PREFIX)objcopy -O verilog \
-		$< \
+		$(FILES_DIR)$< \
 		--verilog-data-width $(DATA_WIDTH) \
-		prog.hex
-	$(RISCV_EXE_PREFIX)readelf -a $< > $*.readelf
+		$(FILES_DIR)$*.hex
+	$(RISCV_EXE_PREFIX)readelf -a $(FILES_DIR)$< > $(FILES_DIR)$*.readelf
 	$(RISCV_EXE_PREFIX)objdump \
 		-d \
 		-M no-aliases \
 		-M numeric \
 		-S \
-		$*.elf > $*.objdump
+		$(FILES_DIR)$*.elf > $(FILES_DIR)$*.objdump
 	$(RISCV_EXE_PREFIX)objdump \
     	-d \
         -S \
 		-M no-aliases \
 		-M numeric \
         -l \
-		$*.elf | ${BIN_PATH}/objdump2itb - > $*.itb
+		$(FILES_DIR)$*.elf | ${BIN_PATH}/objdump2itb - > $(FILES_DIR)$*.itb
 
 # Patterned targets to generate ELF.  Used only if explicit targets do not match.
 #
@@ -70,7 +71,7 @@ endif
 RISCV_CC         = gcc
 RISCV_CFLAGS     = $(CV_SW_CFLAGS)
 TEST_CFLAGS 	+=  -Wall -pedantic -Wl,--no-warn-rwx-segments
-MAP_FILE 		 = -Xlinker -Map=$*.map
+MAP_FILE 		 = -Xlinker -Map=$(FILES_DIR)$*.map
 
 LD_LIBRARY 	= bsp/crt0.S bsp/handlers.S bsp/syscalls.c bsp/vectors.S
 LD_FILE 	= bsp/link.ld
@@ -84,7 +85,7 @@ BSP = bsp
 	@echo "$(BANNER)"
 	$(RISCV_EXE_PREFIX)$(RISCV_CC) \
 		-march=$(RISCV_MARCH) \
-		-o $@ \
+		-o $(FILES_DIR)$@ \
 		-w -Os \
 		-g -static \
 		-nostartfiles -nostdlib \
@@ -100,5 +101,15 @@ BSP = bsp
 		-L $(RISCV)/riscv32-unknown-elf/lib \
 		-lc -lm -lgcc
 
+%.cln:
+	@echo "$(BANNER)"
+	@echo "* Cleaning test-program $@"
+	@echo "$(BANNER)"
+	@rm -rf $(FILES_DIR)$*.elf $(FILES_DIR)$*.hex $(FILES_DIR)$*.readelf $(FILES_DIR)$*.objdump $(FILES_DIR)$*.map $(FILES_DIR)$*.itb $(FILES_DIR)$*.coe
+
 clean:
 	rm -rf *.elf *.hex *.readelf *.objdump *.map *.itb *.coe
+
+clean_all:
+	rm -rf *.elf *.hex *.readelf *.objdump *.map *.itb *.coe
+	rm -rf */*.elf */*.hex */*.readelf */*.objdump */*.map */*.itb */*.coe

@@ -20,10 +20,10 @@ def jump_to_line(file: TextIOWrapper, curr_line: int, next_line: int) -> int:
     
     return curr_line
 
-def get_bytes(line: str) -> list(str):
+def get_bytes(line: str) -> list[str]:
     return line.replace("\n", "").split(" ")
 
-def write_bytes(file_out: TextIOWrapper, bytes: list(str)) -> int:
+def write_bytes(file_out: TextIOWrapper, bytes: list[str]) -> int:
     outLine = ",\n".join(bytes) + ",\n"
     file_out.write(outLine)
     return len(bytes)
