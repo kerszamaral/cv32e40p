@@ -1,12 +1,12 @@
 // Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 // Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
-// Tool Version: Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
-// Date        : Mon Nov 13 19:03:09 2023
-// Host        : kerszamaral running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode synth_stub -rename_top axi_to_bram -prefix
-//               axi_to_bram_ axi_bram_ctrl_2_stub.v
-// Design      : axi_bram_ctrl_2
+// Tool Version: Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
+// Date        : Tue Nov 21 14:52:05 2023
+// Host        : c-am-i running 64-bit Ubuntu 23.10
+// Command     : write_verilog -force -mode synth_stub
+//               /home/kersz/Documents/cv32e40p/cv32e40p.gen/sources_1/ip/axi_to_bram/axi_to_bram_stub.v
+// Design      : axi_to_bram
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7a100tcsg324-1
 // --------------------------------------------------------------------------------
@@ -14,7 +14,7 @@
 // This empty module with port declaration file causes synthesis tools to infer a black box for IP.
 // The synthesis directives are for Synopsys Synplify support to prevent IO buffer insertion.
 // Please paste the declaration into a Verilog source file or add the file as an additional source.
-(* x_core_info = "axi_bram_ctrl,Vivado 2023.1" *)
+(* x_core_info = "axi_bram_ctrl,Vivado 2023.2" *)
 module axi_to_bram(s_axi_aclk, s_axi_aresetn, s_axi_awaddr, 
   s_axi_awprot, s_axi_awvalid, s_axi_awready, s_axi_wdata, s_axi_wstrb, s_axi_wvalid, 
   s_axi_wready, s_axi_bresp, s_axi_bvalid, s_axi_bready, s_axi_araddr, s_axi_arprot, 
