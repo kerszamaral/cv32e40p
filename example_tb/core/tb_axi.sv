@@ -38,7 +38,7 @@ module tb_axi #(
   byte unsigned LASTCHAR = "\n";
 
   // clock and reset for tb
-  logic         clk = 'b1;
+  logic         clk = 'b0;
   logic         rst_n = 'b0;
 
   // cycle counter
