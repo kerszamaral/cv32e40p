@@ -69,8 +69,8 @@ module tb_axi #(
   // clock generation
   initial begin : clock_gen
     forever begin
-      #CLK_PHASE_HI clk = 1'b0;
-      #CLK_PHASE_LO clk = 1'b1;
+      #CLK_PHASE_HI clk = 1'b1;
+      #CLK_PHASE_LO clk = 1'b0;
     end
   end : clock_gen
 
@@ -112,21 +112,11 @@ module tb_axi #(
   logic [7:0] rxData;
   logic rxValid;
   
-      logic clk_s;
-    reg[27:0] counter=28'd0;
-localparam DIVISOR = 28'd4;
-// The frequency of the output clk_out
-//  = The frequency of the input clk_in divided by DIVISOR
-// For example: Fclk_in = 50Mhz, if you want to get 1Hz signal to blink LEDs
-// You will modify the DIVISOR parameter value to 28'd50.000.000
-// Then the frequency of the output clk_out = 50Mhz/50.000.000 = 1Hz
-always @(posedge clk)
-begin
- counter <= counter + 28'd1;
- if(counter>=(DIVISOR-1))
-  counter <= 28'd0;
- clk_s <= (counter<DIVISOR/2)?1'b1:1'b0;
-end
+  logic clk_s;
+  clk_div u_clk_div (
+      .clk_i(clk_i),
+      .clk_o(clk_s)
+  );
 
   axi_uartlite_0 uart (
       .s_axi_aclk   (clk_s),     // input wire s_axi_aclk

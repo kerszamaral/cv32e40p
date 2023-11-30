@@ -28,12 +28,11 @@ def write_bytes(file_out: TextIOWrapper, bytes: list[str]) -> int:
     file_out.write(outLine)
     return len(bytes)
 
-def hex_to_coe(in_file: str, out_file: str):
+def hex_to_coe(in_file: str, out_file: str) -> int:
+    current_index = 0
     with open(in_file, "r") as inF:
         with open(out_file, "w") as out:
             write_start(out)
-            
-            current_index = 0
             
             line = inF.readline()
             
@@ -45,9 +44,13 @@ def hex_to_coe(in_file: str, out_file: str):
                 line = inF.readline()
 
             write_end(out, ";")
+    
+    return current_index
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         print("Usage: python3 elf2coe.py <input_file> <output_file>")
     else:
-        hex_to_coe(sys.argv[1], sys.argv[2])
+        bytes_written = hex_to_coe(sys.argv[1], sys.argv[2])
+        print(f"{bytes_written} bytes written to {sys.argv[2]}")
+        print("Done!")
