@@ -57,25 +57,25 @@
 axi_crossbar_0 your_instance_name (
   .aclk(aclk),                    // input wire aclk
   .aresetn(aresetn),              // input wire aresetn
-  .s_axi_awaddr(s_axi_awaddr),    // input wire [31 : 0] s_axi_awaddr
-  .s_axi_awprot(s_axi_awprot),    // input wire [2 : 0] s_axi_awprot
-  .s_axi_awvalid(s_axi_awvalid),  // input wire [0 : 0] s_axi_awvalid
-  .s_axi_awready(s_axi_awready),  // output wire [0 : 0] s_axi_awready
-  .s_axi_wdata(s_axi_wdata),      // input wire [31 : 0] s_axi_wdata
-  .s_axi_wstrb(s_axi_wstrb),      // input wire [3 : 0] s_axi_wstrb
-  .s_axi_wvalid(s_axi_wvalid),    // input wire [0 : 0] s_axi_wvalid
-  .s_axi_wready(s_axi_wready),    // output wire [0 : 0] s_axi_wready
-  .s_axi_bresp(s_axi_bresp),      // output wire [1 : 0] s_axi_bresp
-  .s_axi_bvalid(s_axi_bvalid),    // output wire [0 : 0] s_axi_bvalid
-  .s_axi_bready(s_axi_bready),    // input wire [0 : 0] s_axi_bready
-  .s_axi_araddr(s_axi_araddr),    // input wire [31 : 0] s_axi_araddr
-  .s_axi_arprot(s_axi_arprot),    // input wire [2 : 0] s_axi_arprot
-  .s_axi_arvalid(s_axi_arvalid),  // input wire [0 : 0] s_axi_arvalid
-  .s_axi_arready(s_axi_arready),  // output wire [0 : 0] s_axi_arready
-  .s_axi_rdata(s_axi_rdata),      // output wire [31 : 0] s_axi_rdata
-  .s_axi_rresp(s_axi_rresp),      // output wire [1 : 0] s_axi_rresp
-  .s_axi_rvalid(s_axi_rvalid),    // output wire [0 : 0] s_axi_rvalid
-  .s_axi_rready(s_axi_rready),    // input wire [0 : 0] s_axi_rready
+  .s_axi_awaddr(s_axi_awaddr),    // input wire [63 : 0] s_axi_awaddr
+  .s_axi_awprot(s_axi_awprot),    // input wire [5 : 0] s_axi_awprot
+  .s_axi_awvalid(s_axi_awvalid),  // input wire [1 : 0] s_axi_awvalid
+  .s_axi_awready(s_axi_awready),  // output wire [1 : 0] s_axi_awready
+  .s_axi_wdata(s_axi_wdata),      // input wire [63 : 0] s_axi_wdata
+  .s_axi_wstrb(s_axi_wstrb),      // input wire [7 : 0] s_axi_wstrb
+  .s_axi_wvalid(s_axi_wvalid),    // input wire [1 : 0] s_axi_wvalid
+  .s_axi_wready(s_axi_wready),    // output wire [1 : 0] s_axi_wready
+  .s_axi_bresp(s_axi_bresp),      // output wire [3 : 0] s_axi_bresp
+  .s_axi_bvalid(s_axi_bvalid),    // output wire [1 : 0] s_axi_bvalid
+  .s_axi_bready(s_axi_bready),    // input wire [1 : 0] s_axi_bready
+  .s_axi_araddr(s_axi_araddr),    // input wire [63 : 0] s_axi_araddr
+  .s_axi_arprot(s_axi_arprot),    // input wire [5 : 0] s_axi_arprot
+  .s_axi_arvalid(s_axi_arvalid),  // input wire [1 : 0] s_axi_arvalid
+  .s_axi_arready(s_axi_arready),  // output wire [1 : 0] s_axi_arready
+  .s_axi_rdata(s_axi_rdata),      // output wire [63 : 0] s_axi_rdata
+  .s_axi_rresp(s_axi_rresp),      // output wire [3 : 0] s_axi_rresp
+  .s_axi_rvalid(s_axi_rvalid),    // output wire [1 : 0] s_axi_rvalid
+  .s_axi_rready(s_axi_rready),    // input wire [1 : 0] s_axi_rready
   .m_axi_awaddr(m_axi_awaddr),    // output wire [95 : 0] m_axi_awaddr
   .m_axi_awprot(m_axi_awprot),    // output wire [8 : 0] m_axi_awprot
   .m_axi_awvalid(m_axi_awvalid),  // output wire [2 : 0] m_axi_awvalid
