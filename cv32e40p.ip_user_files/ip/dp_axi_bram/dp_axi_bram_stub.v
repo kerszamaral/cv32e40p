@@ -1,9 +1,9 @@
 // Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 // Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
-// Tool Version: Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-// Date        : Tue Dec  5 11:09:48 2023
-// Host        : c-am-i running 64-bit Ubuntu 23.10
+// Tool Version: Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
+// Date        : Wed Nov 29 20:19:48 2023
+// Host        : kerszamaral running 64-bit major release  (build 9200)
 // Command     : write_verilog -force -mode synth_stub -rename_top dp_axi_bram -prefix
 //               dp_axi_bram_ dp_axi_bram_stub.v
 // Design      : dp_axi_bram
