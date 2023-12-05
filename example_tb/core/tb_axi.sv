@@ -113,7 +113,7 @@ module tb_axi #(
   logic rxValid;
   
   logic clk_s;
-  clk_div u_clk_div (
+  clk_divisor u_clk_div (
       .clk_i(clk),
       .clk_o(clk_s)
   );

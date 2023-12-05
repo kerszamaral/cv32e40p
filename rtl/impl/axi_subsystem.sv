@@ -31,7 +31,7 @@ module axi_subsystem #(
 );
 
   logic clk;
-  clk_div #(
+  clk_divisor #(
       .INPUT_CLK_FREQ (INPUT_CLK_FREQ),
       .OUTPUT_CLK_FREQ(OUTPUT_CLK_FREQ)
   ) u_clk_div (

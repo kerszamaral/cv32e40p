@@ -28,12 +28,10 @@ module axi_exit_dec (
 );
   localparam ADDRWIDTH = 20;
 
-  logic exit_clk;
   logic exit_en;
   logic [3:0] exit_we;
   logic [ADDRWIDTH-1:0] exit_addr;
   logic [31:0] exit_wrdata;
-  logic [31:0] exit_rddata = '0;
 
   logic [31:0] exit_value;
   logic exit_valid;
@@ -62,13 +60,13 @@ module axi_exit_dec (
       .s_axi_rvalid(s_axi_rvalid),  // output wire s_axi_rvalid
       .s_axi_rready(s_axi_rready),  // input wire s_axi_rready
 
-      .bram_rst_a   (exit_rst),     // output wire bram_rst_a
-      .bram_clk_a   (exit_clk),     // output wire bram_clk_a
+      .bram_rst_a   (),     // output wire bram_rst_a
+      .bram_clk_a   (),     // output wire bram_clk_a
       .bram_en_a    (exit_en),      // output wire bram_en_a
       .bram_we_a    (exit_we),      // output wire [3 : 0] bram_we_a
       .bram_addr_a  (exit_addr),    // output wire [19 : 0] bram_addr_a
       .bram_wrdata_a(exit_wrdata),  // output wire [31 : 0] bram_wrdata_a
-      .bram_rddata_a(exit_rddata)   // input wire [31 : 0] bram_rddata_a
+      .bram_rddata_a()   // input wire [31 : 0] bram_rddata_a
   );
 
   always_comb begin
