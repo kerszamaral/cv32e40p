@@ -155,47 +155,46 @@ module axi_mm_ram #(
   localparam RESPSIZE = 2;
 
   // Crossbar Master Wires
-  wire [63 : 0] s_axi_awaddr;
-  wire [ 5 : 0] s_axi_awprot;
-  wire [ 1 : 0] s_axi_awvalid;
-  wire [ 1 : 0] s_axi_awready;
-  wire [63 : 0] s_axi_wdata;
-  wire [ 7 : 0] s_axi_wstrb;
-  wire [ 1 : 0] s_axi_wvalid;
-  wire [ 1 : 0] s_axi_wready;
-  wire [ 3 : 0] s_axi_bresp;
-  wire [ 1 : 0] s_axi_bvalid;
-  wire [ 1 : 0] s_axi_bready;
-  wire [63 : 0] s_axi_araddr;
-  wire [ 5 : 0] s_axi_arprot;
-  wire [ 1 : 0] s_axi_arvalid;
-  wire [ 1 : 0] s_axi_arready;
-  wire [63 : 0] s_axi_rdata;
-  wire [ 3 : 0] s_axi_rresp;
-  wire [ 1 : 0] s_axi_rvalid;
-  wire [ 1 : 0] s_axi_rready;
+  wire [ (ADDRSIZE*MASTER_NUM)-1:0] s_axi_awaddr;
+  wire [ (PROTSIZE*MASTER_NUM)-1:0] s_axi_awprot;
+  wire [(VALIDSIZE*MASTER_NUM)-1:0] s_axi_awvalid;
+  wire [(READYSIZE*MASTER_NUM)-1:0] s_axi_awready;
+  wire [ (DATASIZE*MASTER_NUM)-1:0] s_axi_wdata;
+  wire [ (STRBSIZE*MASTER_NUM)-1:0] s_axi_wstrb;
+  wire [(VALIDSIZE*MASTER_NUM)-1:0] s_axi_wvalid;
+  wire [(READYSIZE*MASTER_NUM)-1:0] s_axi_wready;
+  wire [ (RESPSIZE*MASTER_NUM)-1:0] s_axi_bresp;
+  wire [(VALIDSIZE*MASTER_NUM)-1:0] s_axi_bvalid;
+  wire [(READYSIZE*MASTER_NUM)-1:0] s_axi_bready;
+  wire [ (ADDRSIZE*MASTER_NUM)-1:0] s_axi_araddr;
+  wire [ (PROTSIZE*MASTER_NUM)-1:0] s_axi_arprot;
+  wire [(VALIDSIZE*MASTER_NUM)-1:0] s_axi_arvalid;
+  wire [(READYSIZE*MASTER_NUM)-1:0] s_axi_arready;
+  wire [ (DATASIZE*MASTER_NUM)-1:0] s_axi_rdata;
+  wire [ (RESPSIZE*MASTER_NUM)-1:0] s_axi_rresp;
+  wire [(VALIDSIZE*MASTER_NUM)-1:0] s_axi_rvalid;
+  wire [(READYSIZE*MASTER_NUM)-1:0] s_axi_rready;
 
   // Crossbar Slave Wires
-  wire [95 : 0] m_axi_awaddr;
-  wire [ 8 : 0] m_axi_awprot;
-  wire [ 2 : 0] m_axi_awvalid;
-  wire [ 2 : 0] m_axi_awready;
-  wire [95 : 0] m_axi_wdata;
-  wire [11 : 0] m_axi_wstrb;
-  wire [ 2 : 0] m_axi_wvalid;
-  wire [ 2 : 0] m_axi_wready;
-  wire [ 5 : 0] m_axi_bresp;
-  wire [ 2 : 0] m_axi_bvalid;
-  wire [ 2 : 0] m_axi_bready;
-  wire [95 : 0] m_axi_araddr;
-  wire [ 8 : 0] m_axi_arprot;
-  wire [ 2 : 0] m_axi_arvalid;
-  wire [ 2 : 0] m_axi_arready;
-  wire [95 : 0] m_axi_rdata;
-  wire [ 5 : 0] m_axi_rresp;
-  wire [ 2 : 0] m_axi_rvalid;
-  wire [ 2 : 0] m_axi_rready;
-
+  wire [  (ADDRSIZE*SLAVE_NUM)-1:0] m_axi_awaddr;
+  wire [  (PROTSIZE*SLAVE_NUM)-1:0] m_axi_awprot;
+  wire [ (VALIDSIZE*SLAVE_NUM)-1:0] m_axi_awvalid;
+  wire [ (READYSIZE*SLAVE_NUM)-1:0] m_axi_awready;
+  wire [  (DATASIZE*SLAVE_NUM)-1:0] m_axi_wdata;
+  wire [  (STRBSIZE*SLAVE_NUM)-1:0] m_axi_wstrb;
+  wire [ (VALIDSIZE*SLAVE_NUM)-1:0] m_axi_wvalid;
+  wire [ (READYSIZE*SLAVE_NUM)-1:0] m_axi_wready;
+  wire [  (RESPSIZE*SLAVE_NUM)-1:0] m_axi_bresp;
+  wire [ (VALIDSIZE*SLAVE_NUM)-1:0] m_axi_bvalid;
+  wire [ (READYSIZE*SLAVE_NUM)-1:0] m_axi_bready;
+  wire [  (ADDRSIZE*SLAVE_NUM)-1:0] m_axi_araddr;
+  wire [  (PROTSIZE*SLAVE_NUM)-1:0] m_axi_arprot;
+  wire [ (VALIDSIZE*SLAVE_NUM)-1:0] m_axi_arvalid;
+  wire [ (READYSIZE*SLAVE_NUM)-1:0] m_axi_arready;
+  wire [  (DATASIZE*SLAVE_NUM)-1:0] m_axi_rdata;
+  wire [  (RESPSIZE*SLAVE_NUM)-1:0] m_axi_rresp;
+  wire [ (VALIDSIZE*SLAVE_NUM)-1:0] m_axi_rvalid;
+  wire [ (READYSIZE*SLAVE_NUM)-1:0] m_axi_rready;
 
   localparam DATA = 0;
   localparam INSTR = 1;
@@ -289,6 +288,9 @@ module axi_mm_ram #(
   localparam UART = 1;
   localparam EXIT = 2;
 
+    wire rsta_busy;
+    wire rstb_busy;
+
   // BRAM AXI Access
   dp_axi_bram mem (
       .rsta_busy(rsta_busy),  // output wire rsta_busy
@@ -334,6 +336,8 @@ module axi_mm_ram #(
       end
     end
   endgenerate
+
+    wire interrupt;
 
   // UART AXI Access
   axi_uartlite_0 uart (

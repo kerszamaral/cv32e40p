@@ -1,4 +1,4 @@
-module clk_div #(
+module clk_divisor #(
     parameter INPUT_CLK_FREQ  = 100_000_000,
     parameter OUTPUT_CLK_FREQ = 25_000_000
 ) (

@@ -2,10 +2,10 @@
 -- Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
--- Date        : Tue Dec  5 18:59:22 2023
+-- Date        : Tue Dec  5 18:59:21 2023
 -- Host        : kerszamaral running 64-bit major release  (build 9200)
--- Command     : write_vhdl -force -mode synth_stub
---               c:/Users/kersz/Documents/ufrgs/IC/cv32e40p/cv32e40p.gen/sources_1/ip/axi_uartlite_0/axi_uartlite_0_stub.vhdl
+-- Command     : write_vhdl -force -mode synth_stub -rename_top axi_uartlite_0 -prefix
+--               axi_uartlite_0_ axi_uartlite_0_stub.vhdl
 -- Design      : axi_uartlite_0
 -- Purpose     : Stub declaration of top-level module interface
 -- Device      : xc7a100tcsg324-1
