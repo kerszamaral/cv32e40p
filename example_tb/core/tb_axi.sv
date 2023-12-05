@@ -114,7 +114,7 @@ module tb_axi #(
   
   logic clk_s;
   clk_div u_clk_div (
-      .clk_i(clk_i),
+      .clk_i(clk),
       .clk_o(clk_s)
   );
 
