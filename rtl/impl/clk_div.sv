@@ -6,7 +6,7 @@ module clk_div #(
     output logic clk_o
 );
   localparam DIVISOR = INPUT_CLK_FREQ / OUTPUT_CLK_FREQ;
-  logic [$clog2(DIVISOR)+1:0] counter = 0;
+  logic [$clog2(DIVISOR):0] counter = 0;
   always_ff @(posedge clk_i) begin
     counter <= counter + 1;
     if (counter >= DIVISOR - 1) counter <= 0;
