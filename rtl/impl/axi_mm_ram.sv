@@ -196,45 +196,63 @@ module axi_mm_ram #(
   wire [ (VALIDSIZE*SLAVE_NUM)-1:0] m_axi_rvalid;
   wire [ (READYSIZE*SLAVE_NUM)-1:0] m_axi_rready;
 
-  localparam DATA = 0;
-  localparam INSTR = 1;
+  localparam INSTR = 0;
+  localparam DATA = 1;
 
   assign s_axi_awaddr[(INSTR*ADDRSIZE)+:ADDRSIZE] = instr_aw_addr_i;
   assign s_axi_awaddr[(DATA*ADDRSIZE)+:ADDRSIZE] = data_aw_addr_i;
+
   assign s_axi_awprot[(INSTR*PROTSIZE)+:PROTSIZE] = instr_aw_prot_i;
   assign s_axi_awprot[(DATA*PROTSIZE)+:PROTSIZE] = data_aw_prot_i;
+
   assign s_axi_awvalid[(INSTR*VALIDSIZE)+:VALIDSIZE] = instr_aw_valid_i;
   assign s_axi_awvalid[(DATA*VALIDSIZE)+:VALIDSIZE] = data_aw_valid_i;
+
   assign instr_aw_ready_o = s_axi_awready[(INSTR*READYSIZE)+:READYSIZE];
   assign data_aw_ready_o = s_axi_awready[(DATA*READYSIZE)+:READYSIZE];
+
   assign s_axi_wdata[(INSTR*DATASIZE)+:DATASIZE] = instr_w_data_i;
   assign s_axi_wdata[(DATA*DATASIZE)+:DATASIZE] = data_w_data_i;
+
   assign s_axi_wstrb[(INSTR*STRBSIZE)+:STRBSIZE] = instr_w_strb_i;
   assign s_axi_wstrb[(DATA*STRBSIZE)+:STRBSIZE] = data_w_strb_i;
+
   assign s_axi_wvalid[(INSTR*VALIDSIZE)+:VALIDSIZE] = instr_w_valid_i;
   assign s_axi_wvalid[(DATA*VALIDSIZE)+:VALIDSIZE] = data_w_valid_i;
+
   assign instr_w_ready_o = s_axi_wready[(INSTR*READYSIZE)+:READYSIZE];
   assign data_w_ready_o = s_axi_wready[(DATA*READYSIZE)+:READYSIZE];
+
   assign instr_b_resp_o = s_axi_bresp[(INSTR*RESPSIZE)+:RESPSIZE];
   assign data_b_resp_o = s_axi_bresp[(DATA*RESPSIZE)+:RESPSIZE];
+
   assign instr_b_valid_o = s_axi_bvalid[(INSTR*VALIDSIZE)+:VALIDSIZE];
   assign data_b_valid_o = s_axi_bvalid[(DATA*VALIDSIZE)+:VALIDSIZE];
+
   assign s_axi_bready[(INSTR*READYSIZE)+:READYSIZE] = instr_b_ready_i;
   assign s_axi_bready[(DATA*READYSIZE)+:READYSIZE] = data_b_ready_i;
+
   assign s_axi_araddr[(INSTR*ADDRSIZE)+:ADDRSIZE] = instr_ar_addr_i;
   assign s_axi_araddr[(DATA*ADDRSIZE)+:ADDRSIZE] = data_ar_addr_i;
+
   assign s_axi_arprot[(INSTR*PROTSIZE)+:PROTSIZE] = instr_ar_prot_i;
   assign s_axi_arprot[(DATA*PROTSIZE)+:PROTSIZE] = data_ar_prot_i;
+
   assign s_axi_arvalid[(INSTR*VALIDSIZE)+:VALIDSIZE] = instr_ar_valid_i;
   assign s_axi_arvalid[(DATA*VALIDSIZE)+:VALIDSIZE] = data_ar_valid_i;
+
   assign instr_ar_ready_o = s_axi_arready[(INSTR*READYSIZE)+:READYSIZE];
   assign data_ar_ready_o = s_axi_arready[(DATA*READYSIZE)+:READYSIZE];
+
   assign instr_r_data_o = s_axi_rdata[(INSTR*DATASIZE)+:DATASIZE];
   assign data_r_data_o = s_axi_rdata[(DATA*DATASIZE)+:DATASIZE];
+
   assign instr_r_resp_o = s_axi_rresp[(INSTR*RESPSIZE)+:RESPSIZE];
   assign data_r_resp_o = s_axi_rresp[(DATA*RESPSIZE)+:RESPSIZE];
+
   assign instr_r_valid_o = s_axi_rvalid[(INSTR*VALIDSIZE)+:VALIDSIZE];
   assign data_r_valid_o = s_axi_rvalid[(DATA*VALIDSIZE)+:VALIDSIZE];
+
   assign s_axi_rready[(INSTR*READYSIZE)+:READYSIZE] = instr_r_ready_i;
   assign s_axi_rready[(DATA*READYSIZE)+:READYSIZE] = data_r_ready_i;
 
@@ -288,8 +306,8 @@ module axi_mm_ram #(
   localparam UART = 1;
   localparam EXIT = 2;
 
-    wire rsta_busy;
-    wire rstb_busy;
+  wire rsta_busy;
+  wire rstb_busy;
 
   // BRAM AXI Access
   dp_axi_bram mem (
@@ -337,7 +355,7 @@ module axi_mm_ram #(
     end
   endgenerate
 
-    wire interrupt;
+  wire interrupt;
 
   // UART AXI Access
   axi_uartlite_0 uart (

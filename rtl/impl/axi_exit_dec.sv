@@ -66,7 +66,7 @@ module axi_exit_dec (
       .bram_we_a    (exit_we),      // output wire [3 : 0] bram_we_a
       .bram_addr_a  (exit_addr),    // output wire [19 : 0] bram_addr_a
       .bram_wrdata_a(exit_wrdata),  // output wire [31 : 0] bram_wrdata_a
-      .bram_rddata_a()   // input wire [31 : 0] bram_rddata_a
+      .bram_rddata_a('0)   // input wire [31 : 0] bram_rddata_a
   );
 
   always_comb begin
