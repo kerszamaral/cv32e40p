@@ -14,6 +14,9 @@ vlog -work xpm  -incr -mfcu  -sv \
 vcom -work xpm  -93  \
 "C:/Xilinx/Vivado/2023.2/data/ip/xpm/xpm_VCOMP.vhd" \
 
+vlog -work xil_defaultlib  -incr -mfcu  \
+"../../../../cv32e40p.gen/sources_1/ip/axi_uartlite_0/axi_uartlite_0_sim_netlist.v" \
+
 vlog -work xil_defaultlib \
 "glbl.v"
 
