@@ -89,7 +89,7 @@ module axi_exit_dec (
       exit_valid_o <= 0;
       // exit_value_o <= '0;
       exit_zero_o  <= 0;
-    end else if (s_axi_aclk) begin
+    end else begin
       if (exit_valid) begin
         exit_valid_o <= exit_valid;
         // exit_value_o <= exit_value;
