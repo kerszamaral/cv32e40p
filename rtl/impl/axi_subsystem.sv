@@ -476,7 +476,7 @@ module axi_subsystem #(
       .irq_ack_i   (irq_ack),
       .irq_id_i    (irq_id),
       // Debug Interface
-      .pc_core_id_i(top_i.core_i.pc_id),
+      .pc_core_id_i(top_i.u_cv32e40p_top.core_i.pc_id),
       .exit_valid_o(exit_valid_o),
       .exit_zero_o (exit_zero_o),
       .rx_i        (rx_i),

@@ -168,67 +168,63 @@ module cv32e40p_axi #(
     output logic core_sleep_o
 );
 
-  import cv32e40p_apu_core_pkg::*;
-
-  // Core to FPU
-  logic                              clk;
-  logic                              apu_req;
-  logic [   APU_NARGS_CPU-1:0][31:0] apu_operands;
-  logic [     APU_WOP_CPU-1:0]       apu_op;
-  logic [APU_NDSFLAGS_CPU-1:0]       apu_flags;
-
-  // FPU to Core
-  logic                              apu_gnt;
-  logic                              apu_rvalid;
-  logic [                31:0]       apu_rdata;
-  logic [APU_NUSFLAGS_CPU-1:0]       apu_rflags;
-
   // Core <--> AXI
   // Instruction memory interface
-  logic                              instr_req;
-  logic                              instr_gnt;
-  logic                              instr_rvalid;
-  logic [                31:0]       instr_addr;
-  logic [                31:0]       instr_rdata;
+  logic        instr_req;
+  logic        instr_gnt;
+  logic        instr_rvalid;
+  logic [31:0] instr_addr;
+  logic [31:0] instr_rdata;
 
   // Data memory interface
-  logic                              data_req;
-  logic                              data_gnt;
-  logic                              data_rvalid;
-  logic [                31:0]       data_addr;
-  logic                              data_we;
-  logic [                 3:0]       data_be;
-  logic [                31:0]       data_rdata;
-  logic [                31:0]       data_wdata;
+  logic        data_req;
+  logic        data_gnt;
+  logic        data_rvalid;
+  logic        data_we;
+  logic [ 3:0] data_be;
+  logic [31:0] data_addr;
+  logic [31:0] data_wdata;
+  logic [31:0] data_rdata;
 
   // Instantiate the Core
-  cv32e40p_core #(
+  cv32e40p_top #(
       .COREV_PULP      (COREV_PULP),
+      // PULP ISA Extension (incl. custom CSRs and hardware loop, excl. cv.elw)
       .COREV_CLUSTER   (COREV_CLUSTER),
+      // PULP Cluster interface (incl. cv.elw)
       .FPU             (FPU),
+      // Floating Point Unit (interfaced via APU interface)
       .FPU_ADDMUL_LAT  (FPU_ADDMUL_LAT),
+      // Floating-Point ADDition/MULtiplication computing lane pipeline registers number
       .FPU_OTHERS_LAT  (FPU_OTHERS_LAT),
+      // Floating-Point COMParison/CONVersion computing lanes pipeline registers number
       .ZFINX           (ZFINX),
+      // Float-in-General Purpose registers
       .NUM_MHPMCOUNTERS(NUM_MHPMCOUNTERS)
-  ) core_i (
-      .clk_i (clk_i),
-      .rst_ni(rst_ni),
-
+  ) u_cv32e40p_top (
+      // Clock and Reset
+      .clk_i          (clk_i),
+      .rst_ni         (rst_ni),
       .pulp_clock_en_i(pulp_clock_en_i),
+      // PULP clock enable (only used if COREV_CLUSTER = 1)
       .scan_cg_en_i   (scan_cg_en_i),
+      // Enable all clock gates for testing
 
+      // Core ID, Cluster ID, debug mode halt address and boot address are considered more or less static
       .boot_addr_i        (boot_addr_i),
       .mtvec_addr_i       (mtvec_addr_i),
       .dm_halt_addr_i     (dm_halt_addr_i),
       .hart_id_i          (hart_id_i),
       .dm_exception_addr_i(dm_exception_addr_i),
 
+      // Instruction memory interface
       .instr_req_o   (instr_req),
       .instr_gnt_i   (instr_gnt),
       .instr_rvalid_i(instr_rvalid),
       .instr_addr_o  (instr_addr),
       .instr_rdata_i (instr_rdata),
 
+      // Data memory interface
       .data_req_o   (data_req),
       .data_gnt_i   (data_gnt),
       .data_rvalid_i(data_rvalid),
@@ -238,62 +234,20 @@ module cv32e40p_axi #(
       .data_wdata_o (data_wdata),
       .data_rdata_i (data_rdata),
 
-      .apu_req_o     (apu_req),
-      .apu_gnt_i     (apu_gnt),
-      .apu_operands_o(apu_operands),
-      .apu_op_o      (apu_op),
-      .apu_flags_o   (apu_flags),
-      .apu_rvalid_i  (apu_rvalid),
-      .apu_result_i  (apu_rdata),
-      .apu_flags_i   (apu_rflags),
-
-      .irq_i    (irq_i),
-      .irq_ack_o(irq_ack_o),
-      .irq_id_o (irq_id_o),
-
+      // Interrupt inputs
+      .irq_i            (irq_i),
+      // CLINT interrupts + CLINT extension interrupts
+      .irq_ack_o        (irq_ack_o),
+      .irq_id_o         (irq_id_o),
+      // Debug Interface
       .debug_req_i      (debug_req_i),
       .debug_havereset_o(debug_havereset_o),
       .debug_running_o  (debug_running_o),
       .debug_halted_o   (debug_halted_o),
-
-      .fetch_enable_i(fetch_enable_i),
-      .core_sleep_o  (core_sleep_o)
+      // CPU Control Signals
+      .fetch_enable_i   (fetch_enable_i),
+      .core_sleep_o     (core_sleep_o)
   );
-
-  generate
-    if (FPU) begin : fpu_gen
-      // FPU clock gate
-      cv32e40p_clock_gate core_clock_gate_i (
-          .clk_i       (clk_i),
-          .en_i        (!core_sleep_o),
-          .scan_cg_en_i(scan_cg_en_i),
-          .clk_o       (clk)
-      );
-
-      // Instantiate the FPU wrapper
-      cv32e40p_fp_wrapper #(
-          .FPU_ADDMUL_LAT(FPU_ADDMUL_LAT),
-          .FPU_OTHERS_LAT(FPU_OTHERS_LAT)
-      ) fp_wrapper_i (
-          .clk_i         (clk),
-          .rst_ni        (rst_ni),
-          .apu_req_i     (apu_req),
-          .apu_gnt_o     (apu_gnt),
-          .apu_operands_i(apu_operands),
-          .apu_op_i      (apu_op),
-          .apu_flags_i   (apu_flags),
-          .apu_rvalid_o  (apu_rvalid),
-          .apu_rdata_o   (apu_rdata),
-          .apu_rflags_o  (apu_rflags)
-      );
-    end else begin : no_fpu_gen
-      // Drive FPU output signals to 0
-      assign apu_gnt    = '0;
-      assign apu_rvalid = '0;
-      assign apu_rdata  = '0;
-      assign apu_rflags = '0;
-    end
-  endgenerate
 
   core2axi #(
       .AXI4_ADDRESS_WIDTH(AXI4_ADDRESS_WIDTH),
