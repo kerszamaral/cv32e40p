@@ -2,10 +2,10 @@
 -- Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
--- Date        : Wed Nov 29 20:19:48 2023
+-- Date        : Wed Dec  6 12:14:17 2023
 -- Host        : kerszamaral running 64-bit major release  (build 9200)
--- Command     : write_vhdl -force -mode synth_stub -rename_top dp_axi_bram -prefix
---               dp_axi_bram_ dp_axi_bram_stub.vhdl
+-- Command     : write_vhdl -force -mode synth_stub
+--               C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/cv32e40p.runs/dp_axi_bram_synth_1/dp_axi_bram_stub.vhdl
 -- Design      : dp_axi_bram
 -- Purpose     : Stub declaration of top-level module interface
 -- Device      : xc7a100tcsg324-1

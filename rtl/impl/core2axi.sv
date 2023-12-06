@@ -13,7 +13,6 @@
 `define SLVERR 2'b10
 `define DECERR 2'b11
 
-(* KEEP_HIERARCHY = "true" *)
 module core2axi #(
     parameter AXI4_ADDRESS_WIDTH = 32,
     parameter AXI4_RDATA_WIDTH   = 32,
@@ -23,132 +22,78 @@ module core2axi #(
     parameter REGISTERED_GRANT   = "FALSE"  // "TRUE"|"FALSE"
 ) (
     // Clock and Reset
-    (* S = "true" *)
     input logic clk_i,
-        (* S = "true" *)
     input logic rst_ni,
 
     input  logic                          data_req_i,
-        (* S = "true" *)
     output logic                          data_gnt_o,
-        (* S = "true" *)
     output logic                          data_rvalid_o,
-        (* S = "true" *)
     input  logic [AXI4_ADDRESS_WIDTH-1:0] data_addr_i,
-        (* S = "true" *)
     input  logic                          data_we_i,
-        (* S = "true" *)
     input  logic [                   3:0] data_be_i,
-        (* S = "true" *)
     output logic [                  31:0] data_rdata_o,
-        (* S = "true" *)
     input  logic [                  31:0] data_wdata_i,
-        (* S = "true" *)
 
     // ---------------------------------------------------------
     // AXI TARG Port Declarations ------------------------------
     // ---------------------------------------------------------
     //AXI write address bus -------------- // USED// -----------
     output logic [     AXI4_ID_WIDTH-1:0] aw_id_o,
-        (* S = "true" *)
     output logic [AXI4_ADDRESS_WIDTH-1:0] aw_addr_o,
-        (* S = "true" *)
     output logic [                   7:0] aw_len_o,
-        (* S = "true" *)
     output logic [                   2:0] aw_size_o,
-        (* S = "true" *)
     output logic [                   1:0] aw_burst_o,
-        (* S = "true" *)
     output logic                          aw_lock_o,
-        (* S = "true" *)
     output logic [                   3:0] aw_cache_o,
-        (* S = "true" *)
     output logic [                   2:0] aw_prot_o,
-        (* S = "true" *)
     output logic [                   3:0] aw_region_o,
-        (* S = "true" *)
     output logic [   AXI4_USER_WIDTH-1:0] aw_user_o,
-        (* S = "true" *)
     output logic [                   3:0] aw_qos_o,
-        (* S = "true" *)
     output logic                          aw_valid_o,
-        (* S = "true" *)
     input  logic                          aw_ready_i,
-        (* S = "true" *)
     // ---------------------------------------------------------
 
     //AXI write data bus -------------- // USED// --------------
     output logic [     AXI4_ID_WIDTH-1:0] w_id_o,
-        (* S = "true" *)
     output logic [  AXI4_WDATA_WIDTH-1:0] w_data_o,
-        (* S = "true" *)
     output logic [AXI4_WDATA_WIDTH/8-1:0] w_strb_o,
-        (* S = "true" *)
     output logic                          w_last_o,
-        (* S = "true" *)
     output logic [   AXI4_USER_WIDTH-1:0] w_user_o,
-        (* S = "true" *)
     output logic                          w_valid_o,
-        (* S = "true" *)
     input  logic                          w_ready_i,
-        (* S = "true" *)
     // ---------------------------------------------------------
 
     //AXI write response bus -------------- // USED// ----------
     input  logic [  AXI4_ID_WIDTH-1:0] b_id_i,
-        (* S = "true" *)
     input  logic [                1:0] b_resp_i,
-        (* S = "true" *)
     input  logic                       b_valid_i,
-        (* S = "true" *)
     input  logic [AXI4_USER_WIDTH-1:0] b_user_i,
-        (* S = "true" *)
     output logic                       b_ready_o,
-        (* S = "true" *)
     // ---------------------------------------------------------
 
     //AXI read address bus -------------------------------------
     output logic [     AXI4_ID_WIDTH-1:0] ar_id_o,
-        (* S = "true" *)
     output logic [AXI4_ADDRESS_WIDTH-1:0] ar_addr_o,
-        (* S = "true" *)
     output logic [                   7:0] ar_len_o,
-        (* S = "true" *)
     output logic [                   2:0] ar_size_o,
-        (* S = "true" *)
     output logic [                   1:0] ar_burst_o,
-        (* S = "true" *)
     output logic                          ar_lock_o,
-        (* S = "true" *)
     output logic [                   3:0] ar_cache_o,
-        (* S = "true" *)
     output logic [                   2:0] ar_prot_o,
-        (* S = "true" *)
     output logic [                   3:0] ar_region_o,
-        (* S = "true" *)
     output logic [   AXI4_USER_WIDTH-1:0] ar_user_o,
-        (* S = "true" *)
     output logic [                   3:0] ar_qos_o,
-        (* S = "true" *)
     output logic                          ar_valid_o,
-        (* S = "true" *)
     input  logic                          ar_ready_i,
-        (* S = "true" *)
     // ---------------------------------------------------------
 
     //AXI read data bus ----------------------------------------
     input  logic [   AXI4_ID_WIDTH-1:0] r_id_i,
-        (* S = "true" *)
     input  logic [AXI4_RDATA_WIDTH-1:0] r_data_i,
-        (* S = "true" *)
     input  logic [                 1:0] r_resp_i,
-        (* S = "true" *)
     input  logic                        r_last_i,
-        (* S = "true" *)
     input  logic [ AXI4_USER_WIDTH-1:0] r_user_i,
-        (* S = "true" *)
     input  logic                        r_valid_i,
-        (* S = "true" *)
     output logic                        r_ready_o
     // ---------------------------------------------------------
 );

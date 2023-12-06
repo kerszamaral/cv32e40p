@@ -25,7 +25,7 @@ module tb_axi #(
 
   // comment to record execution trace
   //`define TRACE_EXECUTION
-
+  const time INITIAL_DELAY = 200ns;
   const time CLK_PHASE_HI = 5ns;
   const time CLK_PHASE_LO = 5ns;
   const time CLK_PERIOD = CLK_PHASE_HI + CLK_PHASE_LO;
@@ -33,7 +33,7 @@ module tb_axi #(
   const time STIM_APPLICATION_DEL = CLK_PERIOD * 0.1;
   const time RESP_ACQUISITION_DEL = CLK_PERIOD * 0.9;
   const time RESET_DEL = STIM_APPLICATION_DEL;
-  const int  RESET_WAIT_CYCLES = 4;
+  const int  RESET_WAIT_CYCLES = 50;
   localparam LOGGING = 0;
   byte unsigned LASTCHAR = "\n";
 
@@ -67,7 +67,8 @@ module tb_axi #(
   end
 
   // clock generation
-  initial begin : clock_gen
+  initial begin : clock_gen 
+  #INITIAL_DELAY
     forever begin
       #CLK_PHASE_HI clk = 1'b1;
       #CLK_PHASE_LO clk = 1'b0;
@@ -85,7 +86,7 @@ module tb_axi #(
 
     // start running
     #RESET_DEL rst_n = 1'b1;
-    if ($test$plusargs("verbose")) $display("reset deasserted", $time);
+    if ($test$plusargs("verbose")) $display("reset deasserted", $time, "ns");
 
   end : reset_gen
 
