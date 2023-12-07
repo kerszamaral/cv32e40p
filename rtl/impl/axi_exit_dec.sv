@@ -1,91 +1,86 @@
 module axi_exit_dec (
-    input logic s_axi_aclk,
-    input logic s_axi_aresetn,
+    input logic clk_i,
+    input logic rst_ni,
 
-    input wire [31 : 0] s_axi_awaddr,
-    input wire [2 : 0] s_axi_awprot,
-    input wire s_axi_awvalid,
-    output wire s_axi_awready,
-    input wire [31 : 0] s_axi_wdata,
-    input wire [3 : 0] s_axi_wstrb,
-    input wire s_axi_wvalid,
-    output wire s_axi_wready,
-    output wire [1 : 0] s_axi_bresp,
-    output wire s_axi_bvalid,
-    input wire s_axi_bready,
-    input wire [31 : 0] s_axi_araddr,
-    input wire [2 : 0] s_axi_arprot,
-    input wire s_axi_arvalid,
-    output wire s_axi_arready,
-    output wire [31 : 0] s_axi_rdata,
-    output wire [1 : 0] s_axi_rresp,
-    output wire s_axi_rvalid,
-    input wire s_axi_rready,
+    AXI_BUS.Slave AXI_Slave,
 
     output logic exit_zero_o,
     output logic exit_valid_o  //,
     // output logic [31:0] exit_value_o
 );
-  localparam ADDRWIDTH = 20;
 
-  logic exit_en;
-  logic [3:0] exit_we;
-  logic [ADDRWIDTH-1:0] exit_addr;
+  logic exit_req;
+  logic exit_we;
+  logic [31:0] exit_addr;
   logic [31:0] exit_wrdata;
+
+  axi_to_mem_intf #(
+      /// See `axi_to_mem`, parameter `AddrWidth`.
+      .ADDR_WIDTH    (32),
+      /// See `axi_to_mem`, parameter `DataWidth`.
+      .DATA_WIDTH    (32),
+      /// AXI4+ATOP ID width.
+      .ID_WIDTH      (16),
+      /// AXI4+ATOP user width.
+      .USER_WIDTH    (10),
+      /// See `axi_to_mem`, parameter `NumBanks`.
+      .NUM_BANKS     (1),
+      /// See `axi_to_mem`, parameter `BufDepth`.
+      .BUF_DEPTH     (1),
+      /// Hide write requests if the strb == '0
+      .HIDE_STRB     (0),
+      /// Depth of output fifo/fall_through_register. Increase for asymmetric backpressure (contention) on banks.
+      .OUT_FIFO_DEPTH(1)
+  ) u_axi_to_mem_intf (
+      /// Clock input.
+      .clk_i (clk_i),
+      /// Asynchronous reset, active low.
+      .rst_ni(rst_ni),
+      /// See `axi_to_mem`, port `busy_o`.
+      .busy_o(),
+      /// AXI4+ATOP slave interface port.
+      .slv   (AXI_Slave),
+
+      /// See `axi_to_mem`, port `mem_req_o`.
+      .mem_req_o   (exit_req),
+      /// See `axi_to_mem`, port `mem_gnt_i`.
+      .mem_gnt_i   ('1),
+      /// See `axi_to_mem`, port `mem_addr_o`.
+      .mem_addr_o  (exit_addr),
+      /// See `axi_to_mem`, port `mem_wdata_o`.
+      .mem_wdata_o (exit_wrdata),
+      /// See `axi_to_mem`, port `mem_strb_o`.
+      .mem_strb_o  (),
+      /// See `axi_to_mem`, port `mem_atop_o`.
+      .mem_atop_o  (),
+      /// See `axi_to_mem`, port `mem_we_o`.
+      .mem_we_o    (exit_we),
+      /// See `axi_to_mem`, port `mem_rvalid_i`.
+      .mem_rvalid_i('0),
+      /// See `axi_to_mem`, port `mem_rdata_i`.
+      .mem_rdata_i ('0)
+  );
 
   logic [31:0] exit_value;
   logic exit_valid;
-
-  axi_to_bram exit_axi_ctrl (
-      .s_axi_aclk   (s_axi_aclk),     // input wire s_axi_aclk
-      .s_axi_aresetn(s_axi_aresetn),  // input wire s_axi_aresetn
-
-      .s_axi_awaddr(s_axi_awaddr[0+:ADDRWIDTH]),  // input wire [19 : 0] s_axi_awaddr
-      .s_axi_awprot(s_axi_awprot),  // input wire [2 : 0] s_axi_awprot
-      .s_axi_awvalid(s_axi_awvalid),  // input wire s_axi_awvalid
-      .s_axi_awready(s_axi_awready),  // output wire s_axi_awready
-      .s_axi_wdata(s_axi_wdata),  // input wire [31 : 0] s_axi_wdata
-      .s_axi_wstrb(s_axi_wstrb),  // input wire [3 : 0] s_axi_wstrb
-      .s_axi_wvalid(s_axi_wvalid),  // input wire s_axi_wvalid
-      .s_axi_wready(s_axi_wready),  // output wire s_axi_wready
-      .s_axi_bresp(s_axi_bresp),  // output wire [1 : 0] s_axi_bresp
-      .s_axi_bvalid(s_axi_bvalid),  // output wire s_axi_bvalid
-      .s_axi_bready(s_axi_bready),  // input wire s_axi_bready
-      .s_axi_araddr(s_axi_araddr[0+:ADDRWIDTH]),  // input wire [19 : 0] s_axi_araddr
-      .s_axi_arprot(s_axi_arprot),  // input wire [2 : 0] s_axi_arprot
-      .s_axi_arvalid(s_axi_arvalid),  // input wire s_axi_arvalid
-      .s_axi_arready(s_axi_arready),  // output wire s_axi_arready
-      .s_axi_rdata(s_axi_rdata),  // output wire [31 : 0] s_axi_rdata
-      .s_axi_rresp(s_axi_rresp),  // output wire [1 : 0] s_axi_rresp
-      .s_axi_rvalid(s_axi_rvalid),  // output wire s_axi_rvalid
-      .s_axi_rready(s_axi_rready),  // input wire s_axi_rready
-
-      .bram_rst_a   (),     // output wire bram_rst_a
-      .bram_clk_a   (),     // output wire bram_clk_a
-      .bram_en_a    (exit_en),      // output wire bram_en_a
-      .bram_we_a    (exit_we),      // output wire [3 : 0] bram_we_a
-      .bram_addr_a  (exit_addr),    // output wire [19 : 0] bram_addr_a
-      .bram_wrdata_a(exit_wrdata),  // output wire [31 : 0] bram_wrdata_a
-      .bram_rddata_a('0)   // input wire [31 : 0] bram_rddata_a
-  );
 
   always_comb begin
     exit_valid = 0;
     exit_value = '0;
 
-    if (exit_en && (exit_we[3] || exit_we[2] || exit_we[1] || exit_we[0])) begin
-      if (exit_addr == 'h4) begin
+    if (exit_req && exit_we) begin
+      if (exit_addr[0+:8] == 'h4) begin
         exit_valid = '1;
         exit_value = exit_wrdata;
-      end else if (exit_addr == 'h10) begin
+      end else if (exit_addr[0+:8] == 'h10) begin
         exit_valid = '1;
         exit_value = '0;
       end
     end
   end
 
-  always_ff @(posedge s_axi_aclk or negedge s_axi_aresetn) begin
-    if (~s_axi_aresetn) begin
+  always_ff @(posedge clk_i or negedge rst_ni) begin
+    if (~rst_ni) begin
       exit_valid_o <= 0;
       // exit_value_o <= '0;
       exit_zero_o  <= 0;

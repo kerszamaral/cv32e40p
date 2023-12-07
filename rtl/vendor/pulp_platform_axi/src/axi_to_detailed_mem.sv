@@ -12,7 +12,7 @@
 // - Michael Rogenmoser <michaero@iis.ee.ethz.ch>
 // - Thomas Benz <tbenz@iis.ee.ethz.ch>
 
-`include "common_cells/registers.svh"
+`include "registers.svh"
 /// AXI4+ATOP slave module which translates AXI bursts into a memory stream.
 /// If both read and write channels of the AXI4+ATOP are active, both will have an
 /// utilization of 50%.
@@ -192,20 +192,20 @@ module axi_to_detailed_mem #(
     // Handle new AR if there is one.
     end else if (axi_req_i.ar_valid) begin
       rd_meta_d = '{
-        addr:   addr_t'(axi_pkg::aligned_addr(axi_req_i.ar.addr, axi_req_i.ar.size)),
-        atop:   '0,
-        lock:   axi_req_i.ar.lock,
-        strb:   '0,
-        id:     axi_req_i.ar.id,
-        last:   (axi_req_i.ar.len == '0),
-        qos:    axi_req_i.ar.qos,
-        size:   axi_req_i.ar.size,
-        write:  1'b0,
-        user:   axi_req_i.ar.user,
-        cache:  axi_req_i.ar.cache,
-        prot:   axi_req_i.ar.prot,
-        region: axi_req_i.ar.region
-      };
+                addr:   addr_t'(axi_pkg::aligned_addr(axi_req_i.ar.addr, axi_req_i.ar.size)),
+                atop:   '0,
+                lock:   axi_req_i.ar.lock,
+                strb:   '0,
+                id:     axi_req_i.ar.id,
+                last:   (axi_req_i.ar.len == '0),
+                qos:    axi_req_i.ar.qos,
+                size:   axi_req_i.ar.size,
+                write:  1'b0,
+                user:   axi_req_i.ar.user,
+                cache:  axi_req_i.ar.cache,
+                prot:   axi_req_i.ar.prot,
+                region: axi_req_i.ar.region
+            };
       rd_meta      = rd_meta_d;
       rd_meta.addr = addr_t'(axi_req_i.ar.addr);
       rd_valid     = 1'b1;
@@ -242,20 +242,20 @@ module axi_to_detailed_mem #(
     // Handle new AW if there is one.
     end else if (axi_req_i.aw_valid && axi_req_i.w_valid) begin
       wr_meta_d = '{
-        addr:   addr_t'(axi_pkg::aligned_addr(axi_req_i.aw.addr, axi_req_i.aw.size)),
-        atop:   axi_req_i.aw.atop,
-        lock:   axi_req_i.aw.lock,
-        strb:   axi_req_i.w.strb,
-        id:     axi_req_i.aw.id,
-        last:   (axi_req_i.aw.len == '0),
-        qos:    axi_req_i.aw.qos,
-        size:   axi_req_i.aw.size,
-        write:  1'b1,
-        user:   axi_req_i.aw.user,
-        cache:  axi_req_i.aw.cache,
-        prot:   axi_req_i.aw.prot,
-        region: axi_req_i.aw.region
-      };
+                addr:   addr_t'(axi_pkg::aligned_addr(axi_req_i.aw.addr, axi_req_i.aw.size)),
+                atop:   axi_req_i.aw.atop,
+                lock:   axi_req_i.aw.lock,
+                strb:   axi_req_i.w.strb,
+                id:     axi_req_i.aw.id,
+                last:   (axi_req_i.aw.len == '0),
+                qos:    axi_req_i.aw.qos,
+                size:   axi_req_i.aw.size,
+                write:  1'b1,
+                user:   axi_req_i.aw.user,
+                cache:  axi_req_i.aw.cache,
+                prot:   axi_req_i.aw.prot,
+                region: axi_req_i.aw.region
+            };
       wr_meta = wr_meta_d;
       wr_meta.addr = addr_t'(axi_req_i.aw.addr);
       wr_valid = 1'b1;
@@ -530,7 +530,7 @@ module axi_to_detailed_mem #(
     assign meta_buf_bank_strb[i] = |meta_buf.strb[i*NumBytesPerBank +: NumBytesPerBank];
     // Set active read banks based on size and address offset: (bank.end > addr) && (bank.start < addr+size)
     assign meta_buf_size_enable[i] = ((i*NumBytesPerBank + NumBytesPerBank) > (meta_buf.addr % DataWidth/8)) &&
-                                     ((i*NumBytesPerBank) < ((meta_buf.addr % DataWidth/8) + 1<<meta_buf.size));
+                                                                          ((i*NumBytesPerBank) < ((meta_buf.addr % DataWidth/8) + 1<<meta_buf.size));
   end
   assign resp_b_err    = |(m2s_resp.err    &  meta_buf_bank_strb);   // Ensure only active banks are used (strobe)
   assign resp_b_exokay = &(m2s_resp.exokay | ~meta_buf_bank_strb);   // Ensure only active banks are used (strobe)
@@ -564,19 +564,19 @@ module axi_to_detailed_mem #(
 
   // Compose B responses.
   assign axi_resp_o.b = '{
-    id:   meta_buf.id,
-    resp: next_collect_b_err ? axi_pkg::RESP_SLVERR : next_collect_b_exokay ? axi_pkg::RESP_EXOKAY : axi_pkg::RESP_OKAY,
-    user: '0
-  };
+        id:   meta_buf.id,
+        resp: next_collect_b_err ? axi_pkg::RESP_SLVERR : next_collect_b_exokay ? axi_pkg::RESP_EXOKAY : axi_pkg::RESP_OKAY,
+        user: '0
+    };
 
   // Compose R responses.
   assign axi_resp_o.r = '{
-    data: m2s_resp.data,
-    id:   meta_buf.id,
-    last: meta_buf.last,
-    resp: resp_r_err ? axi_pkg::RESP_SLVERR : resp_r_exokay ? axi_pkg::RESP_EXOKAY : axi_pkg::RESP_OKAY,
-    user: '0
-  };
+        data: m2s_resp.data,
+        id:   meta_buf.id,
+        last: meta_buf.last,
+        resp: resp_r_err ? axi_pkg::RESP_SLVERR : resp_r_exokay ? axi_pkg::RESP_EXOKAY : axi_pkg::RESP_OKAY,
+        user: '0
+    };
 
   // Registers
   `FFARN(meta_sel_q, meta_sel_d, 1'b0, clk_i, rst_ni)
@@ -591,7 +591,7 @@ module axi_to_detailed_mem #(
   // Assertions
   // pragma translate_off
   `ifndef VERILATOR
-  default disable iff (!rst_ni);
+  // default disable iff (!rst_ni);
   assume property (@(posedge clk_i)
       axi_req_i.ar_valid && !axi_resp_o.ar_ready |=> $stable(axi_req_i.ar))
     else $error("AR must remain stable until handshake has happened!");

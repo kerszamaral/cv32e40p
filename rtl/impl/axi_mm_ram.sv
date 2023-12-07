@@ -264,30 +264,57 @@ module axi_mm_ram #(
       .tx(tx_o)   // output wire tx
   );
 
+  AXI_LITE #(
+      .AXI_ADDR_WIDTH(32),
+      .AXI_DATA_WIDTH(32)
+  ) AXI_exit ();
+
+  AXI_BUS #(
+      .AXI_ADDR_WIDTH(32),
+      .AXI_DATA_WIDTH(32),
+      .AXI_ID_WIDTH  (16),
+      .AXI_USER_WIDTH(10)
+  ) AXI_exit_temp ();
+
+  axi_lite_to_axi_intf #(
+      .AXI_DATA_WIDTH(32)
+  ) u_axi_lite_to_axi_intf (
+      .in            (AXI_exit),
+      .slv_aw_cache_i('0),
+      .slv_ar_cache_i('0),
+      .out           (AXI_exit_temp)
+  );
+
+  assign AXI_exit.aw_addr = m_axi_awaddr[(EXIT*ADDRSIZE)+:ADDRSIZE];
+  assign AXI_exit.aw_prot = m_axi_awprot[(EXIT*PROTSIZE)+:PROTSIZE];
+  assign AXI_exit.aw_valid = m_axi_awvalid[(EXIT*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_awready[(EXIT*READYSIZE)+:READYSIZE] = AXI_exit.aw_ready;
+
+  assign AXI_exit.w_data = m_axi_wdata[(EXIT*DATASIZE)+:DATASIZE];
+  assign AXI_exit.w_strb = m_axi_wstrb[(EXIT*STRBSIZE)+:STRBSIZE];
+  assign AXI_exit.w_valid = m_axi_wvalid[(EXIT*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_wready[(EXIT*READYSIZE)+:READYSIZE] = AXI_exit.w_ready;
+
+  assign m_axi_bresp[(EXIT*RESPSIZE)+:RESPSIZE] = AXI_exit.b_resp;
+  assign m_axi_bvalid[(EXIT*VALIDSIZE)+:VALIDSIZE] = AXI_exit.b_valid;
+  assign AXI_exit.b_ready = m_axi_bready[(EXIT*READYSIZE)+:READYSIZE];
+
+  assign AXI_exit.ar_addr = m_axi_araddr[(EXIT*ADDRSIZE)+:ADDRSIZE];
+  assign AXI_exit.ar_prot = m_axi_arprot[(EXIT*PROTSIZE)+:PROTSIZE];
+  assign AXI_exit.ar_valid = m_axi_arvalid[(EXIT*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_arready[(EXIT*READYSIZE)+:READYSIZE] = AXI_exit.ar_ready;
+
+  assign m_axi_rdata[(EXIT*DATASIZE)+:DATASIZE] = AXI_exit.r_data;
+  assign m_axi_rresp[(EXIT*RESPSIZE)+:RESPSIZE] = AXI_exit.r_resp;
+  assign m_axi_rvalid[(EXIT*VALIDSIZE)+:VALIDSIZE] = AXI_exit.r_valid;
+  assign AXI_exit.r_ready = m_axi_rready[(EXIT*READYSIZE)+:READYSIZE];
+
   // EXIT AXI Access
   axi_exit_dec u_exit_dec (
-      .s_axi_aclk   (clk_i),     // input wire s_axi_aclk
-      .s_axi_aresetn(rst_ni),  // input wire s_axi_aresetn
+      .clk_i (clk_i),  // input wire s_axi_aclk
+      .rst_ni(rst_ni), // input wire s_axi_aresetn
 
-      .s_axi_awaddr(m_axi_awaddr[(EXIT*ADDRSIZE)+:ADDRSIZE]),  // input wire [31 : 0] s_axi_awaddr
-      .s_axi_awprot(m_axi_awprot[(EXIT*PROTSIZE)+:PROTSIZE]),  // input wire [2 : 0] s_axi_awprot
-      .s_axi_awvalid(m_axi_awvalid[(EXIT*VALIDSIZE)+:VALIDSIZE]),  // input wire s_axi_awvalid
-      .s_axi_awready(m_axi_awready[(EXIT*READYSIZE)+:READYSIZE]),  // output wire s_axi_awready
-      .s_axi_wdata(m_axi_wdata[(EXIT*DATASIZE)+:DATASIZE]),  // input wire [31 : 0] s_axi_wdata
-      .s_axi_wstrb(m_axi_wstrb[(EXIT*STRBSIZE)+:STRBSIZE]),  // input wire [3 : 0] s_axi_wstrb
-      .s_axi_wvalid(m_axi_wvalid[(EXIT*VALIDSIZE)+:VALIDSIZE]),  // input wire s_axi_wvalid
-      .s_axi_wready(m_axi_wready[(EXIT*READYSIZE)+:READYSIZE]),  // output wire s_axi_wready
-      .s_axi_bresp(m_axi_bresp[(EXIT*RESPSIZE)+:RESPSIZE]),  // output wire [1 : 0] s_axi_bresp
-      .s_axi_bvalid(m_axi_bvalid[(EXIT*VALIDSIZE)+:VALIDSIZE]),  // output wire s_axi_bvalid
-      .s_axi_bready(m_axi_bready[(EXIT*READYSIZE)+:READYSIZE]),  // input wire s_axi_bready
-      .s_axi_araddr(m_axi_araddr[(EXIT*ADDRSIZE)+:ADDRSIZE]),  // input wire [31 : 0] s_axi_araddr
-      .s_axi_arprot(m_axi_arprot[(EXIT*PROTSIZE)+:PROTSIZE]),  // input wire [2 : 0] s_axi_arprot
-      .s_axi_arvalid(m_axi_arvalid[(EXIT*VALIDSIZE)+:VALIDSIZE]),  // input wire s_axi_arvalid
-      .s_axi_arready(m_axi_arready[(EXIT*READYSIZE)+:READYSIZE]),  // output wire s_axi_arready
-      .s_axi_rdata(m_axi_rdata[(EXIT*DATASIZE)+:DATASIZE]),  // output wire [31 : 0] s_axi_rdata
-      .s_axi_rresp(m_axi_rresp[(EXIT*RESPSIZE)+:RESPSIZE]),  // output wire [1 : 0] s_axi_rresp
-      .s_axi_rvalid(m_axi_rvalid[(EXIT*VALIDSIZE)+:VALIDSIZE]),  // output wire s_axi_rvalid
-      .s_axi_rready(m_axi_rready[(EXIT*READYSIZE)+:READYSIZE]),  // input wire s_axi_rready
+      .AXI_Slave(AXI_exit_temp),
 
       .exit_zero_o (exit_zero_o),
       .exit_valid_o(exit_valid_o)
