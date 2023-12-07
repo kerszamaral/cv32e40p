@@ -145,9 +145,7 @@ module cv32e40p_axi #(
       .clk_i (clk_i),
       .rst_ni(rst_ni),
 
-      // ---------------------------------------------------------
-      // Core Ports Declarations ---------------------------------
-      // ---------------------------------------------------------
+      // Core interface
       .data_req_i   (instr_req),
       .data_gnt_o   (instr_gnt),
       .data_rvalid_o(instr_rvalid),
@@ -156,67 +154,9 @@ module cv32e40p_axi #(
       .data_be_i    ('0),
       .data_rdata_o (instr_rdata),
       .data_wdata_i ('0),
-      // ---------------------------------------------------------
-      // AXI TARG Port Declarations ------------------------------
-      // ---------------------------------------------------------
-      //AXI write address bus -------------- // USED// -----------
-      .aw_id_o      (instr.aw_id),
-      .aw_addr_o    (instr.aw_addr),
-      .aw_len_o     (instr.aw_len),
-      .aw_size_o    (instr.aw_size),
-      .aw_burst_o   (instr.aw_burst),
-      .aw_lock_o    (instr.aw_lock),
-      .aw_cache_o   (instr.aw_cache),
-      .aw_prot_o    (instr.aw_prot),
-      .aw_region_o  (instr.aw_region),
-      .aw_user_o    (instr.aw_user),
-      .aw_qos_o     (instr.aw_qos),
-      .aw_valid_o   (instr.aw_valid),
-      .aw_ready_i   (instr.aw_ready),
-      // ---------------------------------------------------------
 
-      //AXI write data bus -------------- // USED// --------------
-      .w_data_o (instr.w_data),
-      .w_strb_o (instr.w_strb),
-      .w_last_o (instr.w_last),
-      .w_user_o (instr.w_user),
-      .w_valid_o(instr.w_valid),
-      .w_ready_i(instr.w_ready),
-      // ---------------------------------------------------------
-
-      //AXI write response bus -------------- // USED// ----------
-      .b_id_i   (instr.b_id),
-      .b_resp_i (instr.b_resp),
-      .b_valid_i(instr.b_valid),
-      .b_user_i (instr.b_user),
-      .b_ready_o(instr.b_ready),
-      // ---------------------------------------------------------
-
-      //AXI read address bus -------------------------------------
-      .ar_id_o    (instr.ar_id),
-      .ar_addr_o  (instr.ar_addr),
-      .ar_len_o   (instr.ar_len),
-      .ar_size_o  (instr.ar_size),
-      .ar_burst_o (instr.ar_burst),
-      .ar_lock_o  (instr.ar_lock),
-      .ar_cache_o (instr.ar_cache),
-      .ar_prot_o  (instr.ar_prot),
-      .ar_region_o(instr.ar_region),
-      .ar_user_o  (instr.ar_user),
-      .ar_qos_o   (instr.ar_qos),
-      .ar_valid_o (instr.ar_valid),
-      .ar_ready_i (instr.ar_ready),
-      // ---------------------------------------------------------
-
-      //AXI read data bus ----------------------------------------
-      .r_id_i   (instr.r_id),
-      .r_data_i (instr.r_data),
-      .r_resp_i (instr.r_resp),
-      .r_last_i (instr.r_last),
-      .r_user_i (instr.r_user),
-      .r_valid_i(instr.r_valid),
-      .r_ready_o(instr.r_ready)
-      // ---------------------------------------------------------
+      // AXI Interface
+      .AXI_Master(instr)
   );
 
   core2axi #(
@@ -232,6 +172,7 @@ module cv32e40p_axi #(
       .clk_i (clk_i),
       .rst_ni(rst_ni),
 
+      // Core interface
       .data_req_i   (data_req),
       .data_gnt_o   (data_gnt),
       .data_rvalid_o(data_rvalid),
@@ -240,67 +181,9 @@ module cv32e40p_axi #(
       .data_be_i    (data_be),
       .data_rdata_o (data_rdata),
       .data_wdata_i (data_wdata),
-      // ---------------------------------------------------------
-      // AXI TARG Port Declarations ------------------------------
-      // ---------------------------------------------------------
-      //AXI write address bus -------------- // USED// -----------
-      .aw_id_o      (data.aw_id),
-      .aw_addr_o    (data.aw_addr),
-      .aw_len_o     (data.aw_len),
-      .aw_size_o    (data.aw_size),
-      .aw_burst_o   (data.aw_burst),
-      .aw_lock_o    (data.aw_lock),
-      .aw_cache_o   (data.aw_cache),
-      .aw_prot_o    (data.aw_prot),
-      .aw_region_o  (data.aw_region),
-      .aw_user_o    (data.aw_user),
-      .aw_qos_o     (data.aw_qos),
-      .aw_valid_o   (data.aw_valid),
-      .aw_ready_i   (data.aw_ready),
-      // ---------------------------------------------------------
 
-      //AXI write data bus -------------- // USED// --------------
-      .w_data_o (data.w_data),
-      .w_strb_o (data.w_strb),
-      .w_last_o (data.w_last),
-      .w_user_o (data.w_user),
-      .w_valid_o(data.w_valid),
-      .w_ready_i(data.w_ready),
-      // ---------------------------------------------------------
-
-      //AXI write response bus -------------- // USED// ----------
-      .b_id_i   (data.b_id),
-      .b_resp_i (data.b_resp),
-      .b_valid_i(data.b_valid),
-      .b_user_i (data.b_user),
-      .b_ready_o(data.b_ready),
-      // ---------------------------------------------------------
-
-      //AXI read address bus -------------------------------------
-      .ar_id_o    (data.ar_id),
-      .ar_addr_o  (data.ar_addr),
-      .ar_len_o   (data.ar_len),
-      .ar_size_o  (data.ar_size),
-      .ar_burst_o (data.ar_burst),
-      .ar_lock_o  (data.ar_lock),
-      .ar_cache_o (data.ar_cache),
-      .ar_prot_o  (data.ar_prot),
-      .ar_region_o(data.ar_region),
-      .ar_user_o  (data.ar_user),
-      .ar_qos_o   (data.ar_qos),
-      .ar_valid_o (data.ar_valid),
-      .ar_ready_i (data.ar_ready),
-      // ---------------------------------------------------------
-
-      //AXI read data bus ----------------------------------------
-      .r_id_i   (data.r_id),
-      .r_data_i (data.r_data),
-      .r_resp_i (data.r_resp),
-      .r_last_i (data.r_last),
-      .r_user_i (data.r_user),
-      .r_valid_i(data.r_valid),
-      .r_ready_o(data.r_ready)
-      // ---------------------------------------------------------
+      // AXI Interface 
+      .AXI_Master(data)
   );
 
 endmodule
