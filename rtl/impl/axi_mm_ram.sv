@@ -1,134 +1,12 @@
 module axi_mm_ram #(
-    parameter MAXBLKSIZE = 20,
-    parameter BYTES = 4,
-    parameter AXI4_ADDRESS_WIDTH = 32,
-    parameter AXI4_RDATA_WIDTH = 32,
-    parameter AXI4_WDATA_WIDTH = 32,
-    parameter AXI4_ID_WIDTH = 16,
-    parameter AXI4_USER_WIDTH = 10,
     parameter LOGGING = 0
 ) (
-    input  logic                          clk_i,
-    input  logic                          rst_ni,
-    //! AXI4 Instruction Interface
-    //AXI write address bus -------------- // USED// -----------
-    input  logic [     AXI4_ID_WIDTH-1:0] instr_aw_id_i,
-    input  logic [AXI4_ADDRESS_WIDTH-1:0] instr_aw_addr_i,
-    input  logic [                   7:0] instr_aw_len_i,
-    input  logic [                   2:0] instr_aw_size_i,
-    input  logic [                   1:0] instr_aw_burst_i,
-    input  logic                          instr_aw_lock_i,
-    input  logic [                   3:0] instr_aw_cache_i,
-    input  logic [                   2:0] instr_aw_prot_i,
-    input  logic [                   3:0] instr_aw_region_i,
-    input  logic [   AXI4_USER_WIDTH-1:0] instr_aw_user_i,
-    input  logic [                   3:0] instr_aw_qos_i,
-    input  logic                          instr_aw_valid_i,
-    output logic                          instr_aw_ready_o,
-    // ---------------------------------------------------------
+    input logic clk_i,
+    input logic rst_ni,
 
-    //AXI write data bus -------------- // USED// --------------
-    input  logic [  AXI4_WDATA_WIDTH-1:0] instr_w_data_i,
-    input  logic [AXI4_WDATA_WIDTH/8-1:0] instr_w_strb_i,
-    input  logic                          instr_w_last_i,
-    input  logic [   AXI4_USER_WIDTH-1:0] instr_w_user_i,
-    input  logic                          instr_w_valid_i,
-    output logic                          instr_w_ready_o,
-    // ---------------------------------------------------------
-
-    //AXI write response bus -------------- // USED// ----------
-    output logic [  AXI4_ID_WIDTH-1:0] instr_b_id_o,
-    output logic [                1:0] instr_b_resp_o,
-    output logic                       instr_b_valid_o,
-    output logic [AXI4_USER_WIDTH-1:0] instr_b_user_o,
-    input  logic                       instr_b_ready_i,
-    // ---------------------------------------------------------
-
-    //AXI read address bus -------------------------------------
-    input  logic [     AXI4_ID_WIDTH-1:0] instr_ar_id_i,
-    input  logic [AXI4_ADDRESS_WIDTH-1:0] instr_ar_addr_i,
-    input  logic [                   7:0] instr_ar_len_i,
-    input  logic [                   2:0] instr_ar_size_i,
-    input  logic [                   1:0] instr_ar_burst_i,
-    input  logic                          instr_ar_lock_i,
-    input  logic [                   3:0] instr_ar_cache_i,
-    input  logic [                   2:0] instr_ar_prot_i,
-    input  logic [                   3:0] instr_ar_region_i,
-    input  logic [   AXI4_USER_WIDTH-1:0] instr_ar_user_i,
-    input  logic [                   3:0] instr_ar_qos_i,
-    input  logic                          instr_ar_valid_i,
-    output logic                          instr_ar_ready_o,
-    // ---------------------------------------------------------
-
-    //AXI read data bus ----------------------------------------
-    output logic [   AXI4_ID_WIDTH-1:0] instr_r_id_o,
-    output logic [AXI4_RDATA_WIDTH-1:0] instr_r_data_o,
-    output logic [                 1:0] instr_r_resp_o,
-    output logic                        instr_r_last_o,
-    output logic [ AXI4_USER_WIDTH-1:0] instr_r_user_o,
-    output logic                        instr_r_valid_o,
-    input  logic                        instr_r_ready_i,
-    // ---------------------------------------------------------
-
-    //! AXI4 Data Interface
-    //AXI write address bus -------------- // USED// -----------
-    input  logic [     AXI4_ID_WIDTH-1:0] data_aw_id_i,
-    input  logic [AXI4_ADDRESS_WIDTH-1:0] data_aw_addr_i,
-    input  logic [                   7:0] data_aw_len_i,
-    input  logic [                   2:0] data_aw_size_i,
-    input  logic [                   1:0] data_aw_burst_i,
-    input  logic                          data_aw_lock_i,
-    input  logic [                   3:0] data_aw_cache_i,
-    input  logic [                   2:0] data_aw_prot_i,
-    input  logic [                   3:0] data_aw_region_i,
-    input  logic [   AXI4_USER_WIDTH-1:0] data_aw_user_i,
-    input  logic [                   3:0] data_aw_qos_i,
-    input  logic                          data_aw_valid_i,
-    output logic                          data_aw_ready_o,
-    // ---------------------------------------------------------
-
-    //AXI write data bus -------------- // USED// --------------
-    input  logic [  AXI4_WDATA_WIDTH-1:0] data_w_data_i,
-    input  logic [AXI4_WDATA_WIDTH/8-1:0] data_w_strb_i,
-    input  logic                          data_w_last_i,
-    input  logic [   AXI4_USER_WIDTH-1:0] data_w_user_i,
-    input  logic                          data_w_valid_i,
-    output logic                          data_w_ready_o,
-    // ---------------------------------------------------------
-
-    //AXI write response bus -------------- // USED// ----------
-    output logic [  AXI4_ID_WIDTH-1:0] data_b_id_o,
-    output logic [                1:0] data_b_resp_o,
-    output logic                       data_b_valid_o,
-    output logic [AXI4_USER_WIDTH-1:0] data_b_user_o,
-    input  logic                       data_b_ready_i,
-    // ---------------------------------------------------------
-
-    //AXI read address bus -------------------------------------
-    input  logic [     AXI4_ID_WIDTH-1:0] data_ar_id_i,
-    input  logic [AXI4_ADDRESS_WIDTH-1:0] data_ar_addr_i,
-    input  logic [                   7:0] data_ar_len_i,
-    input  logic [                   2:0] data_ar_size_i,
-    input  logic [                   1:0] data_ar_burst_i,
-    input  logic                          data_ar_lock_i,
-    input  logic [                   3:0] data_ar_cache_i,
-    input  logic [                   2:0] data_ar_prot_i,
-    input  logic [                   3:0] data_ar_region_i,
-    input  logic [   AXI4_USER_WIDTH-1:0] data_ar_user_i,
-    input  logic [                   3:0] data_ar_qos_i,
-    input  logic                          data_ar_valid_i,
-    output logic                          data_ar_ready_o,
-    // ---------------------------------------------------------
-
-    //AXI read data bus ----------------------------------------
-    output logic [   AXI4_ID_WIDTH-1:0] data_r_id_o,
-    output logic [AXI4_RDATA_WIDTH-1:0] data_r_data_o,
-    output logic [                 1:0] data_r_resp_o,
-    output logic                        data_r_last_o,
-    output logic [ AXI4_USER_WIDTH-1:0] data_r_user_o,
-    output logic                        data_r_valid_o,
-    input  logic                        data_r_ready_i,
-    // ---------------------------------------------------------
+    // //! AXI4 Instruction Interface
+    AXI_BUS.Slave instr,
+    AXI_BUS.Slave data,
 
     // Interrupt outputs
     output logic [31:0] irq_o,      // CLINT interrupts + CLINT extension interrupts
@@ -199,62 +77,62 @@ module axi_mm_ram #(
   localparam INSTR = 0;
   localparam DATA = 1;
 
-  assign s_axi_awaddr[(INSTR*ADDRSIZE)+:ADDRSIZE] = instr_aw_addr_i;
-  assign s_axi_awaddr[(DATA*ADDRSIZE)+:ADDRSIZE] = data_aw_addr_i;
+  assign s_axi_awaddr[(INSTR*ADDRSIZE)+:ADDRSIZE] = instr.aw_addr;
+  assign s_axi_awaddr[(DATA*ADDRSIZE)+:ADDRSIZE] = data.aw_addr;
 
-  assign s_axi_awprot[(INSTR*PROTSIZE)+:PROTSIZE] = instr_aw_prot_i;
-  assign s_axi_awprot[(DATA*PROTSIZE)+:PROTSIZE] = data_aw_prot_i;
+  assign s_axi_awprot[(INSTR*PROTSIZE)+:PROTSIZE] = instr.aw_prot;
+  assign s_axi_awprot[(DATA*PROTSIZE)+:PROTSIZE] = data.aw_prot;
 
-  assign s_axi_awvalid[(INSTR*VALIDSIZE)+:VALIDSIZE] = instr_aw_valid_i;
-  assign s_axi_awvalid[(DATA*VALIDSIZE)+:VALIDSIZE] = data_aw_valid_i;
+  assign s_axi_awvalid[(INSTR*VALIDSIZE)+:VALIDSIZE] = instr.aw_valid;
+  assign s_axi_awvalid[(DATA*VALIDSIZE)+:VALIDSIZE] = data.aw_valid;
 
-  assign instr_aw_ready_o = s_axi_awready[(INSTR*READYSIZE)+:READYSIZE];
-  assign data_aw_ready_o = s_axi_awready[(DATA*READYSIZE)+:READYSIZE];
+  assign instr.aw_ready = s_axi_awready[(INSTR*READYSIZE)+:READYSIZE];
+  assign data.aw_ready = s_axi_awready[(DATA*READYSIZE)+:READYSIZE];
 
-  assign s_axi_wdata[(INSTR*DATASIZE)+:DATASIZE] = instr_w_data_i;
-  assign s_axi_wdata[(DATA*DATASIZE)+:DATASIZE] = data_w_data_i;
+  assign s_axi_wdata[(INSTR*DATASIZE)+:DATASIZE] = instr.w_data;
+  assign s_axi_wdata[(DATA*DATASIZE)+:DATASIZE] = data.w_data;
 
-  assign s_axi_wstrb[(INSTR*STRBSIZE)+:STRBSIZE] = instr_w_strb_i;
-  assign s_axi_wstrb[(DATA*STRBSIZE)+:STRBSIZE] = data_w_strb_i;
+  assign s_axi_wstrb[(INSTR*STRBSIZE)+:STRBSIZE] = instr.w_strb;
+  assign s_axi_wstrb[(DATA*STRBSIZE)+:STRBSIZE] = data.w_strb;
 
-  assign s_axi_wvalid[(INSTR*VALIDSIZE)+:VALIDSIZE] = instr_w_valid_i;
-  assign s_axi_wvalid[(DATA*VALIDSIZE)+:VALIDSIZE] = data_w_valid_i;
+  assign s_axi_wvalid[(INSTR*VALIDSIZE)+:VALIDSIZE] = instr.w_valid;
+  assign s_axi_wvalid[(DATA*VALIDSIZE)+:VALIDSIZE] = data.w_valid;
 
-  assign instr_w_ready_o = s_axi_wready[(INSTR*READYSIZE)+:READYSIZE];
-  assign data_w_ready_o = s_axi_wready[(DATA*READYSIZE)+:READYSIZE];
+  assign instr.w_ready = s_axi_wready[(INSTR*READYSIZE)+:READYSIZE];
+  assign data.w_ready = s_axi_wready[(DATA*READYSIZE)+:READYSIZE];
 
-  assign instr_b_resp_o = s_axi_bresp[(INSTR*RESPSIZE)+:RESPSIZE];
-  assign data_b_resp_o = s_axi_bresp[(DATA*RESPSIZE)+:RESPSIZE];
+  assign instr.b_resp = s_axi_bresp[(INSTR*RESPSIZE)+:RESPSIZE];
+  assign data.b_resp = s_axi_bresp[(DATA*RESPSIZE)+:RESPSIZE];
 
-  assign instr_b_valid_o = s_axi_bvalid[(INSTR*VALIDSIZE)+:VALIDSIZE];
-  assign data_b_valid_o = s_axi_bvalid[(DATA*VALIDSIZE)+:VALIDSIZE];
+  assign instr.b_valid = s_axi_bvalid[(INSTR*VALIDSIZE)+:VALIDSIZE];
+  assign data.b_valid = s_axi_bvalid[(DATA*VALIDSIZE)+:VALIDSIZE];
 
-  assign s_axi_bready[(INSTR*READYSIZE)+:READYSIZE] = instr_b_ready_i;
-  assign s_axi_bready[(DATA*READYSIZE)+:READYSIZE] = data_b_ready_i;
+  assign s_axi_bready[(INSTR*READYSIZE)+:READYSIZE] = instr.b_ready;
+  assign s_axi_bready[(DATA*READYSIZE)+:READYSIZE] = data.b_ready;
 
-  assign s_axi_araddr[(INSTR*ADDRSIZE)+:ADDRSIZE] = instr_ar_addr_i;
-  assign s_axi_araddr[(DATA*ADDRSIZE)+:ADDRSIZE] = data_ar_addr_i;
+  assign s_axi_araddr[(INSTR*ADDRSIZE)+:ADDRSIZE] = instr.ar_addr;
+  assign s_axi_araddr[(DATA*ADDRSIZE)+:ADDRSIZE] = data.ar_addr;
 
-  assign s_axi_arprot[(INSTR*PROTSIZE)+:PROTSIZE] = instr_ar_prot_i;
-  assign s_axi_arprot[(DATA*PROTSIZE)+:PROTSIZE] = data_ar_prot_i;
+  assign s_axi_arprot[(INSTR*PROTSIZE)+:PROTSIZE] = instr.ar_prot;
+  assign s_axi_arprot[(DATA*PROTSIZE)+:PROTSIZE] = data.ar_prot;
 
-  assign s_axi_arvalid[(INSTR*VALIDSIZE)+:VALIDSIZE] = instr_ar_valid_i;
-  assign s_axi_arvalid[(DATA*VALIDSIZE)+:VALIDSIZE] = data_ar_valid_i;
+  assign s_axi_arvalid[(INSTR*VALIDSIZE)+:VALIDSIZE] = instr.ar_valid;
+  assign s_axi_arvalid[(DATA*VALIDSIZE)+:VALIDSIZE] = data.ar_valid;
 
-  assign instr_ar_ready_o = s_axi_arready[(INSTR*READYSIZE)+:READYSIZE];
-  assign data_ar_ready_o = s_axi_arready[(DATA*READYSIZE)+:READYSIZE];
+  assign instr.ar_ready = s_axi_arready[(INSTR*READYSIZE)+:READYSIZE];
+  assign data.ar_ready = s_axi_arready[(DATA*READYSIZE)+:READYSIZE];
 
-  assign instr_r_data_o = s_axi_rdata[(INSTR*DATASIZE)+:DATASIZE];
-  assign data_r_data_o = s_axi_rdata[(DATA*DATASIZE)+:DATASIZE];
+  assign instr.r_data = s_axi_rdata[(INSTR*DATASIZE)+:DATASIZE];
+  assign data.r_data = s_axi_rdata[(DATA*DATASIZE)+:DATASIZE];
 
-  assign instr_r_resp_o = s_axi_rresp[(INSTR*RESPSIZE)+:RESPSIZE];
-  assign data_r_resp_o = s_axi_rresp[(DATA*RESPSIZE)+:RESPSIZE];
+  assign instr.r_resp = s_axi_rresp[(INSTR*RESPSIZE)+:RESPSIZE];
+  assign data.r_resp = s_axi_rresp[(DATA*RESPSIZE)+:RESPSIZE];
 
-  assign instr_r_valid_o = s_axi_rvalid[(INSTR*VALIDSIZE)+:VALIDSIZE];
-  assign data_r_valid_o = s_axi_rvalid[(DATA*VALIDSIZE)+:VALIDSIZE];
+  assign instr.r_valid = s_axi_rvalid[(INSTR*VALIDSIZE)+:VALIDSIZE];
+  assign data.r_valid = s_axi_rvalid[(DATA*VALIDSIZE)+:VALIDSIZE];
 
-  assign s_axi_rready[(INSTR*READYSIZE)+:READYSIZE] = instr_r_ready_i;
-  assign s_axi_rready[(DATA*READYSIZE)+:READYSIZE] = data_r_ready_i;
+  assign s_axi_rready[(INSTR*READYSIZE)+:READYSIZE] = instr.r_ready;
+  assign s_axi_rready[(DATA*READYSIZE)+:READYSIZE] = data.r_ready;
 
   axi_crossbar_0 data_crossbar (
       .aclk   (clk_i),    // input wire aclk
