@@ -320,7 +320,7 @@ module axi_burst_splitter #(
   // --------------------------------------------------
   `ifndef VERILATOR
   // pragma translate_off
-  default disable iff (!rst_ni);
+  // default disable iff (!rst_ni);
   // Inputs
   assume property (@(posedge clk_i) slv_req_i.aw_valid |->
       txn_supported(slv_req_i.aw.atop, slv_req_i.aw.burst, slv_req_i.aw.cache, slv_req_i.aw.len)
@@ -524,8 +524,7 @@ module axi_burst_splitter_counters #(
   id_queue #(
     .ID_WIDTH ( $bits(id_t) ),
     .CAPACITY ( MaxTxns     ),
-    .data_t   ( cnt_idx_t   ),
-    .FULL_BW  ( FullBW      )
+    .data_t   ( cnt_idx_t   )
   ) i_idq (
     .clk_i,
     .rst_ni,

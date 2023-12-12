@@ -165,16 +165,7 @@ module tb_axi #(
   end
 
   // wrapper for riscv, the memory system and stdout peripheral
-  axi_subsystem #(
-      .BOOT_ADDR       (BOOT_ADDR),
-      .PULP_XPULP      (PULP_XPULP),
-      .PULP_CLUSTER    (PULP_CLUSTER),
-      .FPU             (FPU),
-      .ZFINX           (ZFINX),
-      .NUM_MHPMCOUNTERS(NUM_MHPMCOUNTERS),
-      .DM_HALTADDRESS  (DM_HALTADDRESS),
-      .LOGGING         (LOGGING)
-  ) u_axi_subsystem (
+  axi_subsystem #() u_axi_subsystem (
       .clk_i         (clk),
       .rst_ni        (rst_n),
       .fetch_enable_i(fetch_enable),

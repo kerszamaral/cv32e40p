@@ -103,7 +103,7 @@ module axi_to_mem_interleaved #(
       .axi_resp_t (axi_resp_t),
       .NoMstPorts (2),
       .MaxTrans   (BufDepth),
-      .AxiLookBits(1),           // select is fixed, do not need it
+      .AxiLookBits('1),           // select is fixed, do not need it
       .UniqueIds  (1'b1)         // Can be set as ports are statically selected -> reduces HW
   ) i_split_read_write (
       .clk_i,

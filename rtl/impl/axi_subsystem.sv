@@ -8,15 +8,17 @@ module axi_subsystem #(
     parameter ZFINX = 0,
     parameter NUM_MHPMCOUNTERS = 1,
     parameter DM_HALTADDRESS = 32'h1A110800,
-    parameter MAXBLKSIZE = 20,
-    parameter BYTES = 4,
+
     parameter AXI_ADDR_WIDTH = 32,
     parameter AXI_DATA_WIDTH = 32,
-    parameter AXI_ID_WIDTH = 16,
-    parameter AXI_USER_WIDTH = 10,
+    parameter AXI_ID_WIDTH   = 1,
+    parameter AXI_USER_WIDTH = 1,
+
     parameter REGISTERED_GRANT = "FALSE",  // "TRUE"|"FALSE"
+
     parameter LOGGING = 0,
-    parameter INPUT_CLK_FREQ = 100_000_000,
+
+    parameter INPUT_CLK_FREQ  = 100_000_000,
     parameter OUTPUT_CLK_FREQ = 25_000_000
 ) (
     input logic clk_i,
@@ -109,7 +111,11 @@ module axi_subsystem #(
   );
 
   axi_mm_ram #(
-      .LOGGING(LOGGING)
+      .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
+      .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
+      .AXI_ID_WIDTH  (AXI_ID_WIDTH),
+      .AXI_USER_WIDTH(AXI_USER_WIDTH),
+      .LOGGING       (LOGGING)
   ) u_axi_mm_ram (
       .clk_i (clk),
       .rst_ni(rst_ni),
@@ -118,12 +124,12 @@ module axi_subsystem #(
       .data  (data),
 
       // Interrupt outputs
-      .irq_o       (irq),
+      .irq_o    (irq),
       // CLINT interrupts + CLINT extension interrupts
-      .irq_ack_i   (irq_ack),
-      .irq_id_i    (irq_id),
+      .irq_ack_i(irq_ack),
+      .irq_id_i (irq_id),
+
       // Debug Interface
-      .pc_core_id_i(top_i.u_cv32e40p_top.core_i.pc_id),
       .exit_valid_o(exit_valid_o),
       .exit_zero_o (exit_zero_o),
       .rx_i        (rx_i),
