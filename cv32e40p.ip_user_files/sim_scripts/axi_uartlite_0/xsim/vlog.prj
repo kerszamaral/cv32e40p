@@ -1,7 +1,0 @@
-verilog xil_defaultlib -i "../../../../example_tb/core/include" \
-"../../../../cv32e40p.gen/sources_1/ip/axi_uartlite_0/axi_uartlite_0_sim_netlist.v" \
-
-verilog xil_defaultlib "glbl.v"
-
-# Do not sort compile order
-nosort

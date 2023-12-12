@@ -73,20 +73,17 @@ module axi_mm_ram #(
     addr_map_gen[MEM] = rule_t'{
         idx: unsigned'(MEM),
         start_addr: 32'h0000_0000,
-        end_addr: 32'h1000_0000,
-        default: '0
+        end_addr: 32'h1000_0000
     };
     addr_map_gen[UART] = rule_t'{
         idx: unsigned'(UART),
         start_addr: 32'h1000_0000,
-        end_addr: 32'h1000_0010,
-        default: '0
+        end_addr: 32'h1000_0010
     };
     addr_map_gen[EXIT] = rule_t'{
         idx: unsigned'(EXIT),
         start_addr: 32'h2000_0000,
-        end_addr: 32'h2000_0010,
-        default: '0
+        end_addr: 32'h2000_0010
     };
   endfunction
 
