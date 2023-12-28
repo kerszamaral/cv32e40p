@@ -46,20 +46,20 @@ module axi_mm_ram #(
   // Each slave has its own address range:
   function rule_t [SLAVE_NUM-1:0] addr_map_gen();
     addr_map_gen[MEM] = rule_t'{
-        idx: unsigned'(MEM),
-        start_addr: 32'h0000_0000,
-        end_addr: 32'h1000_0000
-    };
+                idx: unsigned'(MEM),
+                start_addr: 32'h0000_0000,
+                end_addr: 32'h1000_0000
+        };
     addr_map_gen[UART] = rule_t'{
-        idx: unsigned'(UART),
-        start_addr: 32'h1000_0000,
-        end_addr: 32'h1000_0010
-    };
+                idx: unsigned'(UART),
+                start_addr: 32'h1000_0000,
+                end_addr: 32'h1000_0010
+        };
     addr_map_gen[EXIT] = rule_t'{
-        idx: unsigned'(EXIT),
-        start_addr: 32'h2000_0000,
-        end_addr: 32'h2000_0010
-    };
+                idx: unsigned'(EXIT),
+                start_addr: 32'h2000_0000,
+                end_addr: 32'h2000_0010
+        };
   endfunction
   localparam rule_t [SLAVE_NUM-1:0] AddrMap = addr_map_gen();
 
@@ -98,7 +98,6 @@ module axi_mm_ram #(
       .AXI_ID_WIDTH  (AXI_ID_WIDTH),
       .AXI_USER_WIDTH(AXI_USER_WIDTH)
   ) mem (
-
       .clk_i (clk_i),
       .rst_ni(rst_ni),
 
@@ -106,14 +105,13 @@ module axi_mm_ram #(
   );
 
   wire interrupt;
-  
+
   axi_uart #(
       .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
       .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
       .AXI_ID_WIDTH  (AXI_ID_WIDTH),
       .AXI_USER_WIDTH(AXI_USER_WIDTH)
   ) uart (
-
       .clk_i (clk_i),
       .rst_ni(rst_ni),
 
@@ -125,7 +123,12 @@ module axi_mm_ram #(
   );
 
   // EXIT AXI Access
-  axi_exit_dec u_exit_dec (
+  axi_exit_dec #(
+      .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
+      .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
+      .AXI_ID_WIDTH  (AXI_ID_WIDTH),
+      .AXI_USER_WIDTH(AXI_USER_WIDTH)
+  ) u_exit_dec (
       .clk_i (clk_i),
       .rst_ni(rst_ni),
 

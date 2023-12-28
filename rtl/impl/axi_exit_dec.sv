@@ -1,4 +1,9 @@
-module axi_exit_dec (
+module axi_exit_dec #(
+    parameter AXI_ADDR_WIDTH = 32,
+    parameter AXI_DATA_WIDTH = 32,
+    parameter AXI_ID_WIDTH   = 16,
+    parameter AXI_USER_WIDTH = 10
+) (
     input logic clk_i,
     input logic rst_ni,
 
@@ -16,13 +21,13 @@ module axi_exit_dec (
 
   axi_to_mem_intf #(
       /// See `axi_to_mem`, parameter `AddrWidth`.
-      .ADDR_WIDTH    (32),
+      .ADDR_WIDTH    (AXI_ADDR_WIDTH),
       /// See `axi_to_mem`, parameter `DataWidth`.
-      .DATA_WIDTH    (32),
+      .DATA_WIDTH    (AXI_DATA_WIDTH),
       /// AXI4+ATOP ID width.
-      .ID_WIDTH      (16),
+      .ID_WIDTH      (AXI_ID_WIDTH),
       /// AXI4+ATOP user width.
-      .USER_WIDTH    (10),
+      .USER_WIDTH    (AXI_USER_WIDTH),
       /// See `axi_to_mem`, parameter `NumBanks`.
       .NUM_BANKS     (1),
       /// See `axi_to_mem`, parameter `BufDepth`.

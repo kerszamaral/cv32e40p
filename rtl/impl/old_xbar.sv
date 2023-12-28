@@ -133,80 +133,122 @@ module old_xbar #(
   assign s_axi_rready[(DATA*READYSIZE)+:READYSIZE] = AXI_Slaves[DATA].r_ready;
 
   // MEM Conversion
-  assign AXI_Masters[MEM].aw_addr = m_axi_awaddr[(MEM*ADDRSIZE)+:ADDRSIZE];
-  assign AXI_Masters[MEM].aw_prot = m_axi_awprot[(MEM*PROTSIZE)+:PROTSIZE];
-  assign AXI_Masters[MEM].aw_valid = m_axi_awvalid[(MEM*VALIDSIZE)+:VALIDSIZE];
-  assign m_axi_awready[(MEM*READYSIZE)+:READYSIZE] = AXI_Masters[MEM].aw_ready;
+  AXI_LITE #(
+      .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
+      .AXI_DATA_WIDTH(AXI_DATA_WIDTH)
+  ) AXI_mem ();
 
-  assign AXI_Masters[MEM].w_data = m_axi_wdata[(MEM*DATASIZE)+:DATASIZE];
-  assign AXI_Masters[MEM].w_strb = m_axi_wstrb[(MEM*STRBSIZE)+:STRBSIZE];
-  assign AXI_Masters[MEM].w_valid = m_axi_wvalid[(MEM*VALIDSIZE)+:VALIDSIZE];
-  assign m_axi_wready[(MEM*READYSIZE)+:READYSIZE] = AXI_Masters[MEM].w_ready;
+  axi_lite_to_axi_intf #(
+      .AXI_DATA_WIDTH(AXI_DATA_WIDTH)
+  ) u_axi_lite_to_axi_intf_mem (
+      .in            (AXI_mem),
+      .slv_aw_cache_i('0),
+      .slv_ar_cache_i('0),
+      .out           (AXI_Masters[MEM])
+  );
 
-  assign m_axi_bresp[(MEM*RESPSIZE)+:RESPSIZE] = AXI_Masters[MEM].b_resp;
-  assign m_axi_bvalid[(MEM*VALIDSIZE)+:VALIDSIZE] = AXI_Masters[MEM].b_valid;
-  assign AXI_Masters[MEM].b_ready = m_axi_bready[(MEM*READYSIZE)+:READYSIZE];
+  assign AXI_mem.aw_addr = m_axi_awaddr[(MEM*ADDRSIZE)+:ADDRSIZE];
+  assign AXI_mem.aw_prot = m_axi_awprot[(MEM*PROTSIZE)+:PROTSIZE];
+  assign AXI_mem.aw_valid = m_axi_awvalid[(MEM*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_awready[(MEM*READYSIZE)+:READYSIZE] = AXI_mem.aw_ready;
 
-  assign AXI_Masters[MEM].ar_addr = m_axi_araddr[(MEM*ADDRSIZE)+:ADDRSIZE];
-  assign AXI_Masters[MEM].ar_prot = m_axi_arprot[(MEM*PROTSIZE)+:PROTSIZE];
-  assign AXI_Masters[MEM].ar_valid = m_axi_arvalid[(MEM*VALIDSIZE)+:VALIDSIZE];
-  assign m_axi_arready[(MEM*READYSIZE)+:READYSIZE] = AXI_Masters[MEM].ar_ready;
+  assign AXI_mem.w_data = m_axi_wdata[(MEM*DATASIZE)+:DATASIZE];
+  assign AXI_mem.w_strb = m_axi_wstrb[(MEM*STRBSIZE)+:STRBSIZE];
+  assign AXI_mem.w_valid = m_axi_wvalid[(MEM*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_wready[(MEM*READYSIZE)+:READYSIZE] = AXI_mem.w_ready;
 
-  assign m_axi_rdata[(MEM*DATASIZE)+:DATASIZE] = AXI_Masters[MEM].r_data;
-  assign m_axi_rresp[(MEM*RESPSIZE)+:RESPSIZE] = AXI_Masters[MEM].r_resp;
-  assign m_axi_rvalid[(MEM*VALIDSIZE)+:VALIDSIZE] = AXI_Masters[MEM].r_valid;
-  assign AXI_Masters[MEM].r_ready = m_axi_rready[(MEM*READYSIZE)+:READYSIZE];
+  assign m_axi_bresp[(MEM*RESPSIZE)+:RESPSIZE] = AXI_mem.b_resp;
+  assign m_axi_bvalid[(MEM*VALIDSIZE)+:VALIDSIZE] = AXI_mem.b_valid;
+  assign AXI_mem.b_ready = m_axi_bready[(MEM*READYSIZE)+:READYSIZE];
+
+  assign AXI_mem.ar_addr = m_axi_araddr[(MEM*ADDRSIZE)+:ADDRSIZE];
+  assign AXI_mem.ar_prot = m_axi_arprot[(MEM*PROTSIZE)+:PROTSIZE];
+  assign AXI_mem.ar_valid = m_axi_arvalid[(MEM*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_arready[(MEM*READYSIZE)+:READYSIZE] = AXI_mem.ar_ready;
+
+  assign m_axi_rdata[(MEM*DATASIZE)+:DATASIZE] = AXI_mem.r_data;
+  assign m_axi_rresp[(MEM*RESPSIZE)+:RESPSIZE] = AXI_mem.r_resp;
+  assign m_axi_rvalid[(MEM*VALIDSIZE)+:VALIDSIZE] = AXI_mem.r_valid;
+  assign AXI_mem.r_ready = m_axi_rready[(MEM*READYSIZE)+:READYSIZE];
 
 
   // UART Conversion
-  assign AXI_Masters[UART].aw_addr = m_axi_awaddr[(UART*ADDRSIZE)+:ADDRSIZE];
-  assign AXI_Masters[UART].aw_prot = m_axi_awprot[(UART*PROTSIZE)+:PROTSIZE];
-  assign AXI_Masters[UART].aw_valid = m_axi_awvalid[(UART*VALIDSIZE)+:VALIDSIZE];
-  assign m_axi_awready[(UART*READYSIZE)+:READYSIZE] = AXI_Masters[UART].aw_ready;
+  AXI_LITE #(
+      .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
+      .AXI_DATA_WIDTH(AXI_DATA_WIDTH)
+  ) AXI_uart ();
 
-  assign AXI_Masters[UART].w_data = m_axi_wdata[(UART*DATASIZE)+:DATASIZE];
-  assign AXI_Masters[UART].w_strb = m_axi_wstrb[(UART*STRBSIZE)+:STRBSIZE];
-  assign AXI_Masters[UART].w_valid = m_axi_wvalid[(UART*VALIDSIZE)+:VALIDSIZE];
-  assign m_axi_wready[(UART*READYSIZE)+:READYSIZE] = AXI_Masters[UART].w_ready;
+  axi_lite_to_axi_intf #(
+      .AXI_DATA_WIDTH(AXI_DATA_WIDTH)
+  ) u_axi_lite_to_axi_intf_uart (
+      .in            (AXI_uart),
+      .slv_aw_cache_i('0),
+      .slv_ar_cache_i('0),
+      .out           (AXI_Masters[UART])
+  );
 
-  assign m_axi_bresp[(UART*RESPSIZE)+:RESPSIZE] = AXI_Masters[UART].b_resp;
-  assign m_axi_bvalid[(UART*VALIDSIZE)+:VALIDSIZE] = AXI_Masters[UART].b_valid;
-  assign AXI_Masters[UART].b_ready = m_axi_bready[(UART*READYSIZE)+:READYSIZE];
+  assign AXI_uart.aw_addr = m_axi_awaddr[(UART*ADDRSIZE)+:ADDRSIZE];
+  assign AXI_uart.aw_prot = m_axi_awprot[(UART*PROTSIZE)+:PROTSIZE];
+  assign AXI_uart.aw_valid = m_axi_awvalid[(UART*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_awready[(UART*READYSIZE)+:READYSIZE] = AXI_uart.aw_ready;
 
-  assign AXI_Masters[UART].ar_addr = m_axi_araddr[(UART*ADDRSIZE)+:ADDRSIZE];
-  assign AXI_Masters[UART].ar_prot = m_axi_arprot[(UART*PROTSIZE)+:PROTSIZE];
-  assign AXI_Masters[UART].ar_valid = m_axi_arvalid[(UART*VALIDSIZE)+:VALIDSIZE];
-  assign m_axi_arready[(UART*READYSIZE)+:READYSIZE] = AXI_Masters[UART].ar_ready;
+  assign AXI_uart.w_data = m_axi_wdata[(UART*DATASIZE)+:DATASIZE];
+  assign AXI_uart.w_strb = m_axi_wstrb[(UART*STRBSIZE)+:STRBSIZE];
+  assign AXI_uart.w_valid = m_axi_wvalid[(UART*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_wready[(UART*READYSIZE)+:READYSIZE] = AXI_uart.w_ready;
 
-  assign m_axi_rdata[(UART*DATASIZE)+:DATASIZE] = AXI_Masters[UART].r_data;
-  assign m_axi_rresp[(UART*RESPSIZE)+:RESPSIZE] = AXI_Masters[UART].r_resp;
-  assign m_axi_rvalid[(UART*VALIDSIZE)+:VALIDSIZE] = AXI_Masters[UART].r_valid;
-  assign AXI_Masters[UART].r_ready = m_axi_rready[(UART*READYSIZE)+:READYSIZE];
+  assign m_axi_bresp[(UART*RESPSIZE)+:RESPSIZE] = AXI_uart.b_resp;
+  assign m_axi_bvalid[(UART*VALIDSIZE)+:VALIDSIZE] = AXI_uart.b_valid;
+  assign AXI_uart.b_ready = m_axi_bready[(UART*READYSIZE)+:READYSIZE];
+
+  assign AXI_uart.ar_addr = m_axi_araddr[(UART*ADDRSIZE)+:ADDRSIZE];
+  assign AXI_uart.ar_prot = m_axi_arprot[(UART*PROTSIZE)+:PROTSIZE];
+  assign AXI_uart.ar_valid = m_axi_arvalid[(UART*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_arready[(UART*READYSIZE)+:READYSIZE] = AXI_uart.ar_ready;
+
+  assign m_axi_rdata[(UART*DATASIZE)+:DATASIZE] = AXI_uart.r_data;
+  assign m_axi_rresp[(UART*RESPSIZE)+:RESPSIZE] = AXI_uart.r_resp;
+  assign m_axi_rvalid[(UART*VALIDSIZE)+:VALIDSIZE] = AXI_uart.r_valid;
+  assign AXI_uart.r_ready = m_axi_rready[(UART*READYSIZE)+:READYSIZE];
 
   // Exit Conversion
-  assign AXI_Masters[EXIT].aw_addr = m_axi_awaddr[(EXIT*ADDRSIZE)+:ADDRSIZE];
-  assign AXI_Masters[EXIT].aw_prot = m_axi_awprot[(EXIT*PROTSIZE)+:PROTSIZE];
-  assign AXI_Masters[EXIT].aw_valid = m_axi_awvalid[(EXIT*VALIDSIZE)+:VALIDSIZE];
-  assign m_axi_awready[(EXIT*READYSIZE)+:READYSIZE] = AXI_Masters[EXIT].aw_ready;
+  AXI_LITE #(
+      .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
+      .AXI_DATA_WIDTH(AXI_DATA_WIDTH)
+  ) AXI_exit ();
 
-  assign AXI_Masters[EXIT].w_data = m_axi_wdata[(EXIT*DATASIZE)+:DATASIZE];
-  assign AXI_Masters[EXIT].w_strb = m_axi_wstrb[(EXIT*STRBSIZE)+:STRBSIZE];
-  assign AXI_Masters[EXIT].w_valid = m_axi_wvalid[(EXIT*VALIDSIZE)+:VALIDSIZE];
-  assign m_axi_wready[(EXIT*READYSIZE)+:READYSIZE] = AXI_Masters[EXIT].w_ready;
+  axi_lite_to_axi_intf #(
+      .AXI_DATA_WIDTH(AXI_DATA_WIDTH)
+  ) u_axi_lite_to_axi_intf_exit (
+      .in            (AXI_exit),
+      .slv_aw_cache_i('0),
+      .slv_ar_cache_i('0),
+      .out           (AXI_Masters[EXIT])
+  );
 
-  assign m_axi_bresp[(EXIT*RESPSIZE)+:RESPSIZE] = AXI_Masters[EXIT].b_resp;
-  assign m_axi_bvalid[(EXIT*VALIDSIZE)+:VALIDSIZE] = AXI_Masters[EXIT].b_valid;
-  assign AXI_Masters[EXIT].b_ready = m_axi_bready[(EXIT*READYSIZE)+:READYSIZE];
+  assign AXI_exit.aw_addr = m_axi_awaddr[(EXIT*ADDRSIZE)+:ADDRSIZE];
+  assign AXI_exit.aw_prot = m_axi_awprot[(EXIT*PROTSIZE)+:PROTSIZE];
+  assign AXI_exit.aw_valid = m_axi_awvalid[(EXIT*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_awready[(EXIT*READYSIZE)+:READYSIZE] = AXI_exit.aw_ready;
 
-  assign AXI_Masters[EXIT].ar_addr = m_axi_araddr[(EXIT*ADDRSIZE)+:ADDRSIZE];
-  assign AXI_Masters[EXIT].ar_prot = m_axi_arprot[(EXIT*PROTSIZE)+:PROTSIZE];
-  assign AXI_Masters[EXIT].ar_valid = m_axi_arvalid[(EXIT*VALIDSIZE)+:VALIDSIZE];
-  assign m_axi_arready[(EXIT*READYSIZE)+:READYSIZE] = AXI_Masters[EXIT].ar_ready;
+  assign AXI_exit.w_data = m_axi_wdata[(EXIT*DATASIZE)+:DATASIZE];
+  assign AXI_exit.w_strb = m_axi_wstrb[(EXIT*STRBSIZE)+:STRBSIZE];
+  assign AXI_exit.w_valid = m_axi_wvalid[(EXIT*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_wready[(EXIT*READYSIZE)+:READYSIZE] = AXI_exit.w_ready;
 
-  assign m_axi_rdata[(EXIT*DATASIZE)+:DATASIZE] = AXI_Masters[EXIT].r_data;
-  assign m_axi_rresp[(EXIT*RESPSIZE)+:RESPSIZE] = AXI_Masters[EXIT].r_resp;
-  assign m_axi_rvalid[(EXIT*VALIDSIZE)+:VALIDSIZE] = AXI_Masters[EXIT].r_valid;
-  assign AXI_Masters[EXIT].r_ready = m_axi_rready[(EXIT*READYSIZE)+:READYSIZE];
+  assign m_axi_bresp[(EXIT*RESPSIZE)+:RESPSIZE] = AXI_exit.b_resp;
+  assign m_axi_bvalid[(EXIT*VALIDSIZE)+:VALIDSIZE] = AXI_exit.b_valid;
+  assign AXI_exit.b_ready = m_axi_bready[(EXIT*READYSIZE)+:READYSIZE];
+
+  assign AXI_exit.ar_addr = m_axi_araddr[(EXIT*ADDRSIZE)+:ADDRSIZE];
+  assign AXI_exit.ar_prot = m_axi_arprot[(EXIT*PROTSIZE)+:PROTSIZE];
+  assign AXI_exit.ar_valid = m_axi_arvalid[(EXIT*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_arready[(EXIT*READYSIZE)+:READYSIZE] = AXI_exit.ar_ready;
+
+  assign m_axi_rdata[(EXIT*DATASIZE)+:DATASIZE] = AXI_exit.r_data;
+  assign m_axi_rresp[(EXIT*RESPSIZE)+:RESPSIZE] = AXI_exit.r_resp;
+  assign m_axi_rvalid[(EXIT*VALIDSIZE)+:VALIDSIZE] = AXI_exit.r_valid;
+  assign AXI_exit.r_ready = m_axi_rready[(EXIT*READYSIZE)+:READYSIZE];
 
   axi_crossbar_0 data_crossbar (
       .aclk   (clk_i),    // input wire aclk
