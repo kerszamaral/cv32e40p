@@ -113,7 +113,7 @@ module rr_arb_tree #(
   `ifndef VERILATOR
   `ifndef XSIM
   // Default SVA reset
-  // default disable iff (!rst_ni || flush_i);
+  default disable iff (!rst_ni || flush_i);
   `endif
   `endif
   // pragma translate_on
@@ -295,8 +295,8 @@ module rr_arb_tree #(
           assign sel =  ~req_nodes[Idx1] | req_nodes[Idx1+1] & rr_q[NumLevels-1-level];
 
           assign index_nodes[Idx0] = (sel) ?
-                        idx_t'({1'b1, index_nodes[Idx1+1][NumLevels-unsigned'(level)-2:0]}) :
-                        idx_t'({1'b0, index_nodes[Idx1][NumLevels-unsigned'(level)-2:0]});
+                                                idx_t'({1'b1, index_nodes[Idx1+1][NumLevels-unsigned'(level)-2:0]}) :
+                                                idx_t'({1'b0, index_nodes[Idx1][NumLevels-unsigned'(level)-2:0]});
 
           assign data_nodes[Idx0]  = (sel) ? data_nodes[Idx1+1] : data_nodes[Idx1];
           assign gnt_nodes[Idx1]   = gnt_nodes[Idx0] & ~sel;
