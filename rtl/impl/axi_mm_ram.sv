@@ -75,7 +75,7 @@ module axi_mm_ram #(
   `AXI_ASSIGN(master[INSTR], instr)
   `AXI_ASSIGN(master[DATA], data)
 
-  impl_xbar #(
+  old_xbar #(
       .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
       .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
       .AXI_ID_WIDTH  (AXI_ID_WIDTH),

@@ -24,9 +24,9 @@ module axi_uart #(
       .AXI_ADDR_WIDTH    (AXI_ADDR_WIDTH),
       .AXI_DATA_WIDTH    (AXI_DATA_WIDTH),
       .AXI_USER_WIDTH    (AXI_USER_WIDTH),
-      .AXI_MAX_WRITE_TXNS(32'd10),
-      .AXI_MAX_READ_TXNS (32'd10),
-      .FALL_THROUGH      (1'b1)
+      .AXI_MAX_WRITE_TXNS(32'd1),
+      .AXI_MAX_READ_TXNS (32'd1),
+      .FALL_THROUGH      (1'b0)
   ) lite_to_axi (
       .clk_i     (clk_i),
       .rst_ni    (rst_ni),

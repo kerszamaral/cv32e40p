@@ -20,8 +20,8 @@ module impl_xbar #(
   localparam axi_pkg::xbar_cfg_t xbar_cfg = '{
       NoSlvPorts: MASTER_NUM,
       NoMstPorts: SLAVE_NUM,
-      MaxMstTrans: 10,
-      MaxSlvTrans: 6,
+      MaxMstTrans: 1,
+      MaxSlvTrans: 1,
       FallThrough: 1'b0,
       LatencyMode: axi_pkg::CUT_ALL_AX,
       PipelineStages: 1'b1,  /// Pipeline stages in the xbar itself (between demux and mux).
