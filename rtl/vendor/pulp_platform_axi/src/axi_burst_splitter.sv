@@ -524,8 +524,7 @@ module axi_burst_splitter_counters #(
   id_queue #(
     .ID_WIDTH ( $bits(id_t) ),
     .CAPACITY ( MaxTxns     ),
-    .data_t   ( cnt_idx_t   ),
-    .FULL_BW  ( FullBW      )
+    .data_t   ( cnt_idx_t   )
   ) i_idq (
     .clk_i,
     .rst_ni,

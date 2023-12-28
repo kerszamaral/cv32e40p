@@ -14,8 +14,8 @@
 // - Thomas Benz <tbenz@iis.ee.ethz.ch>
 // - Andreas Kurth <akurth@iis.ee.ethz.ch>
 
-`include "common_cells/assertions.svh"
-`include "common_cells/registers.svh"
+`include "assertions.svh"
+`include "registers.svh"
 `include "assign.svh"
 
 `ifdef QUESTA

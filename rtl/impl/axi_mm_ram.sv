@@ -184,84 +184,117 @@ module axi_mm_ram #(
   localparam UART = 1;
   localparam EXIT = 2;
 
-  wire rsta_busy;
-  wire rstb_busy;
-
   // BRAM AXI Access
-  dp_axi_bram mem (
-      .rsta_busy(rsta_busy),  // output wire rsta_busy
-      .rstb_busy(rstb_busy),  // output wire rstb_busy
+  AXI_LITE #(
+      .AXI_ADDR_WIDTH(32),
+      .AXI_DATA_WIDTH(32)
+  ) AXI_mem ();
 
-      .s_aclk   (clk_i),  // input wire s_aclk
-      .s_aresetn(rst_ni), // input wire s_aresetn
+  AXI_BUS #(
+      .AXI_ADDR_WIDTH(32),
+      .AXI_DATA_WIDTH(32),
+      .AXI_ID_WIDTH  (16),
+      .AXI_USER_WIDTH(10)
+  ) AXI_mem_temp ();
 
-      .s_axi_awaddr(m_axi_awaddr[(MEM*ADDRSIZE)+:ADDRSIZE]),  // input wire [31 : 0] s_axi_awaddr
-      .s_axi_awvalid(m_axi_awvalid[(MEM*VALIDSIZE)+:VALIDSIZE]),  // input wire s_axi_awvalid
-      .s_axi_awready(m_axi_awready[(MEM*READYSIZE)+:READYSIZE]),  // output wire s_axi_awready
-      .s_axi_wdata(m_axi_wdata[(MEM*DATASIZE)+:DATASIZE]),  // input wire [31 : 0] s_axi_wdata
-      .s_axi_wstrb(m_axi_wstrb[(MEM*STRBSIZE)+:STRBSIZE]),  // input wire [3 : 0] s_axi_wstrb
-      .s_axi_wvalid(m_axi_wvalid[(MEM*VALIDSIZE)+:VALIDSIZE]),  // input wire s_axi_wvalid
-      .s_axi_wready(m_axi_wready[(MEM*READYSIZE)+:READYSIZE]),  // output wire s_axi_wready
-      .s_axi_bresp(m_axi_bresp[(MEM*RESPSIZE)+:RESPSIZE]),  // output wire [1 : 0] s_axi_bresp
-      .s_axi_bvalid(m_axi_bvalid[(MEM*VALIDSIZE)+:VALIDSIZE]),  // output wire s_axi_bvalid
-      .s_axi_bready(m_axi_bready[(MEM*READYSIZE)+:READYSIZE]),  // input wire s_axi_bready
-      .s_axi_araddr(m_axi_araddr[(MEM*ADDRSIZE)+:ADDRSIZE]),  // input wire [31 : 0] s_axi_araddr
-      .s_axi_arvalid(m_axi_arvalid[(MEM*VALIDSIZE)+:VALIDSIZE]),  // input wire s_axi_arvalid
-      .s_axi_arready(m_axi_arready[(MEM*READYSIZE)+:READYSIZE]),  // output wire s_axi_arready
-      .s_axi_rdata(m_axi_rdata[(MEM*DATASIZE)+:DATASIZE]),  // output wire [31 : 0] s_axi_rdata
-      .s_axi_rresp(m_axi_rresp[(MEM*RESPSIZE)+:RESPSIZE]),  // output wire [1 : 0] s_axi_rresp
-      .s_axi_rvalid(m_axi_rvalid[(MEM*VALIDSIZE)+:VALIDSIZE]),  // output wire s_axi_rvalid
-      .s_axi_rready(m_axi_rready[(MEM*READYSIZE)+:READYSIZE])  // input wire s_axi_rready
+  axi_lite_to_axi_intf #(
+      .AXI_DATA_WIDTH(32)
+  ) u_axi_lite_to_axi_intf_mem (
+      .in            (AXI_mem),
+      .slv_aw_cache_i('0),
+      .slv_ar_cache_i('0),
+      .out           (AXI_mem_temp)
   );
 
-  generate
-    if (LOGGING) begin
-      always @(posedge clk_i) begin
-        if (m_axi_awvalid[(MEM*VALIDSIZE)+:VALIDSIZE])
-          $display(
-              "addr=0x%08x: data=0x%08x",
-              m_axi_araddr[(MEM*ADDRSIZE)+:ADDRSIZE],
-              m_axi_rdata[(MEM*DATASIZE)+:DATASIZE]
-          );
-        if (m_axi_wvalid[(MEM*VALIDSIZE)+:VALIDSIZE])
-          $display(
-              "write addr=0x%08x: data=0x%08x",
-              m_axi_awaddr[(MEM*ADDRSIZE)+:ADDRSIZE],
-              m_axi_wdata[(MEM*DATASIZE)+:DATASIZE]
-          );
-      end
-    end
-  endgenerate
+  assign AXI_mem.aw_addr = m_axi_awaddr[(MEM*ADDRSIZE)+:ADDRSIZE];
+  assign AXI_mem.aw_prot = m_axi_awprot[(MEM*PROTSIZE)+:PROTSIZE];
+  assign AXI_mem.aw_valid = m_axi_awvalid[(MEM*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_awready[(MEM*READYSIZE)+:READYSIZE] = AXI_mem.aw_ready;
+
+  assign AXI_mem.w_data = m_axi_wdata[(MEM*DATASIZE)+:DATASIZE];
+  assign AXI_mem.w_strb = m_axi_wstrb[(MEM*STRBSIZE)+:STRBSIZE];
+  assign AXI_mem.w_valid = m_axi_wvalid[(MEM*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_wready[(MEM*READYSIZE)+:READYSIZE] = AXI_mem.w_ready;
+
+  assign m_axi_bresp[(MEM*RESPSIZE)+:RESPSIZE] = AXI_mem.b_resp;
+  assign m_axi_bvalid[(MEM*VALIDSIZE)+:VALIDSIZE] = AXI_mem.b_valid;
+  assign AXI_mem.b_ready = m_axi_bready[(MEM*READYSIZE)+:READYSIZE];
+
+  assign AXI_mem.ar_addr = m_axi_araddr[(MEM*ADDRSIZE)+:ADDRSIZE];
+  assign AXI_mem.ar_prot = m_axi_arprot[(MEM*PROTSIZE)+:PROTSIZE];
+  assign AXI_mem.ar_valid = m_axi_arvalid[(MEM*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_arready[(MEM*READYSIZE)+:READYSIZE] = AXI_mem.ar_ready;
+
+  assign m_axi_rdata[(MEM*DATASIZE)+:DATASIZE] = AXI_mem.r_data;
+  assign m_axi_rresp[(MEM*RESPSIZE)+:RESPSIZE] = AXI_mem.r_resp;
+  assign m_axi_rvalid[(MEM*VALIDSIZE)+:VALIDSIZE] = AXI_mem.r_valid;
+  assign AXI_mem.r_ready = m_axi_rready[(MEM*READYSIZE)+:READYSIZE];
+
+  axi_mem mem (
+      .clk_i (clk_i),  // input wire clk_i
+      .rst_ni(rst_ni), // input wire rst_ni
+
+      .AXI_Slave(AXI_mem_temp)
+  );
 
   wire interrupt;
 
   // UART AXI Access
-  axi_uartlite_0 uart (
-      .s_axi_aclk   (clk_i),     // input wire s_axi_aclk
-      .s_axi_aresetn(rst_ni),  // input wire s_axi_aresetn
+  AXI_LITE #(
+      .AXI_ADDR_WIDTH(32),
+      .AXI_DATA_WIDTH(32)
+  ) AXI_uart ();
 
-      .interrupt(interrupt),  // output wire interrupt
+  AXI_BUS #(
+      .AXI_ADDR_WIDTH(32),
+      .AXI_DATA_WIDTH(32),
+      .AXI_ID_WIDTH  (16),
+      .AXI_USER_WIDTH(10)
+  ) AXI_uart_temp ();
 
-      .s_axi_awaddr('h4),  // input wire [3 : 0] s_axi_awaddr m_axi_awaddr[(UART*ADDRSIZE)+:4]
-      .s_axi_awvalid(m_axi_awvalid[(UART*VALIDSIZE)+:VALIDSIZE]),  // input wire s_axi_awvalid
-      .s_axi_awready(m_axi_awready[(UART*READYSIZE)+:READYSIZE]),  // output wire s_axi_awready
-      .s_axi_wdata(m_axi_wdata[(UART*DATASIZE)+:DATASIZE]),  // input wire [31 : 0] s_axi_wdata
-      .s_axi_wstrb(m_axi_wstrb[(UART*STRBSIZE)+:STRBSIZE]),  // input wire [3 : 0] s_axi_wstrb
-      .s_axi_wvalid(m_axi_wvalid[(UART*VALIDSIZE)+:VALIDSIZE]),  // input wire s_axi_wvalid
-      .s_axi_wready(m_axi_wready[(UART*READYSIZE)+:READYSIZE]),  // output wire s_axi_wready
-      .s_axi_bresp(m_axi_bresp[(UART*RESPSIZE)+:RESPSIZE]),  // output wire [1 : 0] s_axi_bresp
-      .s_axi_bvalid(m_axi_bvalid[(UART*VALIDSIZE)+:VALIDSIZE]),  // output wire s_axi_bvalid
-      .s_axi_bready(m_axi_bready[(UART*READYSIZE)+:READYSIZE]),  // input wire s_axi_bready
-      .s_axi_araddr(m_axi_araddr[(UART*ADDRSIZE)+:4]),  // input wire [3 : 0] s_axi_araddr
-      .s_axi_arvalid(m_axi_arvalid[(UART*VALIDSIZE)+:VALIDSIZE]),  // input wire s_axi_arvalid
-      .s_axi_arready(m_axi_arready[(UART*READYSIZE)+:READYSIZE]),  // output wire s_axi_arready
-      .s_axi_rdata(m_axi_rdata[(UART*DATASIZE)+:DATASIZE]),  // output wire [31 : 0] s_axi_rdata
-      .s_axi_rresp(m_axi_rresp[(UART*RESPSIZE)+:RESPSIZE]),  // output wire [1 : 0] s_axi_rresp
-      .s_axi_rvalid(m_axi_rvalid[(UART*VALIDSIZE)+:VALIDSIZE]),  // output wire s_axi_rvalid
-      .s_axi_rready(m_axi_rready[(UART*READYSIZE)+:READYSIZE]),  // input wire s_axi_rready
+  axi_lite_to_axi_intf #(
+      .AXI_DATA_WIDTH(32)
+  ) u_axi_lite_to_axi_intf_uart (
+      .in            (AXI_uart),
+      .slv_aw_cache_i('0),
+      .slv_ar_cache_i('0),
+      .out           (AXI_uart_temp)
+  );
 
-      .rx(rx_i),  // input wire rx
-      .tx(tx_o)   // output wire tx
+  assign AXI_uart.aw_addr = m_axi_awaddr[(UART*ADDRSIZE)+:ADDRSIZE];
+  assign AXI_uart.aw_prot = m_axi_awprot[(UART*PROTSIZE)+:PROTSIZE];
+  assign AXI_uart.aw_valid = m_axi_awvalid[(UART*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_awready[(UART*READYSIZE)+:READYSIZE] = AXI_uart.aw_ready;
+
+  assign AXI_uart.w_data = m_axi_wdata[(UART*DATASIZE)+:DATASIZE];
+  assign AXI_uart.w_strb = m_axi_wstrb[(UART*STRBSIZE)+:STRBSIZE];
+  assign AXI_uart.w_valid = m_axi_wvalid[(UART*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_wready[(UART*READYSIZE)+:READYSIZE] = AXI_uart.w_ready;
+
+  assign m_axi_bresp[(UART*RESPSIZE)+:RESPSIZE] = AXI_uart.b_resp;
+  assign m_axi_bvalid[(UART*VALIDSIZE)+:VALIDSIZE] = AXI_uart.b_valid;
+  assign AXI_uart.b_ready = m_axi_bready[(UART*READYSIZE)+:READYSIZE];
+
+  assign AXI_uart.ar_addr = m_axi_araddr[(UART*ADDRSIZE)+:ADDRSIZE];
+  assign AXI_uart.ar_prot = m_axi_arprot[(UART*PROTSIZE)+:PROTSIZE];
+  assign AXI_uart.ar_valid = m_axi_arvalid[(UART*VALIDSIZE)+:VALIDSIZE];
+  assign m_axi_arready[(UART*READYSIZE)+:READYSIZE] = AXI_uart.ar_ready;
+
+  assign m_axi_rdata[(UART*DATASIZE)+:DATASIZE] = AXI_uart.r_data;
+  assign m_axi_rresp[(UART*RESPSIZE)+:RESPSIZE] = AXI_uart.r_resp;
+  assign m_axi_rvalid[(UART*VALIDSIZE)+:VALIDSIZE] = AXI_uart.r_valid;
+  assign AXI_uart.r_ready = m_axi_rready[(UART*READYSIZE)+:READYSIZE];
+
+  axi_uart uart (
+      .clk_i (clk_i),  // input wire clk_i
+      .rst_ni(rst_ni), // input wire rst_ni
+
+      .AXI_Slave(AXI_uart_temp),
+
+      .interrupt_o(interrupt),  // output wire interrupt
+
+      .rx_i(rx_i),  // input wire rx
+      .tx_o(tx_o)   // output wire tx
   );
 
   AXI_LITE #(
