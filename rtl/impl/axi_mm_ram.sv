@@ -5,7 +5,8 @@ module axi_mm_ram #(
     parameter AXI_DATA_WIDTH = 32,
     parameter AXI_ID_WIDTH = 16,
     parameter AXI_USER_WIDTH = 10,
-    parameter LOGGING = 0
+    parameter LOGGING = 1,
+    parameter OLD_XBAR_MODE = 0
 ) (
     input logic clk_i,
     input logic rst_ni,
@@ -46,20 +47,23 @@ module axi_mm_ram #(
   // Each slave has its own address range:
   function rule_t [SLAVE_NUM-1:0] addr_map_gen();
     addr_map_gen[MEM] = rule_t'{
-                idx: unsigned'(MEM),
-                start_addr: 32'h0000_0000,
-                end_addr: 32'h1000_0000
-        };
+                    idx: unsigned'(MEM),
+                    start_addr: 32'h0000_0000,
+                    end_addr: 32'h1000_0000,
+                    default:    '0
+                };
     addr_map_gen[UART] = rule_t'{
-                idx: unsigned'(UART),
-                start_addr: 32'h1000_0000,
-                end_addr: 32'h1000_0010
-        };
+                    idx: unsigned'(UART),
+                    start_addr: 32'h1000_0000,
+                    end_addr: 32'h1000_0010,
+                    default:    '0
+                };
     addr_map_gen[EXIT] = rule_t'{
-                idx: unsigned'(EXIT),
-                start_addr: 32'h2000_0000,
-                end_addr: 32'h2000_0010
-        };
+                    idx: unsigned'(EXIT),
+                    start_addr: 32'h2000_0000,
+                    end_addr: 32'h2000_0010,
+                    default:    '0
+                };
   endfunction
   localparam rule_t [SLAVE_NUM-1:0] AddrMap = addr_map_gen();
 
@@ -75,13 +79,14 @@ module axi_mm_ram #(
   `AXI_ASSIGN(master[INSTR], instr)
   `AXI_ASSIGN(master[DATA], data)
 
-  old_xbar #(
+  impl_xbar #(
       .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
       .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
       .AXI_ID_WIDTH  (AXI_ID_WIDTH),
       .AXI_USER_WIDTH(AXI_USER_WIDTH),
       .MASTER_NUM(MASTER_NUM),
-      .SLAVE_NUM(SLAVE_NUM)
+      .SLAVE_NUM(SLAVE_NUM),
+      .OLD(OLD_XBAR_MODE)
     ) xbar (
     .clk_i(clk_i),
     .rst_ni(rst_ni),
@@ -96,7 +101,8 @@ module axi_mm_ram #(
       .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
       .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
       .AXI_ID_WIDTH  (AXI_ID_WIDTH),
-      .AXI_USER_WIDTH(AXI_USER_WIDTH)
+      .AXI_USER_WIDTH(AXI_USER_WIDTH),
+      .LOGGING(LOGGING)
   ) mem (
       .clk_i (clk_i),
       .rst_ni(rst_ni),

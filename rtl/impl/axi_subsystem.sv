@@ -16,8 +16,6 @@ module axi_subsystem #(
 
     parameter REGISTERED_GRANT = "FALSE",  // "TRUE"|"FALSE"
 
-    parameter LOGGING = 0,
-
     parameter INPUT_CLK_FREQ  = 100_000_000,
     parameter OUTPUT_CLK_FREQ = 25_000_000
 ) (
@@ -114,8 +112,7 @@ module axi_subsystem #(
       .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
       .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
       .AXI_ID_WIDTH  (AXI_ID_WIDTH),
-      .AXI_USER_WIDTH(AXI_USER_WIDTH),
-      .LOGGING       (LOGGING)
+      .AXI_USER_WIDTH(AXI_USER_WIDTH)
   ) u_axi_mm_ram (
       .clk_i (clk),
       .rst_ni(rst_ni),
