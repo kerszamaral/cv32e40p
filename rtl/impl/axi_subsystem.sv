@@ -39,13 +39,19 @@ module axi_subsystem #(
   );
 
   // AXI interface
+  localparam MASTER_NUM = 2;
+  localparam INSTR = 0;
+  localparam DATA = 1;
   AXI_BUS #(
       .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
       .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
       .AXI_ID_WIDTH  (AXI_ID_WIDTH),
       .AXI_USER_WIDTH(AXI_USER_WIDTH)
   )
-      instr (), data ();
+      instr (), data (), AXI_Masters[MASTER_NUM-1:0] ();
+      
+  `AXI_ASSIGN(AXI_Masters[INSTR], instr)
+  `AXI_ASSIGN(AXI_Masters[DATA], data)
 
   // Interrupts
   logic [31:0] irq;  // CLINT interrupts + CLINT extension interrupts
@@ -112,13 +118,14 @@ module axi_subsystem #(
       .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
       .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
       .AXI_ID_WIDTH  (AXI_ID_WIDTH),
-      .AXI_USER_WIDTH(AXI_USER_WIDTH)
+      .AXI_USER_WIDTH(AXI_USER_WIDTH),
+      .MASTER_NUM(MASTER_NUM)
   ) u_axi_mm_ram (
       .clk_i (clk),
       .rst_ni(rst_ni),
-      //! AXI4 Instruction Interface
-      .instr (instr),
-      .data  (data),
+      
+      /// Number of AXI masters connected to the xbar. (Number of slave ports)
+      .AXI_Masters(AXI_Masters),
 
       // Interrupt outputs
       .irq_o    (irq),

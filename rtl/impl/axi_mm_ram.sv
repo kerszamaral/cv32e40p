@@ -5,15 +5,15 @@ module axi_mm_ram #(
     parameter AXI_DATA_WIDTH = 32,
     parameter AXI_ID_WIDTH = 16,
     parameter AXI_USER_WIDTH = 10,
+    parameter MASTER_NUM = 2,
     parameter LOGGING = 1,
     parameter OLD_XBAR_MODE = 0
 ) (
     input logic clk_i,
     input logic rst_ni,
 
-    // //! AXI4 Instruction Interface
-    AXI_BUS.Slave instr,
-    AXI_BUS.Slave data,
+    /// Number of AXI masters connected to the xbar. (Number of slave ports)
+    AXI_BUS.Slave AXI_Masters[MASTER_NUM-1:0],
 
     // Interrupt outputs
     output logic [31:0] irq_o,      // CLINT interrupts + CLINT extension interrupts
@@ -26,9 +26,6 @@ module axi_mm_ram #(
     input  logic rx_i,
     output logic tx_o
 );
-
-  /// Number of AXI masters connected to the xbar. (Number of slave ports)
-  localparam MASTER_NUM = 2;
   /// Number of AXI slaves connected to the xbar. (Number of master ports)
   localparam SLAVE_NUM = 3;
 
@@ -74,10 +71,7 @@ module axi_mm_ram #(
       .AXI_ID_WIDTH  (AXI_ID_WIDTH),
       .AXI_USER_WIDTH(AXI_USER_WIDTH)
   )
-      master[MASTER_NUM-1:0] (), slave[SLAVE_NUM-1:0] ();
-
-  `AXI_ASSIGN(master[INSTR], instr)
-  `AXI_ASSIGN(master[DATA], data)
+      slave[SLAVE_NUM-1:0] ();
 
   impl_xbar #(
       .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
@@ -93,7 +87,7 @@ module axi_mm_ram #(
 
     .addr_map_i(AddrMap),
 
-    .AXI_Slaves(master),
+    .AXI_Slaves(AXI_Masters),
     .AXI_Masters(slave)
     );
 

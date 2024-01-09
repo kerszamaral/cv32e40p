@@ -18,14 +18,15 @@ module impl_xbar #(
 );
 
     generate;
-        if (OLD == 0) begin
+        if (OLD == 0) begin : g_new_xbar
             // Crossbar configuration
+            localparam FALLTHROUGH = 1'b1;
             localparam axi_pkg::xbar_cfg_t xbar_cfg = '{
                 NoSlvPorts: MASTER_NUM,
                 NoMstPorts: SLAVE_NUM,
                 MaxMstTrans: 1,
                 MaxSlvTrans: 1,
-                FallThrough: 1'b1,
+                FallThrough: FALLTHROUGH,
                 LatencyMode: axi_pkg::NO_LATENCY,
                 PipelineStages: 1'b0,  /// Pipeline stages in the xbar itself (between demux and mux).
 
@@ -43,24 +44,58 @@ module impl_xbar #(
                 AxiDataWidth: AXI_DATA_WIDTH,
                 NoAddrRules: SLAVE_NUM
             };
+           
+            AXI_LITE #(
+               .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
+               .AXI_DATA_WIDTH(AXI_DATA_WIDTH)
+            ) AXI_lite_mst[MASTER_NUM-1:0] (), AXI_lite_slv[SLAVE_NUM-1:0] ();
+
+            genvar i;
+            for (i = 0; i < MASTER_NUM; i = i + 1) begin : g_master_converter
+               axi_to_axi_lite_intf #(
+                 .AXI_ID_WIDTH      (AXI_ID_WIDTH),
+                 .AXI_ADDR_WIDTH    (AXI_ADDR_WIDTH),
+                 .AXI_DATA_WIDTH    (AXI_DATA_WIDTH),
+                 .AXI_USER_WIDTH    (AXI_USER_WIDTH),
+                 .AXI_MAX_WRITE_TXNS(32'd1),
+                 .AXI_MAX_READ_TXNS (32'd1),
+                 .FALL_THROUGH      (FALLTHROUGH)
+               ) lite_to_axi (
+                 .clk_i     (clk_i),
+                 .rst_ni    (rst_ni),
+                 .testmode_i(1'b0),
+                 .slv       (AXI_Slaves[i]),
+                 .mst       (AXI_lite_mst[i])
+               );
+            end
+
+            genvar j;
+            for (j = 0; j < SLAVE_NUM; j = j + 1) begin : g_slave_converter
+               axi_lite_to_axi_intf #(
+                 .AXI_DATA_WIDTH(AXI_DATA_WIDTH)
+               ) lite_to_axi (
+                 .in(AXI_lite_slv[j]),
+                 .out(AXI_Masters[j]),
+                 .slv_aw_cache_i(0),
+                 .slv_ar_cache_i(0)
+               );
+            end
 
             // AXI4 Crossbar
-            axi_xbar_intf #(
-                .AXI_USER_WIDTH(AXI_USER_WIDTH),
+            axi_lite_xbar_intf #(
                 .Cfg(xbar_cfg),
-                .rule_t(axi_pkg::xbar_rule_32_t),
-                .ATOPS(0)
+                .rule_t(axi_pkg::xbar_rule_32_t)
             ) xbar (
                 .clk_i   (clk_i),    // input wire clk_i
                 .rst_ni  (rst_ni),   // input wire rst_ni
                 .test_i('0),  // input wire test_i
-                .slv_ports(AXI_Slaves),
-                .mst_ports(AXI_Masters),
+                .slv_ports(AXI_lite_mst),
+                .mst_ports(AXI_lite_slv),
                 .addr_map_i(addr_map_i),
                 .en_default_mst_port_i('0),
                 .default_mst_port_i('0)
             );
-        end else begin // OLD Style XBAR
+        end else begin : g_old_xbar
             localparam ADDRSIZE = 32;
             localparam PROTSIZE = 3;
             localparam VALIDSIZE = 1;
