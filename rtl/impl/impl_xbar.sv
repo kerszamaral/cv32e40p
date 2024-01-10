@@ -20,7 +20,7 @@ module impl_xbar #(
     generate;
         if (OLD == 0) begin : g_new_xbar
             // Crossbar configuration
-            localparam FALLTHROUGH = 1'b1;
+            localparam FALLTHROUGH = 1'b0;
             localparam axi_pkg::xbar_cfg_t xbar_cfg = '{
                 NoSlvPorts: MASTER_NUM,
                 NoMstPorts: SLAVE_NUM,

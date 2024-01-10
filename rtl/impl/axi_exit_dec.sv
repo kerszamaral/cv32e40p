@@ -61,7 +61,7 @@ module axi_exit_dec #(
       /// See `axi_to_mem`, port `mem_we_o`.
       .mem_we_o    (exit_we),
       /// See `axi_to_mem`, port `mem_rvalid_i`.
-      .mem_rvalid_i('0),
+      .mem_rvalid_i('1),
       /// See `axi_to_mem`, port `mem_rdata_i`.
       .mem_rdata_i ('0)
   );

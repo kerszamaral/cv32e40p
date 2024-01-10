@@ -49,7 +49,7 @@ module axi_subsystem #(
       .AXI_USER_WIDTH(AXI_USER_WIDTH)
   )
       instr (), data (), AXI_Masters[MASTER_NUM-1:0] ();
-      
+
   `AXI_ASSIGN(AXI_Masters[INSTR], instr)
   `AXI_ASSIGN(AXI_Masters[DATA], data)
 
