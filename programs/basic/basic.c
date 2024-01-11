@@ -5,7 +5,7 @@ static volatile uint8_t *uart = (void *)0x10000000;
 static int m_putchar(char ch)
 {
     static uint8_t THR = 0x00;
-
+    while((*uart) != 1);
     return *uart = ch;
 }
 

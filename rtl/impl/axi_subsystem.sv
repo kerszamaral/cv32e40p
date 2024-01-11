@@ -119,11 +119,11 @@ module axi_subsystem #(
       .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
       .AXI_ID_WIDTH  (AXI_ID_WIDTH),
       .AXI_USER_WIDTH(AXI_USER_WIDTH),
-      .MASTER_NUM(MASTER_NUM)
+      .MASTER_NUM(MASTER_NUM),
+      .CLK_FREQ(OUTPUT_CLK_FREQ )
   ) u_axi_mm_ram (
       .clk_i (clk),
       .rst_ni(rst_ni),
-      
       /// Number of AXI masters connected to the xbar. (Number of slave ports)
       .AXI_Masters(AXI_Masters),
 

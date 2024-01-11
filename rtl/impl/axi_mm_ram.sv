@@ -6,8 +6,8 @@ module axi_mm_ram #(
     parameter AXI_ID_WIDTH = 16,
     parameter AXI_USER_WIDTH = 10,
     parameter MASTER_NUM = 2,
-    parameter LOGGING = 0,
-    parameter OLD_XBAR_MODE = 0
+    parameter CLK_FREQ = 25_000_000,
+    parameter LOGGING = 0
 ) (
     input logic clk_i,
     input logic rst_ni,
@@ -74,8 +74,7 @@ module axi_mm_ram #(
       .AXI_ID_WIDTH(AXI_ID_WIDTH),
       .AXI_USER_WIDTH(AXI_USER_WIDTH),
       .MASTER_NUM(MASTER_NUM),
-      .SLAVE_NUM(SLAVE_NUM),
-      .OLD(OLD_XBAR_MODE)
+      .SLAVE_NUM(SLAVE_NUM)
   ) xbar (
       .clk_i (clk_i),
       .rst_ni(rst_ni),
@@ -99,20 +98,20 @@ module axi_mm_ram #(
       .AXI_Slave(slave[MEM])
   );
 
-  wire interrupt;
-
   axi_uart #(
       .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
       .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
       .AXI_ID_WIDTH  (AXI_ID_WIDTH),
-      .AXI_USER_WIDTH(AXI_USER_WIDTH)
+      .AXI_USER_WIDTH(AXI_USER_WIDTH),
+      .CLK_FREQ(CLK_FREQ)
   ) uart (
       .clk_i (clk_i),
       .rst_ni(rst_ni),
 
       .AXI_Slave(slave[UART]),
 
-      .interrupt_o(interrupt),
+      .interrupt_o(),
+      .interrupt_ack_i('1),
       .rx_i(rx_i),
       .tx_o(tx_o)
   );

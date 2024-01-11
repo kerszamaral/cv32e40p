@@ -110,57 +110,46 @@ module tb_axi #(
     end
   end
 
-  logic [7:0] rxData;
+  localparam READ_ADDRESS = 32'h10000004;
+  logic [31:0] rxData;
   logic rxValid;
+  logic rxInt;
   
-  logic clk_s;
-  clk_divisor u_clk_div (
-      .clk_i(clk),
-      .clk_o(clk_s)
-  );
+  uart #(
+    .CLOCK_FREQUENCY(100_000_000),
+    .UART_BAUD_RATE(57600),
+    .READ_ADDRESS(READ_ADDRESS)
+  ) uart_module (
+    .clock(clk),
+    .reset(!rst_n),
 
-  axi_uartlite_0 uart (
-      .s_axi_aclk   (clk_s),     // input wire s_axi_aclk
-      .s_axi_aresetn(rst_n),  // input wire s_axi_aresetn
+    .rw_address(READ_ADDRESS),
+    .read_data(rxData),
+    .read_request(rxInt),
+    .read_response(rxValid),
+    .write_data('0),
+    .write_request('0),
+    .write_response(),
 
-      .interrupt(),  // output wire interrupt
+    .uart_rx(tx),
+    .uart_tx(rx),
 
-      .s_axi_awaddr ('0),  // input wire [3 : 0] s_axi_awaddr
-      .s_axi_awvalid('0),  // input wire s_axi_awvalid
-      .s_axi_awready(),    // output wire s_axi_awready
-      .s_axi_wdata  ('0),  // input wire [31 : 0] s_axi_wdata
-      .s_axi_wstrb  ('0),  // input wire [3 : 0] s_axi_wstrb
-      .s_axi_wvalid ('0),  // input wire s_axi_wvalid
-      .s_axi_wready (),    // output wire s_axi_wready
-      .s_axi_bresp  (),    // output wire [1 : 0] s_axi_bresp
-      .s_axi_bvalid (),    // output wire s_axi_bvalid
-      .s_axi_bready ('0),  // input wire s_axi_bready
-
-      .s_axi_araddr('0),  // input wire [3 : 0] s_axi_araddr
-      .s_axi_arvalid('1),  // input wire s_axi_arvalid
-      .s_axi_arready(),  // output wire   s_axi_arready
-      .s_axi_rdata(rxData),  // output wire [31 : 0] s_axi_rdata
-      .s_axi_rresp(),  // output wire [1 : 0] s_axi_rresp
-      .s_axi_rvalid(rxValid),  // output wire s_axi_rvalid
-      .s_axi_rready('1),  // input wire s_axi_rready
-
-      .rx(tx),  // input wire rx
-      .tx(rx)   // output wire tx
-  );
+    .uart_irq(rxInt),
+    .uart_irq_response('1)
+    );
 
   // print to stdout pseudo peripheral
-  always_ff @(posedge clk_s, negedge rst_n) begin : print_peripheral
+  always_ff @(posedge clk, negedge rst_n) begin : print_peripheral
     if (rxValid && rxData) begin
-      $write("%c", rxData);
-
-      // Because of the way the UART works, the string may arrive after the program has finished
-      if (rxData == LASTCHAR) begin
-        if (exit_valid) begin
-          if (exit_zero) $display("EXIT SUCCESS");
-          else $display("EXIT FAILURE");
-          $finish;
+        $write("%c", rxData[7:0]);
+        // Because of the way the UART works, the string may arrive after the program has finished
+        if (rxData[7:0] == LASTCHAR) begin
+            if (exit_valid) begin
+                if (exit_zero) $display("EXIT SUCCESS");
+                else $display("EXIT FAILURE");
+                $finish;
+            end
         end
-      end
     end
   end
 
