@@ -3,6 +3,7 @@ module axi_uart #(
     parameter AXI_DATA_WIDTH = 32,
     parameter AXI_ID_WIDTH = 16,
     parameter AXI_USER_WIDTH = 10,
+    /// CLOCK_FREQUENCY / UART_BAUD_RATE > 50        (clock cycles per baud)
     parameter CLK_FREQ = 25_000_000,
     parameter BAUD_RATE = 57600,
     parameter WRITE_ADDRESS = 32'h10000000,

@@ -218,6 +218,7 @@ module core2axi #(
   assign AXI_Master.aw_cache  = '0;
   assign AXI_Master.aw_prot   = '0;
   assign AXI_Master.aw_region = '0;
+  assign AXI_Master.aw_atop   = '0;
   assign AXI_Master.aw_user   = '0;
   assign AXI_Master.aw_qos    = '0;
 
