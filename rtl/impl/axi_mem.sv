@@ -53,6 +53,9 @@ module axi_mem #(
       .s_axi_rready (AXI_Slave.r_ready)    // input wire s_axi_rready
   );
 
+  assign AXI_Slave.b_user = AXI_Slave.w_user;
+  assign AXI_Slave.r_user = AXI_Slave.ar_user;
+
   generate
     if (LOGGING) begin
       always @(posedge clk_i) begin
