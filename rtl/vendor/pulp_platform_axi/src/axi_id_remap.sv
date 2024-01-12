@@ -14,7 +14,7 @@
 // - Wolfgang Roenninger <wroennin@iis.ee.ethz.ch>
 // - Florian Zaruba <zarubaf@iis.ee.ethz.ch>
 
-`include "common_cells/registers.svh"
+`include "registers.svh"
 
 /// Remap AXI IDs from wide IDs at the slave port to narrower IDs at the master port.
 ///

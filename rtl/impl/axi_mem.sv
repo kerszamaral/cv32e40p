@@ -14,7 +14,6 @@ module axi_mem #(
   wire rsta_busy;
   wire rstb_busy;
  
-  // BRAM AXI Access
   dp_axi_bram mem (
       .rsta_busy(rsta_busy),  // output wire rsta_busy
       .rstb_busy(rstb_busy),  // output wire rstb_busy
@@ -22,7 +21,7 @@ module axi_mem #(
       .s_aclk   (clk_i),  // input wire s_aclk
       .s_aresetn(rst_ni), // input wire s_aresetn
 
-      .s_axi_awid   (AXI_Slave.aw_id),     // input wire [0 : 0] s_axi_awid
+      .s_axi_awid   (AXI_Slave.aw_id),     // input wire [1 : 0] s_axi_awid
       .s_axi_awaddr (AXI_Slave.aw_addr),   // input wire [31 : 0] s_axi_awaddr
       .s_axi_awlen  (AXI_Slave.aw_len),    // input wire [7 : 0] s_axi_awlen
       .s_axi_awsize (AXI_Slave.aw_size),   // input wire [2 : 0] s_axi_awsize
@@ -34,18 +33,18 @@ module axi_mem #(
       .s_axi_wlast  (AXI_Slave.w_last),    // input wire s_axi_wlast
       .s_axi_wvalid (AXI_Slave.w_valid),   // input wire s_axi_wvalid
       .s_axi_wready (AXI_Slave.w_ready),   // output wire s_axi_wready
-      .s_axi_bid    (AXI_Slave.b_id),      // output wire [0 : 0] s_axi_bid
+      .s_axi_bid    (AXI_Slave.b_id),      // output wire [1 : 0] s_axi_bid
       .s_axi_bresp  (AXI_Slave.b_resp),    // output wire [1 : 0] s_axi_bresp
       .s_axi_bvalid (AXI_Slave.b_valid),   // output wire s_axi_bvalid
       .s_axi_bready (AXI_Slave.b_ready),   // input wire s_axi_bready
-      .s_axi_arid   (AXI_Slave.ar_id),     // input wire [0 : 0] s_axi_arid
+      .s_axi_arid   (AXI_Slave.ar_id),     // input wire [1 : 0] s_axi_arid
       .s_axi_araddr (AXI_Slave.ar_addr),   // input wire [31 : 0] s_axi_araddr
       .s_axi_arlen  (AXI_Slave.ar_len),    // input wire [7 : 0] s_axi_arlen
       .s_axi_arsize (AXI_Slave.ar_size),   // input wire [2 : 0] s_axi_arsize
       .s_axi_arburst(AXI_Slave.ar_burst),  // input wire [1 : 0] s_axi_arburst
       .s_axi_arvalid(AXI_Slave.ar_valid),  // input wire s_axi_arvalid
       .s_axi_arready(AXI_Slave.ar_ready),  // output wire s_axi_arready
-      .s_axi_rid    (AXI_Slave.r_id),      // output wire [0 : 0] s_axi_rid
+      .s_axi_rid    (AXI_Slave.r_id),      // output wire [1 : 0] s_axi_rid
       .s_axi_rdata  (AXI_Slave.r_data),    // output wire [31 : 0] s_axi_rdata
       .s_axi_rresp  (AXI_Slave.r_resp),    // output wire [1 : 0] s_axi_rresp
       .s_axi_rlast  (AXI_Slave.r_last),    // output wire s_axi_rlast

@@ -14,8 +14,6 @@ module axi_subsystem #(
     parameter AXI_ID_WIDTH   = 2,
     parameter AXI_USER_WIDTH = 2,
 
-    parameter REGISTERED_GRANT = "FALSE",  // "TRUE"|"FALSE"
-
     parameter INPUT_CLK_FREQ  = 100_000_000,
     parameter OUTPUT_CLK_FREQ = 25_000_000
 ) (
@@ -71,12 +69,10 @@ module axi_subsystem #(
       // Float-in-General Purpose registers
       .NUM_MHPMCOUNTERS(NUM_MHPMCOUNTERS),
 
-      .AXI_ADDR_WIDTH  (AXI_ADDR_WIDTH),
-      .AXI_DATA_WIDTH  (AXI_DATA_WIDTH),
-      .AXI_ID_WIDTH    (AXI_ID_WIDTH),
-      .AXI_USER_WIDTH  (AXI_USER_WIDTH),
-      // "TRUE"|"FALSE"
-      .REGISTERED_GRANT(REGISTERED_GRANT)
+      .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
+      .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
+      .AXI_ID_WIDTH  (AXI_ID_WIDTH),
+      .AXI_USER_WIDTH(AXI_USER_WIDTH)
   ) top_i (
       // Clock and Reset
       .clk_i          (clk),
