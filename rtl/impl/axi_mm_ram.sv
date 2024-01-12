@@ -58,7 +58,7 @@ module axi_mm_ram #(
         default: '0
     };
   endfunction
-  localparam rule_t [SLAVE_NUM-1:0] AddrMap = addr_map_gen();
+  rule_t [SLAVE_NUM-1:0] AddrMap = addr_map_gen();
 
   // AXI4 Interfaces
   AXI_BUS #(
