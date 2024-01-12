@@ -54,8 +54,8 @@ module uart #(
 
   // Global signals
 
-  input   wire          clock,
-  input   wire          reset,
+  input   wire          clk_i,
+  input   wire          rst_ni,
 
   // IO interface
 
@@ -81,6 +81,9 @@ module uart #(
 
   localparam CYCLES_PER_BAUD = CLOCK_FREQUENCY / UART_BAUD_RATE;
 
+  wire reset;
+  assign reset = ~rst_ni;
+
   reg [31:0] tx_cycle_counter = 0;
   reg [31:0] rx_cycle_counter = 0;
   reg [3:0]  tx_bit_counter;
@@ -93,14 +96,14 @@ module uart #(
 
   wire       reset_internal;
 
-  always @(posedge clock)
+  always @(posedge clk_i)
     reset_reg <= reset;
 
   assign reset_internal = reset | reset_reg;
 
   assign uart_tx = tx_register[0];
 
-  always @(posedge clock) begin
+  always @(posedge clk_i) begin
     if (reset_internal) begin
       tx_cycle_counter <= 0;
       tx_register <= 10'b1111111111;
@@ -127,7 +130,7 @@ module uart #(
     end
   end
 
-  always @(posedge clock) begin
+  always @(posedge clk_i) begin
     if (reset_internal) begin
       rx_cycle_counter <= 0;
       rx_register <= 8'h00;
@@ -202,7 +205,7 @@ module uart #(
     end
   end
 
-  always @(posedge clock) begin
+  always @(posedge clk_i) begin
     if (reset_internal) begin
       read_response  <= 1'b0;
       write_response <= 1'b0;
@@ -213,7 +216,7 @@ module uart #(
     end
   end
 
-  always @(posedge clock) begin
+  always @(posedge clk_i) begin
     if (reset_internal)
       read_data <= 32'h00000000;
     else if (rw_address == WRITE_ADDRESS && read_request == 1'b1)
@@ -225,3 +228,4 @@ module uart #(
   end
 
 endmodule
+

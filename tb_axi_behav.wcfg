@@ -3,69 +3,202 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="tb_axi_func_synth.wdb" id="1">
+      <db_ref path="tb_axi_behav.wdb" id="1">
          <top_modules>
+            <top_module name="axi_pkg" />
+            <top_module name="cf_math_pkg" />
+            <top_module name="cv32e40p_apu_core_pkg" />
+            <top_module name="cv32e40p_fpu_pkg" />
+            <top_module name="cv32e40p_pkg" />
             <top_module name="glbl" />
             <top_module name="tb_axi" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000000 us"></ZoomStartTime>
-      <ZoomEndTime time="6.640001 us"></ZoomEndTime>
-      <Cursor1Time time="5.300000 us"></Cursor1Time>
+      <ZoomStartTime time="255.833 ns"></ZoomStartTime>
+      <ZoomEndTime time="482.834 ns"></ZoomEndTime>
+      <Cursor1Time time="445.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="185"></NameColumnWidth>
-      <ValueColumnWidth column_width="182"></ValueColumnWidth>
+      <ValueColumnWidth column_width="178"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="12" />
-   <wvobject fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/clk_i" type="logic">
+   <WVObjectSize size="44" />
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/clk_i">
       <obj_property name="ElementShortName">clk_i</obj_property>
       <obj_property name="ObjectShortName">clk_i</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_axi/u_axi_subsystem/rst_ni" type="logic">
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/rst_ni">
       <obj_property name="ElementShortName">rst_ni</obj_property>
       <obj_property name="ObjectShortName">rst_ni</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_axi/u_axi_subsystem/fetch_enable_i" type="logic">
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/fetch_enable_i">
       <obj_property name="ElementShortName">fetch_enable_i</obj_property>
       <obj_property name="ObjectShortName">fetch_enable_i</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/clk_i" type="logic">
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/clk_i">
       <obj_property name="ElementShortName">clk_i</obj_property>
       <obj_property name="ObjectShortName">clk_i</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/rst_ni" type="logic">
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/rst_ni">
       <obj_property name="ElementShortName">rst_ni</obj_property>
       <obj_property name="ObjectShortName">rst_ni</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/interrupt_o" type="logic">
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/interrupt_o">
       <obj_property name="ElementShortName">interrupt_o</obj_property>
       <obj_property name="ObjectShortName">interrupt_o</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/rx_i" type="logic">
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/rx_i">
       <obj_property name="ElementShortName">rx_i</obj_property>
       <obj_property name="ObjectShortName">rx_i</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/tx_o" type="logic">
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/tx_o">
       <obj_property name="ElementShortName">tx_o</obj_property>
       <obj_property name="ObjectShortName">tx_o</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/mem/\AXI_Slave\.ar_addr " type="array">
-      <obj_property name="ElementShortName">\AXI_Slave\.ar_addr [31:0]</obj_property>
-      <obj_property name="ObjectShortName">\AXI_Slave\.ar_addr [31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/mem/\AXI_Slave\.aw_addr " type="array">
-      <obj_property name="ElementShortName">\AXI_Slave\.aw_addr [31:0]</obj_property>
-      <obj_property name="ObjectShortName">\AXI_Slave\.aw_addr [31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/mem/mem/rsta_busy" type="logic">
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/mem/mem/rsta_busy">
       <obj_property name="ElementShortName">rsta_busy</obj_property>
       <obj_property name="ObjectShortName">rsta_busy</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/mem/mem/rstb_busy" type="logic">
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/mem/mem/rstb_busy">
       <obj_property name="ElementShortName">rstb_busy</obj_property>
       <obj_property name="ObjectShortName">rstb_busy</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/clk_i">
+      <obj_property name="ElementShortName">clk_i</obj_property>
+      <obj_property name="ObjectShortName">clk_i</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/rst_ni">
+      <obj_property name="ElementShortName">rst_ni</obj_property>
+      <obj_property name="ObjectShortName">rst_ni</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/interrupt_o">
+      <obj_property name="ElementShortName">interrupt_o</obj_property>
+      <obj_property name="ObjectShortName">interrupt_o</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/interrupt_ack_i">
+      <obj_property name="ElementShortName">interrupt_ack_i</obj_property>
+      <obj_property name="ObjectShortName">interrupt_ack_i</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/rx_i">
+      <obj_property name="ElementShortName">rx_i</obj_property>
+      <obj_property name="ObjectShortName">rx_i</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/tx_o">
+      <obj_property name="ElementShortName">tx_o</obj_property>
+      <obj_property name="ObjectShortName">tx_o</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/debug_clk_o">
+      <obj_property name="ElementShortName">debug_clk_o</obj_property>
+      <obj_property name="ObjectShortName">debug_clk_o</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/debug_ar_valid_o">
+      <obj_property name="ElementShortName">debug_ar_valid_o</obj_property>
+      <obj_property name="ObjectShortName">debug_ar_valid_o</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/debug_ar_addr_o">
+      <obj_property name="ElementShortName">debug_ar_addr_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">debug_ar_addr_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/debug_r_valid_o">
+      <obj_property name="ElementShortName">debug_r_valid_o</obj_property>
+      <obj_property name="ObjectShortName">debug_r_valid_o</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/debug_r_data_o">
+      <obj_property name="ElementShortName">debug_r_data_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">debug_r_data_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/debug_aw_valid_o">
+      <obj_property name="ElementShortName">debug_aw_valid_o</obj_property>
+      <obj_property name="ObjectShortName">debug_aw_valid_o</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/debug_aw_addr_o">
+      <obj_property name="ElementShortName">debug_aw_addr_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">debug_aw_addr_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/debug_w_valid_o">
+      <obj_property name="ElementShortName">debug_w_valid_o</obj_property>
+      <obj_property name="ObjectShortName">debug_w_valid_o</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/debug_w_data_o">
+      <obj_property name="ElementShortName">debug_w_data_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">debug_w_data_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/uart_req">
+      <obj_property name="ElementShortName">uart_req</obj_property>
+      <obj_property name="ObjectShortName">uart_req</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/uart_gnt">
+      <obj_property name="ElementShortName">uart_gnt</obj_property>
+      <obj_property name="ObjectShortName">uart_gnt</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/uart_addr">
+      <obj_property name="ElementShortName">uart_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">uart_addr[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/uart_wdata">
+      <obj_property name="ElementShortName">uart_wdata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">uart_wdata[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/uart_rdata">
+      <obj_property name="ElementShortName">uart_rdata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">uart_rdata[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/uart_we">
+      <obj_property name="ElementShortName">uart_we</obj_property>
+      <obj_property name="ObjectShortName">uart_we</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/uart_ack">
+      <obj_property name="ElementShortName">uart_ack</obj_property>
+      <obj_property name="ObjectShortName">uart_ack</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/uart_r_ack">
+      <obj_property name="ElementShortName">uart_r_ack</obj_property>
+      <obj_property name="ObjectShortName">uart_r_ack</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/uart_w_ack">
+      <obj_property name="ElementShortName">uart_w_ack</obj_property>
+      <obj_property name="ObjectShortName">uart_w_ack</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/uart_r_req">
+      <obj_property name="ElementShortName">uart_r_req</obj_property>
+      <obj_property name="ObjectShortName">uart_r_req</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/uart_w_req">
+      <obj_property name="ElementShortName">uart_w_req</obj_property>
+      <obj_property name="ObjectShortName">uart_w_req</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/AXI_ADDR_WIDTH">
+      <obj_property name="ElementShortName">AXI_ADDR_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AXI_ADDR_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/AXI_DATA_WIDTH">
+      <obj_property name="ElementShortName">AXI_DATA_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AXI_DATA_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/AXI_ID_WIDTH">
+      <obj_property name="ElementShortName">AXI_ID_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AXI_ID_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/AXI_USER_WIDTH">
+      <obj_property name="ElementShortName">AXI_USER_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AXI_USER_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/CLK_FREQ">
+      <obj_property name="ElementShortName">CLK_FREQ[31:0]</obj_property>
+      <obj_property name="ObjectShortName">CLK_FREQ[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/BAUD_RATE">
+      <obj_property name="ElementShortName">BAUD_RATE[31:0]</obj_property>
+      <obj_property name="ObjectShortName">BAUD_RATE[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/WRITE_ADDRESS">
+      <obj_property name="ElementShortName">WRITE_ADDRESS[31:0]</obj_property>
+      <obj_property name="ObjectShortName">WRITE_ADDRESS[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/READ_ADDRESS">
+      <obj_property name="ElementShortName">READ_ADDRESS[31:0]</obj_property>
+      <obj_property name="ObjectShortName">READ_ADDRESS[31:0]</obj_property>
    </wvobject>
 </wave_config>

@@ -120,8 +120,8 @@ module tb_axi #(
       .UART_BAUD_RATE(57600),
       .READ_ADDRESS(READ_ADDRESS)
   ) uart_module (
-      .clock(clk),
-      .reset(!rst_n),
+      .clk_i(clk),
+      .rst_ni(rst_n),
 
       .rw_address(READ_ADDRESS),
       .read_data(rxData),
@@ -162,15 +162,23 @@ module tb_axi #(
   wire mem_aw_valid;
   wire [31:0] mem_aw_addr;
   wire mem_w_valid;
-  wire mem_w_data;
+  wire [31:0] mem_w_data;
 
   always @(posedge mem_clk) begin
     if (LOGGING) begin
-      if (mem_ar_valid) $write("READ addr=0x%08x\n", mem_ar_addr);
-      if (mem_r_valid) $write("READ data=0x%08x\n", mem_r_data);
+      if (mem_ar_valid) begin 
+        $write("READ addr=0x%08x\n", mem_ar_addr); 
+      end
+      if (mem_r_valid) begin 
+        $write("READ data=0x%08x\n", mem_r_data);
+      end
 
-      if (mem_aw_valid) $write("WRITE addr=0x%08x\n", mem_aw_addr);
-      if (mem_w_valid) $write("WRITE data=0x%08x\n", mem_w_data);
+      if (mem_aw_valid) begin 
+        $write("WRITE addr=0x%08x\n", mem_aw_addr);
+      end
+      if (mem_w_valid) begin 
+        $write("WRITE data=0x%08x\n", mem_w_data);
+      end
     end
   end
 

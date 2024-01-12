@@ -103,17 +103,7 @@ module axi_mm_ram #(
       .clk_i (clk_i),
       .rst_ni(rst_ni),
 
-      .AXI_Slave(slave[MEM]),
-
-      .debug_clk_o   (debug_clk_o),
-      .debug_ar_valid_o (debug_ar_valid_o),
-      .debug_ar_addr_o  (debug_ar_addr_o),
-      .debug_r_valid_o  (debug_r_valid_o),
-      .debug_r_data_o   (debug_r_data_o),
-      .debug_aw_valid_o (debug_aw_valid_o),
-      .debug_aw_addr_o  (debug_aw_addr_o),
-      .debug_w_valid_o  (debug_w_valid_o),
-      .debug_w_data_o   (debug_w_data_o)
+      .AXI_Slave(slave[MEM])
   );
 
   axi_uart #(
@@ -131,7 +121,17 @@ module axi_mm_ram #(
       .interrupt_o(),
       .interrupt_ack_i('1),
       .rx_i(rx_i),
-      .tx_o(tx_o)
+      .tx_o(tx_o),
+
+      .debug_clk_o   (debug_clk_o),
+      .debug_ar_valid_o (debug_ar_valid_o),
+      .debug_ar_addr_o  (debug_ar_addr_o),
+      .debug_r_valid_o  (debug_r_valid_o),
+      .debug_r_data_o   (debug_r_data_o),
+      .debug_aw_valid_o (debug_aw_valid_o),
+      .debug_aw_addr_o  (debug_aw_addr_o),
+      .debug_w_valid_o  (debug_w_valid_o),
+      .debug_w_data_o   (debug_w_data_o)
   );
 
   // EXIT AXI Access
