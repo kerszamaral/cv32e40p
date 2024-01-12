@@ -13,8 +13,7 @@ module cv32e40p_axi #(
     parameter AXI_ADDR_WIDTH = 32,
     parameter AXI_DATA_WIDTH = 32,
     parameter AXI_ID_WIDTH = 16,
-    parameter AXI_USER_WIDTH = 10,
-    parameter REGISTERED_GRANT = "FALSE"  // "TRUE"|"FALSE"
+    parameter AXI_USER_WIDTH = 10
 ) (
     // Clock and Reset
     input logic clk_i,
@@ -133,13 +132,10 @@ module cv32e40p_axi #(
   );
 
   core2axi #(
-      .AXI4_ADDRESS_WIDTH(AXI_ADDR_WIDTH),
-      .AXI4_RDATA_WIDTH  (AXI_DATA_WIDTH),
-      .AXI4_WDATA_WIDTH  (AXI_DATA_WIDTH),
-      .AXI4_ID_WIDTH     (AXI_ID_WIDTH),
-      .AXI4_USER_WIDTH   (AXI_USER_WIDTH),
-      // "TRUE"|"FALSE"
-      .REGISTERED_GRANT  (REGISTERED_GRANT)
+      .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
+      .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
+      .AXI_ID_WIDTH  (AXI_ID_WIDTH),
+      .AXI_USER_WIDTH(AXI_USER_WIDTH)
   ) instr_core2axi (
       // Clock and Reset
       .clk_i (clk_i),
@@ -160,13 +156,10 @@ module cv32e40p_axi #(
   );
 
   core2axi #(
-      .AXI4_ADDRESS_WIDTH(AXI_ADDR_WIDTH),
-      .AXI4_RDATA_WIDTH  (AXI_DATA_WIDTH),
-      .AXI4_WDATA_WIDTH  (AXI_DATA_WIDTH),
-      .AXI4_ID_WIDTH     (AXI_ID_WIDTH),
-      .AXI4_USER_WIDTH   (AXI_USER_WIDTH),
-      // "TRUE"|"FALSE"
-      .REGISTERED_GRANT  (REGISTERED_GRANT)
+      .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
+      .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
+      .AXI_ID_WIDTH  (AXI_ID_WIDTH),
+      .AXI_USER_WIDTH(AXI_USER_WIDTH)
   ) data_core2axi (
       // Clock and Reset
       .clk_i (clk_i),
