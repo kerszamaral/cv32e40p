@@ -11,8 +11,8 @@ module axi_subsystem #(
 
     parameter AXI_ADDR_WIDTH = 32,
     parameter AXI_DATA_WIDTH = 32,
-    parameter AXI_ID_WIDTH   = 1,
-    parameter AXI_USER_WIDTH = 1,
+    parameter AXI_ID_WIDTH   = 2,
+    parameter AXI_USER_WIDTH = 2,
 
     parameter REGISTERED_GRANT = "FALSE",  // "TRUE"|"FALSE"
 
@@ -47,11 +47,7 @@ module axi_subsystem #(
       .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
       .AXI_ID_WIDTH  (AXI_ID_WIDTH),
       .AXI_USER_WIDTH(AXI_USER_WIDTH)
-  )
-      instr (), data (), AXI_Masters[MASTER_NUM-1:0] ();
-
-  `AXI_ASSIGN(AXI_Masters[INSTR], instr)
-  `AXI_ASSIGN(AXI_Masters[DATA], data)
+  ) AXI_Masters[MASTER_NUM-1:0] ();
 
   // Interrupts
   logic [31:0] irq;  // CLINT interrupts + CLINT extension interrupts
@@ -97,8 +93,8 @@ module axi_subsystem #(
       .hart_id_i          (32'h0),
       .dm_exception_addr_i(32'h0),
       //! AXI4 Instruction Interface
-      .instr              (instr),
-      .data               (data),
+      .instr              (AXI_Masters[INSTR]),
+      .data               (AXI_Masters[DATA]),
       // Interrupt inputs
       .irq_i              (irq),
       // CLINT interrupts + CLINT extension interrupts
@@ -117,10 +113,10 @@ module axi_subsystem #(
   axi_mm_ram #(
       .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
       .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
-      .AXI_ID_WIDTH  (AXI_ID_WIDTH),
+      .AXI_ID_WIDTH(AXI_ID_WIDTH),
       .AXI_USER_WIDTH(AXI_USER_WIDTH),
       .MASTER_NUM(MASTER_NUM),
-      .CLK_FREQ(OUTPUT_CLK_FREQ )
+      .CLK_FREQ(OUTPUT_CLK_FREQ)
   ) u_axi_mm_ram (
       .clk_i (clk),
       .rst_ni(rst_ni),
