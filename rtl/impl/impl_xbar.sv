@@ -5,7 +5,7 @@ module impl_xbar #(
     parameter AXI_USER_WIDTH = 1,
     parameter MASTER_NUM = 2,
     parameter SLAVE_NUM = 3,
-    parameter OLD = 1
+    parameter OLD = 0
 ) (
     input logic clk_i,
     input logic rst_ni,

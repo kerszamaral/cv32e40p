@@ -24,7 +24,7 @@ module axi_uart #(
     wire uart_gnt;
     wire [31:0] uart_addr;
     wire [31:0] uart_wdata;
-    wire uart_rdata;
+    wire [31:0] uart_rdata;
 
     wire uart_we;
     wire uart_ack;
@@ -75,7 +75,7 @@ module axi_uart #(
       /// See `axi_to_mem`, port `mem_addr_o`.
       .mem_addr_o  (uart_addr),
       /// See `axi_to_mem`, port `mem_wdata_o`.
-      .mem_wdata_o (uart_wdata[7:0]),
+      .mem_wdata_o (uart_wdata),
       /// See `axi_to_mem`, port `mem_strb_o`.
       .mem_strb_o  (),
       /// See `axi_to_mem`, port `mem_atop_o`.
@@ -101,7 +101,7 @@ module axi_uart #(
     .read_data(uart_rdata),
     .read_request(uart_r_req),
     .read_response(uart_r_ack),
-    .write_data(uart_wdata),
+    .write_data(uart_wdata[7:0]),
     .write_request(uart_w_req),
     .write_response(uart_w_ack),
 

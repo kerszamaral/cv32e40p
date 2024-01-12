@@ -99,7 +99,7 @@ module axi_xp #(
 );
 
   // The master port of the Xbar has a different ID width than the slave ports.
-  parameter int unsigned AxiXbarIdWidth = AxiIdWidth + $clog2(NumSlvPorts);
+  localparam int unsigned AxiXbarIdWidth = AxiIdWidth + $clog2(NumSlvPorts);
   typedef logic [AxiAddrWidth-1:0] addr_t;
   typedef logic [AxiDataWidth-1:0] data_t;
   typedef logic [AxiIdWidth-1:0] id_t;

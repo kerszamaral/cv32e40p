@@ -6,8 +6,7 @@ module axi_mm_ram #(
     parameter AXI_ID_WIDTH = 16,
     parameter AXI_USER_WIDTH = 10,
     parameter MASTER_NUM = 2,
-    parameter CLK_FREQ = 25_000_000,
-    parameter LOGGING = 0
+    parameter CLK_FREQ = 25_000_000
 ) (
     input logic clk_i,
     input logic rst_ni,
@@ -24,7 +23,17 @@ module axi_mm_ram #(
     output logic exit_zero_o,
 
     input  logic rx_i,
-    output logic tx_o
+    output logic tx_o,
+
+    output logic debug_clk_o,
+    output logic debug_ar_valid_o,
+    output logic [31:0] debug_ar_addr_o,
+    output logic debug_r_valid_o,
+    output logic [31:0] debug_r_data_o,
+    output logic debug_aw_valid_o,
+    output logic [31:0] debug_aw_addr_o,
+    output logic debug_w_valid_o,
+    output logic [31:0] debug_w_data_o
 );
   /// Number of AXI slaves connected to the xbar. (Number of master ports)
   localparam SLAVE_NUM = 3;
@@ -89,13 +98,22 @@ module axi_mm_ram #(
       .AXI_ADDR_WIDTH(AXI_ADDR_WIDTH),
       .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
       .AXI_ID_WIDTH(AXI_ID_WIDTH),
-      .AXI_USER_WIDTH(AXI_USER_WIDTH),
-      .LOGGING(LOGGING)
+      .AXI_USER_WIDTH(AXI_USER_WIDTH)
   ) mem (
       .clk_i (clk_i),
       .rst_ni(rst_ni),
 
-      .AXI_Slave(slave[MEM])
+      .AXI_Slave(slave[MEM]),
+
+      .debug_clk_o   (debug_clk_o),
+      .debug_ar_valid_o (debug_ar_valid_o),
+      .debug_ar_addr_o  (debug_ar_addr_o),
+      .debug_r_valid_o  (debug_r_valid_o),
+      .debug_r_data_o   (debug_r_data_o),
+      .debug_aw_valid_o (debug_aw_valid_o),
+      .debug_aw_addr_o  (debug_aw_addr_o),
+      .debug_w_valid_o  (debug_w_valid_o),
+      .debug_w_data_o   (debug_w_data_o)
   );
 
   axi_uart #(

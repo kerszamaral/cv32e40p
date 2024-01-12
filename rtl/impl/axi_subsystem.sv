@@ -24,7 +24,17 @@ module axi_subsystem #(
     output logic exit_zero_o,
     output logic exit_valid_o,
     input  logic rx_i,
-    output logic tx_o
+    output logic tx_o,
+
+    output logic debug_clk_o,
+    output logic debug_ar_valid_o,
+    output logic [31:0] debug_ar_addr_o,
+    output logic debug_r_valid_o,
+    output logic [31:0] debug_r_data_o,
+    output logic debug_aw_valid_o,
+    output logic [31:0] debug_aw_addr_o,
+    output logic debug_w_valid_o,
+    output logic [31:0] debug_w_data_o
 );
 
   logic clk;
@@ -129,7 +139,17 @@ module axi_subsystem #(
       .exit_valid_o(exit_valid_o),
       .exit_zero_o (exit_zero_o),
       .rx_i        (rx_i),
-      .tx_o        (tx_o)
+      .tx_o        (tx_o),
+
+      .debug_clk_o   (debug_clk_o),
+      .debug_ar_valid_o (debug_ar_valid_o),
+      .debug_ar_addr_o  (debug_ar_addr_o),
+      .debug_r_valid_o  (debug_r_valid_o),
+      .debug_r_data_o   (debug_r_data_o),
+      .debug_aw_valid_o (debug_aw_valid_o),
+      .debug_aw_addr_o  (debug_aw_addr_o),
+      .debug_w_valid_o  (debug_w_valid_o),
+      .debug_w_data_o   (debug_w_data_o)
   );
 
 endmodule

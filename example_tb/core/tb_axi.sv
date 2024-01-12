@@ -33,8 +33,8 @@ module tb_axi #(
   const time STIM_APPLICATION_DEL = CLK_PERIOD * 0.1;
   const time RESP_ACQUISITION_DEL = CLK_PERIOD * 0.9;
   const time RESET_DEL = STIM_APPLICATION_DEL;
-  const int  RESET_WAIT_CYCLES = 50;
-  localparam LOGGING = 0;
+  const int  RESET_WAIT_CYCLES = 100;
+  localparam LOGGING = 1;
   byte unsigned LASTCHAR = "\n";
 
   // clock and reset for tb
@@ -67,8 +67,8 @@ module tb_axi #(
   end
 
   // clock generation
-  initial begin : clock_gen 
-  #INITIAL_DELAY
+  initial begin : clock_gen
+    #INITIAL_DELAY
     forever begin
       #CLK_PHASE_HI clk = 1'b1;
       #CLK_PHASE_LO clk = 1'b0;
@@ -114,42 +114,63 @@ module tb_axi #(
   logic [31:0] rxData;
   logic rxValid;
   logic rxInt;
-  
+
   uart #(
-    .CLOCK_FREQUENCY(100_000_000),
-    .UART_BAUD_RATE(57600),
-    .READ_ADDRESS(READ_ADDRESS)
+      .CLOCK_FREQUENCY(100_000_000),
+      .UART_BAUD_RATE(57600),
+      .READ_ADDRESS(READ_ADDRESS)
   ) uart_module (
-    .clock(clk),
-    .reset(!rst_n),
+      .clock(clk),
+      .reset(!rst_n),
 
-    .rw_address(READ_ADDRESS),
-    .read_data(rxData),
-    .read_request(rxInt),
-    .read_response(rxValid),
-    .write_data('0),
-    .write_request('0),
-    .write_response(),
+      .rw_address(READ_ADDRESS),
+      .read_data(rxData),
+      .read_request(rxInt),
+      .read_response(rxValid),
+      .write_data('0),
+      .write_request('0),
+      .write_response(),
 
-    .uart_rx(tx),
-    .uart_tx(rx),
+      .uart_rx(tx),
+      .uart_tx(rx),
 
-    .uart_irq(rxInt),
-    .uart_irq_response('1)
-    );
+      .uart_irq(rxInt),
+      .uart_irq_response('1)
+  );
 
   // print to stdout pseudo peripheral
   always_ff @(posedge clk, negedge rst_n) begin : print_peripheral
     if (rxValid && rxData) begin
-        $write("%c", rxData[7:0]);
-        // Because of the way the UART works, the string may arrive after the program has finished
-        if (rxData[7:0] == LASTCHAR) begin
-            if (exit_valid) begin
-                if (exit_zero) $display("EXIT SUCCESS");
-                else $display("EXIT FAILURE");
-                $finish;
-            end
+      $write("%c", rxData[7:0]);
+      // Because of the way the UART works, the string may arrive after the program has finished
+      if (rxData[7:0] == LASTCHAR) begin
+        if (exit_valid) begin
+          if (exit_zero) $display("EXIT SUCCESS");
+          else $display("EXIT FAILURE");
+          $finish;
         end
+      end
+    end
+  end
+
+  wire mem_clk;
+  wire mem_ar_valid;
+  wire [31:0] mem_ar_addr;
+  wire mem_r_valid;
+  wire [31:0] mem_r_data;
+
+  wire mem_aw_valid;
+  wire [31:0] mem_aw_addr;
+  wire mem_w_valid;
+  wire mem_w_data;
+
+  always @(posedge mem_clk) begin
+    if (LOGGING) begin
+      if (mem_ar_valid) $write("READ addr=0x%08x\n", mem_ar_addr);
+      if (mem_r_valid) $write("READ data=0x%08x\n", mem_r_data);
+
+      if (mem_aw_valid) $write("WRITE addr=0x%08x\n", mem_aw_addr);
+      if (mem_w_valid) $write("WRITE data=0x%08x\n", mem_w_data);
     end
   end
 
@@ -161,7 +182,17 @@ module tb_axi #(
       .exit_zero_o   (exit_zero),
       .exit_valid_o  (exit_valid),
       .rx_i          (rx),
-      .tx_o          (tx)
+      .tx_o          (tx),
+
+      .debug_clk_o   (mem_clk),
+      .debug_ar_valid_o (mem_ar_valid),
+      .debug_ar_addr_o  (mem_ar_addr),
+      .debug_r_valid_o  (mem_r_valid),
+      .debug_r_data_o   (mem_r_data),
+      .debug_aw_valid_o (mem_aw_valid),
+      .debug_aw_addr_o  (mem_aw_addr),
+      .debug_w_valid_o  (mem_w_valid),
+      .debug_w_data_o   (mem_w_data)
   );
 
 endmodule  // tb_top

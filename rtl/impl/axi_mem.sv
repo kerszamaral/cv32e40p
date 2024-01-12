@@ -8,7 +8,17 @@ module axi_mem #(
     input logic clk_i,
     input logic rst_ni,
 
-    AXI_BUS.Slave AXI_Slave
+    AXI_BUS.Slave AXI_Slave,
+
+    output logic debug_clk_o,
+    output logic debug_ar_valid_o,
+    output logic [31:0] debug_ar_addr_o,
+    output logic debug_r_valid_o,
+    output logic [31:0] debug_r_data_o,
+    output logic debug_aw_valid_o,
+    output logic [31:0] debug_aw_addr_o,
+    output logic debug_w_valid_o,
+    output logic [31:0] debug_w_data_o
 );
   
   wire rsta_busy;
@@ -55,14 +65,13 @@ module axi_mem #(
   assign AXI_Slave.b_user = AXI_Slave.w_user;
   assign AXI_Slave.r_user = AXI_Slave.ar_user;
 
-  generate
-    if (LOGGING) begin
-      always @(posedge clk_i) begin
-        if (AXI_Slave.ar_valid)
-          $display("addr=0x%08x: data=0x%08x", AXI_Slave.ar_addr, AXI_Slave.r_data);
-        if (AXI_Slave.aw_valid)
-          $display("write addr=0x%08x: data=0x%08x", AXI_Slave.aw_addr, AXI_Slave.w_data);
-      end
-    end
-  endgenerate
+  assign debug_clk_o = clk_i;
+  assign debug_ar_valid_o = AXI_Slave.ar_valid;
+  assign debug_ar_addr_o = AXI_Slave.ar_addr;
+  assign debug_r_valid_o = AXI_Slave.r_valid;
+  assign debug_r_data_o = AXI_Slave.r_data;
+  assign debug_aw_valid_o = AXI_Slave.aw_valid;
+  assign debug_aw_addr_o = AXI_Slave.aw_addr;
+  assign debug_w_valid_o = AXI_Slave.w_valid;
+  assign debug_w_data_o = AXI_Slave.w_data;
 endmodule

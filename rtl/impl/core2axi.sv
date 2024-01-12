@@ -75,8 +75,8 @@ module core2axi #(
       .mem_rsp_valid_o(data_rvalid_o),
       .mem_rsp_rdata_o(data_rdata_o),
       .mem_rsp_error_o(),
-      .slv_aw_cache_i(0),
-      .slv_ar_cache_i(0),
+      .slv_aw_cache_i(4'b0),
+      .slv_ar_cache_i(4'b0),
       .axi_req_o(mst_req),
       .axi_rsp_i(mst_resp)
   );
