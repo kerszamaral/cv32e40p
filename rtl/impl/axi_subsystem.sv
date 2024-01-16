@@ -24,17 +24,7 @@ module axi_subsystem #(
     output logic exit_zero_o,
     output logic exit_valid_o,
     input  logic rx_i,
-    output logic tx_o,
-
-    output logic debug_clk_o,
-    output logic debug_ar_valid_o,
-    output logic [31:0] debug_ar_addr_o,
-    output logic debug_r_valid_o,
-    output logic [31:0] debug_r_data_o,
-    output logic debug_aw_valid_o,
-    output logic [31:0] debug_aw_addr_o,
-    output logic debug_w_valid_o,
-    output logic [31:0] debug_w_data_o
+    output logic tx_o
 );
 
   logic clk;
@@ -45,6 +35,13 @@ module axi_subsystem #(
       .clk_i(clk_i),
       .clk_o(clk)
   );
+ 
+  //Reset Sync
+  (* keep = "true" *) logic rst_n = '0;
+  always_ff @(posedge clk) begin : Reset_Sync
+    rst_n <= rst_ni;
+  end
+
 
   // AXI interface
   localparam MASTER_NUM = 2;
@@ -86,7 +83,7 @@ module axi_subsystem #(
   ) top_i (
       // Clock and Reset
       .clk_i          (clk),
-      .rst_ni         (rst_ni),
+      .rst_ni         (rst_n),
       .pulp_clock_en_i(1'b1),
       // PULP clock enable (only used if COREV_CLUSTER = 1)
       .scan_cg_en_i   (1'b0),
@@ -125,7 +122,7 @@ module axi_subsystem #(
       .CLK_FREQ(OUTPUT_CLK_FREQ)
   ) u_axi_mm_ram (
       .clk_i (clk),
-      .rst_ni(rst_ni),
+      .rst_ni(rst_n),
       /// Number of AXI masters connected to the xbar. (Number of slave ports)
       .AXI_Masters(AXI_Masters),
 
@@ -139,17 +136,7 @@ module axi_subsystem #(
       .exit_valid_o(exit_valid_o),
       .exit_zero_o (exit_zero_o),
       .rx_i        (rx_i),
-      .tx_o        (tx_o),
-
-      .debug_clk_o   (debug_clk_o),
-      .debug_ar_valid_o (debug_ar_valid_o),
-      .debug_ar_addr_o  (debug_ar_addr_o),
-      .debug_r_valid_o  (debug_r_valid_o),
-      .debug_r_data_o   (debug_r_data_o),
-      .debug_aw_valid_o (debug_aw_valid_o),
-      .debug_aw_addr_o  (debug_aw_addr_o),
-      .debug_w_valid_o  (debug_w_valid_o),
-      .debug_w_data_o   (debug_w_data_o)
+      .tx_o        (tx_o)
   );
 
 endmodule

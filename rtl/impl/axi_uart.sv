@@ -17,17 +17,7 @@ module axi_uart #(
     output logic interrupt_o,
     input logic interrupt_ack_i,
     input logic rx_i,
-    output logic tx_o,
-
-    output logic debug_clk_o,
-    output logic debug_ar_valid_o,
-    output logic [31:0] debug_ar_addr_o,
-    output logic debug_r_valid_o,
-    output logic [31:0] debug_r_data_o,
-    output logic debug_aw_valid_o,
-    output logic [31:0] debug_aw_addr_o,
-    output logic debug_w_valid_o,
-    output logic [31:0] debug_w_data_o
+    output logic tx_o
 );
 
   wire uart_req;
@@ -49,16 +39,6 @@ module axi_uart #(
   assign uart_w_req = uart_req & uart_we;
   assign uart_ack = uart_r_ack | uart_w_ack;
   assign uart_gnt = uart_w_ack | uart_r_ack;
-
-  assign debug_clk_o = clk_i;
-  assign debug_ar_valid_o = AXI_Slave.ar_valid;
-  assign debug_ar_addr_o = AXI_Slave.ar_addr;
-  assign debug_r_valid_o = AXI_Slave.r_valid;
-  assign debug_r_data_o = AXI_Slave.r_data;
-  assign debug_aw_valid_o = AXI_Slave.aw_valid;
-  assign debug_aw_addr_o = AXI_Slave.aw_addr;
-  assign debug_w_valid_o = AXI_Slave.w_valid;
-  assign debug_w_data_o = uart_wdata;
 
   axi_to_mem_intf #(
       /// See `axi_to_mem`, parameter `AddrWidth`.

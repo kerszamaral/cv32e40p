@@ -48,8 +48,8 @@ module uart #(
 
   parameter CLOCK_FREQUENCY = 50000000,
   parameter UART_BAUD_RATE  = 9600,
-  parameter WRITE_ADDRESS = 32'h80000000,
-  parameter READ_ADDRESS = 32'h80000004
+  parameter WRITE_ADDRESS = 32'h10000000,
+  parameter READ_ADDRESS = 32'h10000004
   )(
 
   // Global signals

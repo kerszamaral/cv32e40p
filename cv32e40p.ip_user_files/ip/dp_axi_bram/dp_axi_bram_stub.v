@@ -2,7 +2,7 @@
 // Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2023.2 (lin64) Build 4029153 Fri Oct 13 20:13:54 MDT 2023
-// Date        : Fri Jan 12 11:03:02 2024
+// Date        : Tue Jan 16 11:59:05 2024
 // Host        : c-am-i running 64-bit Ubuntu 23.10
 // Command     : write_verilog -force -mode synth_stub
 //               /home/kersz/Documents/cv32e40p/cv32e40p.runs/dp_axi_bram_synth_1/dp_axi_bram_stub.v

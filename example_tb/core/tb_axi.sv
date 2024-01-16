@@ -34,7 +34,7 @@ module tb_axi #(
   const time RESP_ACQUISITION_DEL = CLK_PERIOD * 0.9;
   const time RESET_DEL = STIM_APPLICATION_DEL;
   const int  RESET_WAIT_CYCLES = 100;
-  localparam LOGGING = 1;
+  localparam LOGGING = 0;
   byte unsigned LASTCHAR = "\n";
 
   // clock and reset for tb
@@ -110,17 +110,26 @@ module tb_axi #(
     end
   end
 
+  logic clk_s;
+  clk_divisor #(
+      .INPUT_CLK_FREQ (100_000_000),
+      .OUTPUT_CLK_FREQ(25_000_000)
+  ) u_clk_div (
+      .clk_i(clk),
+      .clk_o(clk_s)
+  );
+
   localparam READ_ADDRESS = 32'h10000004;
   logic [31:0] rxData;
   logic rxValid;
   logic rxInt;
 
-  uart #(
-      .CLOCK_FREQUENCY(100_000_000),
+  uart_sim #(
+      .CLOCK_FREQUENCY(25_000_000),
       .UART_BAUD_RATE(57600),
       .READ_ADDRESS(READ_ADDRESS)
   ) uart_module (
-      .clk_i(clk),
+      .clk_i(clk_s),
       .rst_ni(rst_n),
 
       .rw_address(READ_ADDRESS),
@@ -139,7 +148,7 @@ module tb_axi #(
   );
 
   // print to stdout pseudo peripheral
-  always_ff @(posedge clk, negedge rst_n) begin : print_peripheral
+  always_ff @(posedge clk_s, negedge rst_n) begin : print_peripheral
     if (rxValid && rxData) begin
       $write("%c", rxData[7:0]);
       // Because of the way the UART works, the string may arrive after the program has finished
@@ -153,35 +162,6 @@ module tb_axi #(
     end
   end
 
-  wire mem_clk;
-  wire mem_ar_valid;
-  wire [31:0] mem_ar_addr;
-  wire mem_r_valid;
-  wire [31:0] mem_r_data;
-
-  wire mem_aw_valid;
-  wire [31:0] mem_aw_addr;
-  wire mem_w_valid;
-  wire [31:0] mem_w_data;
-
-  always @(posedge mem_clk) begin
-    if (LOGGING) begin
-      if (mem_ar_valid) begin 
-        $write("READ addr=0x%08x\n", mem_ar_addr); 
-      end
-      if (mem_r_valid) begin 
-        $write("READ data=0x%08x\n", mem_r_data);
-      end
-
-      if (mem_aw_valid) begin 
-        $write("WRITE addr=0x%08x\n", mem_aw_addr);
-      end
-      if (mem_w_valid) begin 
-        $write("WRITE data=0x%08x\n", mem_w_data);
-      end
-    end
-  end
-
   // wrapper for riscv, the memory system and stdout peripheral
   axi_subsystem #() u_axi_subsystem (
       .clk_i         (clk),
@@ -190,17 +170,7 @@ module tb_axi #(
       .exit_zero_o   (exit_zero),
       .exit_valid_o  (exit_valid),
       .rx_i          (rx),
-      .tx_o          (tx),
-
-      .debug_clk_o   (mem_clk),
-      .debug_ar_valid_o (mem_ar_valid),
-      .debug_ar_addr_o  (mem_ar_addr),
-      .debug_r_valid_o  (mem_r_valid),
-      .debug_r_data_o   (mem_r_data),
-      .debug_aw_valid_o (mem_aw_valid),
-      .debug_aw_addr_o  (mem_aw_addr),
-      .debug_w_valid_o  (mem_w_valid),
-      .debug_w_data_o   (mem_w_data)
+      .tx_o          (tx)
   );
 
 endmodule  // tb_top

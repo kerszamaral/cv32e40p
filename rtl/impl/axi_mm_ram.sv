@@ -23,17 +23,7 @@ module axi_mm_ram #(
     output logic exit_zero_o,
 
     input  logic rx_i,
-    output logic tx_o,
-
-    output logic debug_clk_o,
-    output logic debug_ar_valid_o,
-    output logic [31:0] debug_ar_addr_o,
-    output logic debug_r_valid_o,
-    output logic [31:0] debug_r_data_o,
-    output logic debug_aw_valid_o,
-    output logic [31:0] debug_aw_addr_o,
-    output logic debug_w_valid_o,
-    output logic [31:0] debug_w_data_o
+    output logic tx_o
 );
   /// Number of AXI slaves connected to the xbar. (Number of master ports)
   localparam SLAVE_NUM = 3;
@@ -121,17 +111,7 @@ module axi_mm_ram #(
       .interrupt_o(),
       .interrupt_ack_i('1),
       .rx_i(rx_i),
-      .tx_o(tx_o),
-
-      .debug_clk_o   (debug_clk_o),
-      .debug_ar_valid_o (debug_ar_valid_o),
-      .debug_ar_addr_o  (debug_ar_addr_o),
-      .debug_r_valid_o  (debug_r_valid_o),
-      .debug_r_data_o   (debug_r_data_o),
-      .debug_aw_valid_o (debug_aw_valid_o),
-      .debug_aw_addr_o  (debug_aw_addr_o),
-      .debug_w_valid_o  (debug_w_valid_o),
-      .debug_w_data_o   (debug_w_data_o)
+      .tx_o(tx_o)
   );
 
   // EXIT AXI Access
