@@ -120,7 +120,7 @@ module axi_mm_ram #(
       .AXI_DATA_WIDTH(AXI_DATA_WIDTH),
       .AXI_ID_WIDTH  (AXI_ID_WIDTH),
       .AXI_USER_WIDTH(AXI_USER_WIDTH)
-  ) u_exit_dec (
+  ) exit (
       .clk_i (clk_i),
       .rst_ni(rst_ni),
 
