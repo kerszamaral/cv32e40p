@@ -14,6 +14,7 @@ void m_puts(char *s)
     while (*s)
         m_putchar(*s++);
     m_putchar('\n');
+    m_putchar('\r');
 }
 
 int main()
