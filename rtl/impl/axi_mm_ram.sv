@@ -6,7 +6,7 @@ module axi_mm_ram #(
     parameter AXI_ID_WIDTH = 16,
     parameter AXI_USER_WIDTH = 10,
     parameter MASTER_NUM = 2,
-    parameter CLK_FREQ = 25_000_000
+    parameter CLK_FREQ = 20_000_000
 ) (
     input logic clk_i,
     input logic rst_ni,

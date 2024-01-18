@@ -1,6 +1,6 @@
 module clk_divisor #(
     parameter INPUT_CLK_FREQ  = 100_000_000,
-    parameter OUTPUT_CLK_FREQ = 25_000_000
+    parameter OUTPUT_CLK_FREQ = 20_000_000
 ) (
     input  logic clk_i,
     output logic clk_o

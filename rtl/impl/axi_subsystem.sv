@@ -15,7 +15,7 @@ module axi_subsystem #(
     parameter AXI_USER_WIDTH = 2,
 
     parameter INPUT_CLK_FREQ  = 100_000_000,
-    parameter OUTPUT_CLK_FREQ = 25_000_000
+    parameter OUTPUT_CLK_FREQ = 20_000_000
 ) (
     input logic clk_i,
     input logic rst_ni,

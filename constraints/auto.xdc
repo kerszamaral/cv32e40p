@@ -1,8 +1,8 @@
 #File created from Constraints Wizard
 
 create_clock -period 10.000 -name clk_i -waveform {0.000 5.000} [get_ports clk_i]
-create_generated_clock -name u_clk_div/clk_o -source [get_ports clk_i] -divide_by 4 [get_pins u_clk_div/clk_o_reg/Q]
-create_clock -period 40.000 -name VIRTUAL_u_clk_div/clk_o -waveform {0.000 20.000}
+create_generated_clock -name u_clk_div/clk_o -source [get_ports clk_i] -divide_by 5 [get_pins u_clk_div/clk_o_reg/Q]
+create_clock -period 50.000 -name VIRTUAL_u_clk_div/clk_o -waveform {0.000 25.000}
 set_input_delay -clock [get_clocks VIRTUAL_u_clk_div/clk_o] -min -add_delay 0.000 [get_ports fetch_enable_i]
 set_input_delay -clock [get_clocks VIRTUAL_u_clk_div/clk_o] -max -add_delay 0.000 [get_ports fetch_enable_i]
 set_input_delay -clock [get_clocks VIRTUAL_u_clk_div/clk_o] -min -add_delay 0.000 [get_ports rst_ni]
