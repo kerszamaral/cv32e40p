@@ -35,7 +35,7 @@ module axi_subsystem #(
       .clk_i(clk_i),
       .clk_o(clk)
   );
- 
+
   //Reset Sync
   (* keep = "true" *) logic rst_n = '0;
   always_ff @(posedge clk) begin : Reset_Sync
@@ -121,7 +121,7 @@ module axi_subsystem #(
       .MASTER_NUM(MASTER_NUM),
       .CLK_FREQ(OUTPUT_CLK_FREQ)
   ) u_axi_mm_ram (
-      .clk_i (clk),
+      .clk_i(clk),
       .rst_ni(rst_n),
       /// Number of AXI masters connected to the xbar. (Number of slave ports)
       .AXI_Masters(AXI_Masters),

@@ -3,23 +3,28 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="tb_axi_func_impl.wdb" id="1">
+      <db_ref path="tb_axi_behav.wdb" id="1">
          <top_modules>
+            <top_module name="axi_pkg" />
+            <top_module name="cf_math_pkg" />
+            <top_module name="cv32e40p_apu_core_pkg" />
+            <top_module name="cv32e40p_fpu_pkg" />
+            <top_module name="cv32e40p_pkg" />
             <top_module name="glbl" />
             <top_module name="tb_axi" />
          </top_modules>
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="1,142.858333 us"></ZoomStartTime>
-      <ZoomEndTime time="2,542.858334 us"></ZoomEndTime>
-      <Cursor1Time time="2,309.525000 us"></Cursor1Time>
+      <ZoomStartTime time="2,169,859.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="2,170,575.001 ns"></ZoomEndTime>
+      <Cursor1Time time="2,170,455.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="185"></NameColumnWidth>
-      <ValueColumnWidth column_width="146"></ValueColumnWidth>
+      <ValueColumnWidth column_width="130"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="5" />
+   <WVObjectSize size="107" />
    <wvobject fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/clk_i" type="logic">
       <obj_property name="ElementShortName">clk_i</obj_property>
       <obj_property name="ObjectShortName">clk_i</obj_property>
@@ -39,5 +44,413 @@
    <wvobject fp_name="/tb_axi/u_axi_subsystem/u_axi_mm_ram/uart/tx_o" type="logic">
       <obj_property name="ElementShortName">tx_o</obj_property>
       <obj_property name="ObjectShortName">tx_o</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /aw_id" type="array">
+      <obj_property name="ElementShortName">aw_id[1:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_id[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /aw_addr" type="array">
+      <obj_property name="ElementShortName">aw_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_addr[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /aw_len" type="array">
+      <obj_property name="ElementShortName">aw_len[7:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_len[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /aw_size" type="array">
+      <obj_property name="ElementShortName">aw_size[2:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_size[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /aw_burst" type="array">
+      <obj_property name="ElementShortName">aw_burst[1:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_burst[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /aw_lock" type="logic">
+      <obj_property name="ElementShortName">aw_lock</obj_property>
+      <obj_property name="ObjectShortName">aw_lock</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /aw_cache" type="array">
+      <obj_property name="ElementShortName">aw_cache[3:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_cache[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /aw_prot" type="array">
+      <obj_property name="ElementShortName">aw_prot[2:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_prot[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /aw_qos" type="array">
+      <obj_property name="ElementShortName">aw_qos[3:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_qos[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /aw_region" type="array">
+      <obj_property name="ElementShortName">aw_region[3:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_region[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /aw_atop" type="array">
+      <obj_property name="ElementShortName">aw_atop[5:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_atop[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /aw_user" type="array">
+      <obj_property name="ElementShortName">aw_user[1:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_user[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /aw_valid" type="logic">
+      <obj_property name="ElementShortName">aw_valid</obj_property>
+      <obj_property name="ObjectShortName">aw_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /aw_ready" type="logic">
+      <obj_property name="ElementShortName">aw_ready</obj_property>
+      <obj_property name="ObjectShortName">aw_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /w_data" type="array">
+      <obj_property name="ElementShortName">w_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">w_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /w_strb" type="array">
+      <obj_property name="ElementShortName">w_strb[3:0]</obj_property>
+      <obj_property name="ObjectShortName">w_strb[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /w_last" type="logic">
+      <obj_property name="ElementShortName">w_last</obj_property>
+      <obj_property name="ObjectShortName">w_last</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /w_user" type="array">
+      <obj_property name="ElementShortName">w_user[1:0]</obj_property>
+      <obj_property name="ObjectShortName">w_user[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /w_valid" type="logic">
+      <obj_property name="ElementShortName">w_valid</obj_property>
+      <obj_property name="ObjectShortName">w_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /w_ready" type="logic">
+      <obj_property name="ElementShortName">w_ready</obj_property>
+      <obj_property name="ObjectShortName">w_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /b_id" type="array">
+      <obj_property name="ElementShortName">b_id[1:0]</obj_property>
+      <obj_property name="ObjectShortName">b_id[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /b_resp" type="array">
+      <obj_property name="ElementShortName">b_resp[1:0]</obj_property>
+      <obj_property name="ObjectShortName">b_resp[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /b_user" type="array">
+      <obj_property name="ElementShortName">b_user[1:0]</obj_property>
+      <obj_property name="ObjectShortName">b_user[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /b_valid" type="logic">
+      <obj_property name="ElementShortName">b_valid</obj_property>
+      <obj_property name="ObjectShortName">b_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /b_ready" type="logic">
+      <obj_property name="ElementShortName">b_ready</obj_property>
+      <obj_property name="ObjectShortName">b_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /ar_id" type="array">
+      <obj_property name="ElementShortName">ar_id[1:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_id[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /ar_addr" type="array">
+      <obj_property name="ElementShortName">ar_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_addr[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /ar_len" type="array">
+      <obj_property name="ElementShortName">ar_len[7:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_len[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /ar_size" type="array">
+      <obj_property name="ElementShortName">ar_size[2:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_size[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /ar_burst" type="array">
+      <obj_property name="ElementShortName">ar_burst[1:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_burst[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /ar_lock" type="logic">
+      <obj_property name="ElementShortName">ar_lock</obj_property>
+      <obj_property name="ObjectShortName">ar_lock</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /ar_cache" type="array">
+      <obj_property name="ElementShortName">ar_cache[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_cache[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /ar_prot" type="array">
+      <obj_property name="ElementShortName">ar_prot[2:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_prot[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /ar_qos" type="array">
+      <obj_property name="ElementShortName">ar_qos[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_qos[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /ar_region" type="array">
+      <obj_property name="ElementShortName">ar_region[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_region[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /ar_user" type="array">
+      <obj_property name="ElementShortName">ar_user[1:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_user[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /ar_valid" type="logic">
+      <obj_property name="ElementShortName">ar_valid</obj_property>
+      <obj_property name="ObjectShortName">ar_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /ar_ready" type="logic">
+      <obj_property name="ElementShortName">ar_ready</obj_property>
+      <obj_property name="ObjectShortName">ar_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /r_id" type="array">
+      <obj_property name="ElementShortName">r_id[1:0]</obj_property>
+      <obj_property name="ObjectShortName">r_id[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /r_data" type="array">
+      <obj_property name="ElementShortName">r_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">r_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /r_resp" type="array">
+      <obj_property name="ElementShortName">r_resp[1:0]</obj_property>
+      <obj_property name="ObjectShortName">r_resp[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /r_last" type="logic">
+      <obj_property name="ElementShortName">r_last</obj_property>
+      <obj_property name="ObjectShortName">r_last</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /r_user" type="array">
+      <obj_property name="ElementShortName">r_user[1:0]</obj_property>
+      <obj_property name="ObjectShortName">r_user[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /r_valid" type="logic">
+      <obj_property name="ElementShortName">r_valid</obj_property>
+      <obj_property name="ObjectShortName">r_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /r_ready" type="logic">
+      <obj_property name="ElementShortName">r_ready</obj_property>
+      <obj_property name="ObjectShortName">r_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /AXI_ADDR_WIDTH" type="array">
+      <obj_property name="ElementShortName">AXI_ADDR_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AXI_ADDR_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /AXI_DATA_WIDTH" type="array">
+      <obj_property name="ElementShortName">AXI_DATA_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AXI_DATA_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /AXI_ID_WIDTH" type="array">
+      <obj_property name="ElementShortName">AXI_ID_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AXI_ID_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /AXI_USER_WIDTH" type="array">
+      <obj_property name="ElementShortName">AXI_USER_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AXI_USER_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[0] /AXI_STRB_WIDTH" type="array">
+      <obj_property name="ElementShortName">AXI_STRB_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AXI_STRB_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/exit_zero_o" type="logic">
+      <obj_property name="ElementShortName">exit_zero_o</obj_property>
+      <obj_property name="ObjectShortName">exit_zero_o</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/exit_valid_o" type="logic">
+      <obj_property name="ElementShortName">exit_valid_o</obj_property>
+      <obj_property name="ObjectShortName">exit_valid_o</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /aw_id" type="array">
+      <obj_property name="ElementShortName">aw_id[1:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_id[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /aw_addr" type="array">
+      <obj_property name="ElementShortName">aw_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_addr[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /aw_len" type="array">
+      <obj_property name="ElementShortName">aw_len[7:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_len[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /aw_size" type="array">
+      <obj_property name="ElementShortName">aw_size[2:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_size[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /aw_burst" type="array">
+      <obj_property name="ElementShortName">aw_burst[1:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_burst[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /aw_lock" type="logic">
+      <obj_property name="ElementShortName">aw_lock</obj_property>
+      <obj_property name="ObjectShortName">aw_lock</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /aw_cache" type="array">
+      <obj_property name="ElementShortName">aw_cache[3:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_cache[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /aw_prot" type="array">
+      <obj_property name="ElementShortName">aw_prot[2:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_prot[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /aw_qos" type="array">
+      <obj_property name="ElementShortName">aw_qos[3:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_qos[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /aw_region" type="array">
+      <obj_property name="ElementShortName">aw_region[3:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_region[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /aw_atop" type="array">
+      <obj_property name="ElementShortName">aw_atop[5:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_atop[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /aw_user" type="array">
+      <obj_property name="ElementShortName">aw_user[1:0]</obj_property>
+      <obj_property name="ObjectShortName">aw_user[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /aw_valid" type="logic">
+      <obj_property name="ElementShortName">aw_valid</obj_property>
+      <obj_property name="ObjectShortName">aw_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /aw_ready" type="logic">
+      <obj_property name="ElementShortName">aw_ready</obj_property>
+      <obj_property name="ObjectShortName">aw_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /w_data" type="array">
+      <obj_property name="ElementShortName">w_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">w_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /w_strb" type="array">
+      <obj_property name="ElementShortName">w_strb[3:0]</obj_property>
+      <obj_property name="ObjectShortName">w_strb[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /w_last" type="logic">
+      <obj_property name="ElementShortName">w_last</obj_property>
+      <obj_property name="ObjectShortName">w_last</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /w_user" type="array">
+      <obj_property name="ElementShortName">w_user[1:0]</obj_property>
+      <obj_property name="ObjectShortName">w_user[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /w_valid" type="logic">
+      <obj_property name="ElementShortName">w_valid</obj_property>
+      <obj_property name="ObjectShortName">w_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /w_ready" type="logic">
+      <obj_property name="ElementShortName">w_ready</obj_property>
+      <obj_property name="ObjectShortName">w_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /b_id" type="array">
+      <obj_property name="ElementShortName">b_id[1:0]</obj_property>
+      <obj_property name="ObjectShortName">b_id[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /b_resp" type="array">
+      <obj_property name="ElementShortName">b_resp[1:0]</obj_property>
+      <obj_property name="ObjectShortName">b_resp[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /b_user" type="array">
+      <obj_property name="ElementShortName">b_user[1:0]</obj_property>
+      <obj_property name="ObjectShortName">b_user[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /b_valid" type="logic">
+      <obj_property name="ElementShortName">b_valid</obj_property>
+      <obj_property name="ObjectShortName">b_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /b_ready" type="logic">
+      <obj_property name="ElementShortName">b_ready</obj_property>
+      <obj_property name="ObjectShortName">b_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /ar_id" type="array">
+      <obj_property name="ElementShortName">ar_id[1:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_id[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /ar_addr" type="array">
+      <obj_property name="ElementShortName">ar_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_addr[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /ar_len" type="array">
+      <obj_property name="ElementShortName">ar_len[7:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_len[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /ar_size" type="array">
+      <obj_property name="ElementShortName">ar_size[2:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_size[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /ar_burst" type="array">
+      <obj_property name="ElementShortName">ar_burst[1:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_burst[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /ar_lock" type="logic">
+      <obj_property name="ElementShortName">ar_lock</obj_property>
+      <obj_property name="ObjectShortName">ar_lock</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /ar_cache" type="array">
+      <obj_property name="ElementShortName">ar_cache[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_cache[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /ar_prot" type="array">
+      <obj_property name="ElementShortName">ar_prot[2:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_prot[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /ar_qos" type="array">
+      <obj_property name="ElementShortName">ar_qos[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_qos[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /ar_region" type="array">
+      <obj_property name="ElementShortName">ar_region[3:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_region[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /ar_user" type="array">
+      <obj_property name="ElementShortName">ar_user[1:0]</obj_property>
+      <obj_property name="ObjectShortName">ar_user[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /ar_valid" type="logic">
+      <obj_property name="ElementShortName">ar_valid</obj_property>
+      <obj_property name="ObjectShortName">ar_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /ar_ready" type="logic">
+      <obj_property name="ElementShortName">ar_ready</obj_property>
+      <obj_property name="ObjectShortName">ar_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /r_id" type="array">
+      <obj_property name="ElementShortName">r_id[1:0]</obj_property>
+      <obj_property name="ObjectShortName">r_id[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /r_data" type="array">
+      <obj_property name="ElementShortName">r_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">r_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /r_resp" type="array">
+      <obj_property name="ElementShortName">r_resp[1:0]</obj_property>
+      <obj_property name="ObjectShortName">r_resp[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /r_last" type="logic">
+      <obj_property name="ElementShortName">r_last</obj_property>
+      <obj_property name="ObjectShortName">r_last</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /r_user" type="array">
+      <obj_property name="ElementShortName">r_user[1:0]</obj_property>
+      <obj_property name="ObjectShortName">r_user[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /r_valid" type="logic">
+      <obj_property name="ElementShortName">r_valid</obj_property>
+      <obj_property name="ObjectShortName">r_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /r_ready" type="logic">
+      <obj_property name="ElementShortName">r_ready</obj_property>
+      <obj_property name="ObjectShortName">r_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /AXI_ADDR_WIDTH" type="array">
+      <obj_property name="ElementShortName">AXI_ADDR_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AXI_ADDR_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /AXI_DATA_WIDTH" type="array">
+      <obj_property name="ElementShortName">AXI_DATA_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AXI_DATA_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /AXI_ID_WIDTH" type="array">
+      <obj_property name="ElementShortName">AXI_ID_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AXI_ID_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /AXI_USER_WIDTH" type="array">
+      <obj_property name="ElementShortName">AXI_USER_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AXI_USER_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_axi/u_axi_subsystem/\AXI_Masters[1] /AXI_STRB_WIDTH" type="array">
+      <obj_property name="ElementShortName">AXI_STRB_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">AXI_STRB_WIDTH[31:0]</obj_property>
    </wvobject>
 </wave_config>

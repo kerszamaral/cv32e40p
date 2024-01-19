@@ -34,8 +34,7 @@ module tb_axi #(
   const time RESP_ACQUISITION_DEL = CLK_PERIOD * 0.9;
   const time RESET_DEL = STIM_APPLICATION_DEL;
   const int  RESET_WAIT_CYCLES = 100;
-  localparam LOGGING = 0;
-  byte unsigned LASTCHAR = "\n";
+  byte unsigned LASTCHAR = "\r";
 
   // clock and reset for tb
   logic         clk = 'b0;
@@ -129,7 +128,7 @@ module tb_axi #(
       .UART_BAUD_RATE(57600),
       .READ_ADDRESS(READ_ADDRESS)
   ) uart_module (
-      .clk_i(clk_s),
+      .clk_i (clk_s),
       .rst_ni(rst_n),
 
       .rw_address(READ_ADDRESS),
@@ -161,6 +160,31 @@ module tb_axi #(
       end
     end
   end
+
+  localparam LOGGING = 1;
+  localparam NUM_MASTERS = 2;
+  generate
+    ;
+    if (LOGGING) begin : logging
+      for (genvar i = 0; i < NUM_MASTERS; i = i + 1) begin
+        always @(posedge u_axi_subsystem.clk) begin
+          if (u_axi_subsystem.AXI_Masters[i].ar_valid) begin
+            $write("BUS %01d READ addr=0x%08x\n", i, u_axi_subsystem.AXI_Masters[i].ar_addr);
+          end
+          if (u_axi_subsystem.AXI_Masters[i].r_valid) begin
+            $write("BUS %01d READ data=0x%08x\n", i, u_axi_subsystem.AXI_Masters[i].r_data);
+          end
+
+          if (u_axi_subsystem.AXI_Masters[i].aw_valid) begin
+            $write("BUS %01d WRITE addr=0x%08x\n", i, u_axi_subsystem.AXI_Masters[i].aw_addr);
+          end
+          if (u_axi_subsystem.AXI_Masters[i].w_valid) begin
+            $write("BUS %01d WRITE data=0x%08x\n", i, u_axi_subsystem.AXI_Masters[i].w_data);
+          end
+        end
+      end
+    end
+  endgenerate
 
   // wrapper for riscv, the memory system and stdout peripheral
   axi_subsystem #() u_axi_subsystem (

@@ -32,21 +32,34 @@ def checkDiff(file1: str, file2: str, outFile: str):
                 line1 = f1.readline()
                 line2 = f2.readline()
                 out.write(f"{file1}||{file2}\n")
-                lineNumbr = 1
+                lineNumbr1 = 1
+                lineNumbr2 = 1
                 
                 startWord = "reset"
                 while not line2.startswith(startWord):
+                    lineNumbr2 += 1
                     line2 = f2.readline()
                 while not line1.startswith(startWord):
+                    lineNumbr1 += 1
                     line1 = f1.readline()
-                
+                buff1 = ""
+                buff2 = ""
                 while line1 or line2:
+                    if buff1 == line1:
+                        lineNumbr1 += 1
+                        line1 = f1.readline()
+                    if buff2 == line2:
+                        lineNumbr2 += 1
+                        line2 = f2.readline()
                     
+                    buff1 = line1
+                    buff2 = line2
                     if line1 != line2:
                         line1 = line1.replace("\n", "")
                         line2 = line2.replace("\n", "")
-                        out.write(f"InLines {lineNumbr}: {line1} || {line2}\n")
-                    lineNumbr += 1
+                        out.write(f"Lines: {lineNumbr1}: {line1} || {lineNumbr2}: {line2}\n")
+                    lineNumbr1 += 1
+                    lineNumbr2 += 1
                     line1 = f1.readline()
                     line2 = f2.readline()
                     
