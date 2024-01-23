@@ -34,7 +34,7 @@ module tb_axi #(
   const time RESP_ACQUISITION_DEL = CLK_PERIOD * 0.9;
   const time RESET_DEL = STIM_APPLICATION_DEL;
   const int  RESET_WAIT_CYCLES = 100;
-  byte unsigned LASTCHAR = "\r";
+  byte unsigned LASTCHAR = 8'h0d; // "\r" is not working
 
   // clock and reset for tb
   logic         clk = 'b0;
@@ -169,17 +169,24 @@ module tb_axi #(
       for (genvar i = 0; i < NUM_MASTERS; i = i + 1) begin
         always @(posedge u_axi_subsystem.clk) begin
           if (u_axi_subsystem.AXI_Masters[i].ar_valid) begin
-            $write("BUS %01d READ addr=0x%08x\n", i, u_axi_subsystem.AXI_Masters[i].ar_addr);
+            $write("BUS %01d READ addr=0x%08x at %t\n", i, u_axi_subsystem.AXI_Masters[i].ar_addr,
+                   $time);
+            if (u_axi_subsystem.AXI_Masters[i].ar_addr == 32'h1f08) begin
+              $write("HERE");
+            end
           end
           if (u_axi_subsystem.AXI_Masters[i].r_valid) begin
-            $write("BUS %01d READ data=0x%08x\n", i, u_axi_subsystem.AXI_Masters[i].r_data);
+            $write("BUS %01d READ data=0x%08x at %t\n", i, u_axi_subsystem.AXI_Masters[i].r_data,
+                   $time);
           end
 
           if (u_axi_subsystem.AXI_Masters[i].aw_valid) begin
-            $write("BUS %01d WRITE addr=0x%08x\n", i, u_axi_subsystem.AXI_Masters[i].aw_addr);
+            $write("BUS %01d WRITE addr=0x%08x at %t\n", i, u_axi_subsystem.AXI_Masters[i].aw_addr,
+                   $time);
           end
           if (u_axi_subsystem.AXI_Masters[i].w_valid) begin
-            $write("BUS %01d WRITE data=0x%08x\n", i, u_axi_subsystem.AXI_Masters[i].w_data);
+            $write("BUS %01d WRITE data=0x%08x at %t\n", i, u_axi_subsystem.AXI_Masters[i].w_data,
+                   $time);
           end
         end
       end

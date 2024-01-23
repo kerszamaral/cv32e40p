@@ -28,16 +28,11 @@ module xilinx_simple_dual_port_byte_write_1_clock_ram #(
   // The following code either initializes the memory values to a specified file or to all zeros to match hardware
   generate
     initial begin
-      if (RAM_DEPTH > 2 ** 16) begin
-        for (integer ram_jmp = 1; ram_jmp < 3; ram_jmp = ram_jmp + 1) begin
-          for (integer ram_index = 0; ram_index < RAM_DEPTH / 2; ram_index = ram_index + 1) begin
-            BRAM[ram_index*ram_jmp] = {(NB_COL * COL_WIDTH) {1'b0}};
-          end
-        end
-      end else begin
-        for (integer ram_index = 0; ram_index < RAM_DEPTH; ram_index = ram_index + 1) begin
-          BRAM[ram_index] = {(NB_COL * COL_WIDTH) {1'b0}};
-        end
+      for (integer i = 0; i < RAM_DEPTH / 2; i = i + 1) begin
+        BRAM[i] = {(NB_COL * COL_WIDTH) {1'b0}};
+      end
+      for (integer j = RAM_DEPTH / 2; j < RAM_DEPTH; j = j + 1) begin
+        BRAM[j] = {(NB_COL * COL_WIDTH) {1'b0}};
       end
     end
     if (INIT_FILE != "") begin : use_init_file
