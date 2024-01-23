@@ -313,3 +313,84 @@ hwlp-vsim-run-gui: vsim-run-gui-pulp
 # general targets
 .PHONY: clean
 clean: tb-clean tb-clean-fp custom-clean custom-fp-clean interrupt-clean hwlp-clean
+
+
+# RTL source files for the CV32E core
+# DESIGN_RTL_DIR is used by CV_CORE_MANIFEST file
+CV_CORE_PKG           := $(CORE_V_VERIF)/core-v-cores/$(CV_CORE_LC)
+CV_CORE_RTLSRC_INCDIR := $(CV_CORE_PKG)/rtl/include
+CV_CORE_RTLSRC_PKG    := $(CV_CORE_PKG)/rtl/fpnew/src/fpnew_pkg.sv \
+				$(addprefix $(CV_CORE_RTLSRC_INCDIR)/,\
+				CV_CORE_apu_core_package.sv CV_CORE_defines.sv \
+				CV_CORE_tracer_defines.sv)
+CV_CORE_RTLSRC  := $(filter-out $(CV_CORE_PKG)/rtl/$(CV_CORE_LC)_register_file_latch.sv, \
+                $(wildcard $(CV_CORE_PKG)/rtl/*.sv))
+# FIXME: temporarily using a local manifest for the core.
+#        This is BAD PRACTICE and will be fixed with
+#        https://github.com/openhwgroup/CV_CORE/pull/421 is resolved.
+CV_CORE_MANIFEST    := $(CV_CORE_PKG)/cv32e40p_manifest.flist
+export DESIGN_RTL_DIR = $(CV_CORE_PKG)/rtl
+
+# xsim is the Xilinx Vivado simulator (https://xilinx.com/)
+XVLOG			  	= xvlog
+XELAB			  	= xelab
+XSIM			  	= xsim
+XSIM_CMP_FLAGS 		:= -sv
+XSIM_ELB_FLAGS 		:= -debug all -top tb_top -snapshot tb_top_snapshot
+XSIM_RESULTS	  	?= $(PWD)/xsim_results
+XSIM_SCRIPT_DIR   	= ../tools/xsim
+XSIM_SCRIPT       	= $(XSIM_SCRIPT_DIR)/xsim.tcl
+XSIM_UVM_ARGS 		= -L UVM
+XSIM_RUN_FLAGS      = -tclbatch ../$(XSIM_SCRIPT)
+
+###############################################################################
+# Xilinx Vivado xsim testbench compilation
+
+.PHONY: xsim-run-gui
+xsim-run-gui: .xsim-elab
+	@echo "$(BANNER)"
+	@echo "* Running with Xilinx Vivado XSIM"
+	@echo "$(BANNER)"
+	@cd $(XSIM_RESULTS) && \
+	$(XSIM) \
+		tb_top_snapshot \
+		--gui -onfinish stop
+
+.PHONY: xsim-run xsim-sanity xsim-hello-world
+xsim-run: xsim-test
+xsim-sanity: xsim-test
+xsim-hello-world: xsim-test
+
+.PHONY: xsim-test
+xsim-test: .xsim-elab
+	@echo "$(BANNER)"
+	@echo "* Running with Xilinx Vivado XSIM"
+	@echo "$(BANNER)"
+	@cd $(XSIM_RESULTS) && \
+	$(XSIM) \
+		tb_top_snapshot \
+		$(XSIM_RUN_FLAGS)
+
+.PHONY: xsim-elab
+.xsim-elab: .xsim-comp
+	@cd $(XSIM_RESULTS) && \
+	$(XELAB) \
+		$(XSIM_ELB_FLAGS)
+
+.PHONY: xsim-comp
+.xsim-comp: xsim_mk_results $(CV_CORE_PKG) $(RTLSRC_PKG) $(RTLSRC) $(TBSRC_PKG) $(TBSRC)
+	@cd $(XSIM_RESULTS) && \
+	$(XVLOG) \
+		$(XSIM_CMP_FLAGS) \
+		$(XSIM_UVM_ARGS) \
+		-f $(CV_CORE_MANIFEST).xsim \
+		$(TBSRC_PKG) \
+		$(TBSRC)
+
+.PHONY: xsim_mk_results
+xsim_mk_results:
+	$(MKDIR_P) $(XSIM_RESULTS)
+
+.PHONY: xsim-clean
+xsim-clean:
+	rm -rf $(XSIM_RESULTS)
