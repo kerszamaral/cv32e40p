@@ -76,7 +76,7 @@ module axi_mem #(
           .COL_WIDTH(8),  // Specify column width (byte width, typically 8 or 9)
           .ADDR_WIDTH(MEM_SIZE),  // Specify RAM depth (number of entries)
           .RAM_PERFORMANCE("HIGH_PERFORMANCE"),  // Select "HIGH_PERFORMANCE" or "LOW_LATENCY" 
-          .INIT_FILE("C:/Users/kersz/Documents/ufrgs/IC/cv32e40p/programs/basic/basic.hex") // Specify name/location of RAM initialization file if using one (leave blank if not)
+          .INIT_FILE("/home/kersz/Documents/cv32e40p/programs/basic/basic.hex") // Specify name/location of RAM initialization file if using one (leave blank if not)
       ) memory (
           .clka(clk_i),  // Clock
 

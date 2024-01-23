@@ -161,7 +161,7 @@ module tb_axi #(
     end
   end
 
-  localparam LOGGING = 1;
+  localparam LOGGING = 0;
   localparam NUM_MASTERS = 2;
   generate
     ;

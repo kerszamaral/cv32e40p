@@ -20,6 +20,7 @@ endif
 
 RISCV_EXE_PREFIX = $(RISCV)/bin/$(RISCV_PREFIX)
 
+MEM_SIZE      ?= 0x1FFFF
 DATA_WIDTH 		?= 4
 
 %.coe: %.hex
@@ -39,6 +40,7 @@ DATA_WIDTH 		?= 4
 	@echo "* Generating hexfile, readelf and objdump files"
 	@echo "$(BANNER)"
 	$(RISCV_EXE_PREFIX)objcopy -O verilog \
+		--pad-to $(MEM_SIZE) \
 		$(FILES_DIR)$< \
 		--verilog-data-width $(DATA_WIDTH) \
 		$(FILES_DIR)$*.hex

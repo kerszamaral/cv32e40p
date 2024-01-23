@@ -27,16 +27,14 @@ module xilinx_simple_dual_port_byte_write_1_clock_ram #(
 
   // The following code either initializes the memory values to a specified file or to all zeros to match hardware
   generate
-    initial begin
-      for (integer i = 0; i < RAM_DEPTH / 2; i = i + 1) begin
-        BRAM[i] = {(NB_COL * COL_WIDTH) {1'b0}};
-      end
-      for (integer j = RAM_DEPTH / 2; j < RAM_DEPTH; j = j + 1) begin
-        BRAM[j] = {(NB_COL * COL_WIDTH) {1'b0}};
-      end
-    end
-    if (INIT_FILE != "") begin : use_init_file
-      initial $readmemh(INIT_FILE, BRAM, 0, RAM_DEPTH - 1);
+    if (INIT_FILE != "") begin: g_use_init_file
+      initial
+        $readmemh(INIT_FILE, BRAM, 0, RAM_DEPTH-1);
+    end else begin: g_init_bram_to_zero
+      integer ram_index;
+      initial
+        for (ram_index = 0; ram_index < RAM_DEPTH; ram_index = ram_index + 1)
+          BRAM[ram_index] = {(NB_COL*COL_WIDTH){1'b0}};
     end
   endgenerate
 
@@ -44,7 +42,7 @@ module xilinx_simple_dual_port_byte_write_1_clock_ram #(
 
   generate
     genvar i;
-    for (i = 0; i < NB_COL; i = i + 1) begin : byte_write
+    for (i = 0; i < NB_COL; i = i + 1) begin : g_byte_write
       always @(posedge clka)
         if (wea[i])
           BRAM[addra][(i+1)*COL_WIDTH-1:i*COL_WIDTH] <= dina[(i+1)*COL_WIDTH-1:i*COL_WIDTH];
@@ -53,12 +51,12 @@ module xilinx_simple_dual_port_byte_write_1_clock_ram #(
 
   //  The following code generates HIGH_PERFORMANCE (use output register) or LOW_LATENCY (no output register)
   generate
-    if (RAM_PERFORMANCE == "LOW_LATENCY") begin : no_output_register
+    if (RAM_PERFORMANCE == "LOW_LATENCY") begin : g_no_output_register
 
       // The following is a 1 clock cycle read latency at the cost of a longer clock-to-out timing
       assign doutb = ram_data;
 
-    end else begin : output_register
+    end else begin : g_output_register
 
       // The following is a 2 clock cycle read latency with improve clock-to-out timing
 
