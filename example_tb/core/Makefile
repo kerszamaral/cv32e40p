@@ -317,7 +317,7 @@ clean: tb-clean tb-clean-fp custom-clean custom-fp-clean interrupt-clean hwlp-cl
 
 # RTL source files for the CV32E core
 # DESIGN_RTL_DIR is used by CV_CORE_MANIFEST file
-CV_CORE_PKG           := $(CORE_V_VERIF)/core-v-cores/$(CV_CORE_LC)
+CV_CORE_PKG           := $(BASE)
 CV_CORE_RTLSRC_INCDIR := $(CV_CORE_PKG)/rtl/include
 CV_CORE_RTLSRC_PKG    := $(CV_CORE_PKG)/rtl/fpnew/src/fpnew_pkg.sv \
 				$(addprefix $(CV_CORE_RTLSRC_INCDIR)/,\
@@ -331,17 +331,22 @@ CV_CORE_RTLSRC  := $(filter-out $(CV_CORE_PKG)/rtl/$(CV_CORE_LC)_register_file_l
 CV_CORE_MANIFEST    := $(CV_CORE_PKG)/cv32e40p_manifest.flist
 export DESIGN_RTL_DIR = $(CV_CORE_PKG)/rtl
 
+BASE = /home/kersz/Documents/cv32e40p
+RTL = $(BASE)/cv32e40p_manifest.flist
+TB_SRC = $(BASE)/example_tb/core/tb_axi.sv
+TB_TOP = tb_top
 # xsim is the Xilinx Vivado simulator (https://xilinx.com/)
 XVLOG			  	= xvlog
 XELAB			  	= xelab
 XSIM			  	= xsim
 XSIM_CMP_FLAGS 		:= -sv
-XSIM_ELB_FLAGS 		:= -debug all -top tb_top -snapshot tb_top_snapshot
+XSIM_ELB_FLAGS 		:= -debug all -top $(TB_TOP) -snapshot tb_top_snapshot -d VERILATOR
 XSIM_RESULTS	  	?= $(PWD)/xsim_results
 XSIM_SCRIPT_DIR   	= ../tools/xsim
 XSIM_SCRIPT       	= $(XSIM_SCRIPT_DIR)/xsim.tcl
 XSIM_UVM_ARGS 		= -L UVM
 XSIM_RUN_FLAGS      = -tclbatch ../$(XSIM_SCRIPT)
+
 
 ###############################################################################
 # Xilinx Vivado xsim testbench compilation
@@ -378,18 +383,17 @@ xsim-test: .xsim-elab
 		$(XSIM_ELB_FLAGS)
 
 .PHONY: xsim-comp
-.xsim-comp: xsim_mk_results $(CV_CORE_PKG) $(RTLSRC_PKG) $(RTLSRC) $(TBSRC_PKG) $(TBSRC)
+.xsim-comp:
 	@cd $(XSIM_RESULTS) && \
 	$(XVLOG) \
 		$(XSIM_CMP_FLAGS) \
 		$(XSIM_UVM_ARGS) \
-		-f $(CV_CORE_MANIFEST).xsim \
-		$(TBSRC_PKG) \
-		$(TBSRC)
+		-f $(RTL).xsim \
+		$(TB_SRC)
 
 .PHONY: xsim_mk_results
 xsim_mk_results:
-	$(MKDIR_P) $(XSIM_RESULTS)
+	mkdir $(XSIM_RESULTS)
 
 .PHONY: xsim-clean
 xsim-clean:
