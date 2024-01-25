@@ -46,7 +46,7 @@ VSIM_SCRIPT             = vsim.tcl
 
 # RTL source files
 RTLSRC_HOME             := ../..
-export DESIGN_RTL_DIR = $(RTLSRC_HOME)/rtl
+#export DESIGN_RTL_DIR = $(RTLSRC_HOME)/rtl
 CV_CORE_MANIFEST    := $(RTLSRC_HOME)/cv32e40p_manifest.flist
 RTLSRC_TB_PKG		:= include/perturbation_pkg.sv
 RTLSRC_TB_TOP		:= tb_top.sv
@@ -317,6 +317,7 @@ clean: tb-clean tb-clean-fp custom-clean custom-fp-clean interrupt-clean hwlp-cl
 
 # RTL source files for the CV32E core
 # DESIGN_RTL_DIR is used by CV_CORE_MANIFEST file
+export DESIGN_RTL_DIR = ../../../rtl
 CV_CORE_PKG           := $(BASE)
 CV_CORE_RTLSRC_INCDIR := $(CV_CORE_PKG)/rtl/include
 CV_CORE_RTLSRC_PKG    := $(CV_CORE_PKG)/rtl/fpnew/src/fpnew_pkg.sv \
@@ -329,22 +330,20 @@ CV_CORE_RTLSRC  := $(filter-out $(CV_CORE_PKG)/rtl/$(CV_CORE_LC)_register_file_l
 #        This is BAD PRACTICE and will be fixed with
 #        https://github.com/openhwgroup/CV_CORE/pull/421 is resolved.
 CV_CORE_MANIFEST    := $(CV_CORE_PKG)/cv32e40p_manifest.flist
-export DESIGN_RTL_DIR = $(CV_CORE_PKG)/rtl
 
-BASE = /home/kersz/Documents/cv32e40p
-RTL = $(BASE)/cv32e40p_manifest.flist
-TB_SRC = $(BASE)/example_tb/core/tb_axi.sv
-TB_TOP = tb_top
+RTL = $(DESIGN_RTL_DIR)/../cv32e40p_manifest.flist
+TB_SRC = $(DESIGN_RTL_DIR)/../example_tb/core/tb_axi.sv
+TB_TOP = tb_axi
 # xsim is the Xilinx Vivado simulator (https://xilinx.com/)
 XVLOG			  	= xvlog
 XELAB			  	= xelab
 XSIM			  	= xsim
-XSIM_CMP_FLAGS 		:= -sv
-XSIM_ELB_FLAGS 		:= -debug all -top $(TB_TOP) -snapshot tb_top_snapshot -d VERILATOR
+XSIM_CMP_FLAGS 		:= -sv -d VERILATOR
+XSIM_ELB_FLAGS 		:= -debug all -top $(TB_TOP) -snapshot tb_top_snapshot
 XSIM_RESULTS	  	?= $(PWD)/xsim_results
-XSIM_SCRIPT_DIR   	= ../tools/xsim
+XSIM_SCRIPT_DIR   	= .
 XSIM_SCRIPT       	= $(XSIM_SCRIPT_DIR)/xsim.tcl
-XSIM_UVM_ARGS 		= -L UVM
+XSIM_UVM_ARGS 		  = -L UVM
 XSIM_RUN_FLAGS      = -tclbatch ../$(XSIM_SCRIPT)
 
 
