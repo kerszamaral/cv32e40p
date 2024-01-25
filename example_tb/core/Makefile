@@ -318,22 +318,11 @@ clean: tb-clean tb-clean-fp custom-clean custom-fp-clean interrupt-clean hwlp-cl
 # RTL source files for the CV32E core
 # DESIGN_RTL_DIR is used by CV_CORE_MANIFEST file
 export DESIGN_RTL_DIR = ../../../rtl
-CV_CORE_PKG           := $(BASE)
-CV_CORE_RTLSRC_INCDIR := $(CV_CORE_PKG)/rtl/include
-CV_CORE_RTLSRC_PKG    := $(CV_CORE_PKG)/rtl/fpnew/src/fpnew_pkg.sv \
-				$(addprefix $(CV_CORE_RTLSRC_INCDIR)/,\
-				CV_CORE_apu_core_package.sv CV_CORE_defines.sv \
-				CV_CORE_tracer_defines.sv)
-CV_CORE_RTLSRC  := $(filter-out $(CV_CORE_PKG)/rtl/$(CV_CORE_LC)_register_file_latch.sv, \
-                $(wildcard $(CV_CORE_PKG)/rtl/*.sv))
-# FIXME: temporarily using a local manifest for the core.
-#        This is BAD PRACTICE and will be fixed with
-#        https://github.com/openhwgroup/CV_CORE/pull/421 is resolved.
-CV_CORE_MANIFEST    := $(CV_CORE_PKG)/cv32e40p_manifest.flist
 
 RTL = $(DESIGN_RTL_DIR)/../cv32e40p_manifest.flist
 TB_SRC = $(DESIGN_RTL_DIR)/../example_tb/core/tb_axi.sv
 TB_TOP = tb_axi
+
 # xsim is the Xilinx Vivado simulator (https://xilinx.com/)
 XVLOG			  	= xvlog
 XELAB			  	= xelab
@@ -382,7 +371,7 @@ xsim-test: .xsim-elab
 		$(XSIM_ELB_FLAGS)
 
 .PHONY: xsim-comp
-.xsim-comp:
+.xsim-comp: xsim_mk_results $(TB_SRC) $(RTL)
 	@cd $(XSIM_RESULTS) && \
 	$(XVLOG) \
 		$(XSIM_CMP_FLAGS) \
