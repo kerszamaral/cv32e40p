@@ -386,3 +386,50 @@ xsim_mk_results:
 .PHONY: xsim-clean
 xsim-clean:
 	rm -rf $(XSIM_RESULTS)
+
+####################################
+MCOMP = vlog
+MSIM_CMP_FLAGS  = -define VERILATOR
+MSIM_SIM_FLAGS  = 
+MSIM_SCRIPT_DIR = .
+MSIM_SCRIPT     = $(MSIM_SCRIPT_DIR)/xsim.tcl
+MSIM_RUN_FLAGS  = -do ../$(MSIM_SCRIPT) 
+MSIM_RESULTS   ?= $(PWD)/msim_results
+###############################################################################
+# Mentor Graphics Modelsim testbench compilation
+.PHONY: xsim-run-gui
+msim-run-gui: msim-comp
+	@echo "$(BANNER)"
+	@echo "* Running with Siemens ModelSim"
+	@echo "$(BANNER)"
+	@cd $(MSIM_RESULTS) && \
+	$(VSIM) \
+	  -gui
+	  $(MSIM_SIM_FLAGS) \
+		$(TB_TOP)
+
+.PHONY: msim-test
+msim-test: msim-comp
+	@cd $(MSIM_RESULTS) && \
+	$(VSIM) \
+	  -c
+	  $(MSIM_SIM_FLAGS) \
+		$(MSIM_RUN_FLAGS) \
+		$(TB_TOP)
+
+.PHONY: msim-comp
+.msim-comp: msim-mk-results $(TB_SRC) $(RTL)
+	@cd $(MSIM_RESULTS) && \
+	$(MCOMP) \
+		-work work \
+		$(MSIM_CMP_FLAGS) \
+		-f $(RTL) \
+		$(TB_SRC)
+
+.PHONY: msim-mk-results
+msim-mk-results:
+	mkdir $(MSIM_RESULTS)
+
+.PHONY: msim-clean
+msim-clean:
+	rm -rf $(MSIM_RESULTS)

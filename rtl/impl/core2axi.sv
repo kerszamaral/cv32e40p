@@ -11,6 +11,9 @@
 `define PROT_INSTR 3'b100
 `define PROT_DATA 3'b000
 
+`include "assign.svh"
+`include "typedef.svh"
+
 module core2axi #(
     parameter AXI_ADDR_WIDTH = 32,
     parameter AXI_DATA_WIDTH = 32,

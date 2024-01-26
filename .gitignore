@@ -18,6 +18,8 @@ TAGS
 .lib-rtl
 .opt-rtl
 example_tb/core/xsim_results/
+example_tb/core/msim_results/
+*.help
 /build
 /Bender.lock
 /Bender.local
