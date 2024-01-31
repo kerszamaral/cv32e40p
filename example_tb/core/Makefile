@@ -318,23 +318,23 @@ clean: tb-clean tb-clean-fp custom-clean custom-fp-clean interrupt-clean hwlp-cl
 # RTL source files for the CV32E core
 # DESIGN_RTL_DIR is used by CV_CORE_MANIFEST file
 export DESIGN_RTL_DIR = ../../../rtl
+PWD = $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 RTL = $(DESIGN_RTL_DIR)/../cv32e40p_manifest.flist
-TB_SRC = $(DESIGN_RTL_DIR)/../example_tb/core/tb_axi.sv
 TB_TOP = tb_axi
+TB_SRC = $(DESIGN_RTL_DIR)/../example_tb/core/$(TB_TOP).sv
 
 # xsim is the Xilinx Vivado simulator (https://xilinx.com/)
 XVLOG			  	= xvlog
 XELAB			  	= xelab
 XSIM			  	= xsim
 XSIM_CMP_FLAGS 		:= -sv -d VERILATOR
-XSIM_ELB_FLAGS 		:= -debug all -top $(TB_TOP) -snapshot tb_top_snapshot
+XSIM_ELB_FLAGS 		:= -debug all -top $(TB_TOP) -snapshot $(TB_TOP)_snapshot
 XSIM_RESULTS	  	?= $(PWD)/xsim_results
 XSIM_SCRIPT_DIR   	= .
 XSIM_SCRIPT       	= $(XSIM_SCRIPT_DIR)/xsim.tcl
 XSIM_UVM_ARGS 		  = -L UVM
 XSIM_RUN_FLAGS      = -tclbatch ../$(XSIM_SCRIPT)
-
 
 ###############################################################################
 # Xilinx Vivado xsim testbench compilation
@@ -346,7 +346,7 @@ xsim-run-gui: .xsim-elab
 	@echo "$(BANNER)"
 	@cd $(XSIM_RESULTS) && \
 	$(XSIM) \
-		tb_top_snapshot \
+		$(TB_TOP)_snapshot \
 		--gui -onfinish stop
 
 .PHONY: xsim-run xsim-sanity xsim-hello-world
@@ -361,7 +361,7 @@ xsim-test: .xsim-elab
 	@echo "$(BANNER)"
 	@cd $(XSIM_RESULTS) && \
 	$(XSIM) \
-		tb_top_snapshot \
+		$(TB_TOP)_snapshot \
 		$(XSIM_RUN_FLAGS)
 
 .PHONY: xsim-elab
@@ -371,7 +371,7 @@ xsim-test: .xsim-elab
 		$(XSIM_ELB_FLAGS)
 
 .PHONY: xsim-comp
-.xsim-comp: xsim_mk_results $(TB_SRC) $(RTL)
+.xsim-comp: xsim_mk_results
 	@cd $(XSIM_RESULTS) && \
 	$(XVLOG) \
 		$(XSIM_CMP_FLAGS) \
@@ -379,8 +379,7 @@ xsim-test: .xsim-elab
 		-f $(RTL).xsim \
 		$(TB_SRC)
 
-.PHONY: xsim_mk_results
-xsim_mk_results:
+xsim_mk_results: xsim-clean
 	mkdir $(XSIM_RESULTS)
 
 .PHONY: xsim-clean
@@ -389,6 +388,7 @@ xsim-clean:
 
 ####################################
 MCOMP = vlog
+VSIM  = vsim
 MSIM_CMP_FLAGS  = -define VERILATOR
 MSIM_SIM_FLAGS  = 
 MSIM_SCRIPT_DIR = .
@@ -404,21 +404,21 @@ msim-run-gui: msim-comp
 	@echo "$(BANNER)"
 	@cd $(MSIM_RESULTS) && \
 	$(VSIM) \
-	  -gui
-	  $(MSIM_SIM_FLAGS) \
+		-gui
+		$(MSIM_SIM_FLAGS) \
 		$(TB_TOP)
 
 .PHONY: msim-test
-msim-test: msim-comp
+msim-test: .msim-comp
 	@cd $(MSIM_RESULTS) && \
 	$(VSIM) \
-	  -c
-	  $(MSIM_SIM_FLAGS) \
+		-c \
+		$(MSIM_SIM_FLAGS) \
 		$(MSIM_RUN_FLAGS) \
 		$(TB_TOP)
 
 .PHONY: msim-comp
-.msim-comp: msim-mk-results $(TB_SRC) $(RTL)
+.msim-comp: msim-mk-results
 	@cd $(MSIM_RESULTS) && \
 	$(MCOMP) \
 		-work work \
@@ -426,8 +426,7 @@ msim-test: msim-comp
 		-f $(RTL) \
 		$(TB_SRC)
 
-.PHONY: msim-mk-results
-msim-mk-results:
+msim-mk-results: msim-clean
 	mkdir $(MSIM_RESULTS)
 
 .PHONY: msim-clean

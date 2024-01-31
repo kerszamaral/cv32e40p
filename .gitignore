@@ -29,3 +29,4 @@ example_tb/core/msim_results/
 !/programs/*
 !/cv32e40p.ip_user_files
 !/cv32e40p.srcs
+*.pb

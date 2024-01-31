@@ -89,7 +89,7 @@ ${DESIGN_RTL_DIR}/impl/axi_uart.sv
 ${DESIGN_RTL_DIR}/impl/clk_divisor.sv
 ${DESIGN_RTL_DIR}/impl/core2axi.sv
 ${DESIGN_RTL_DIR}/impl/impl_xbar.sv
-${DESIGN_RTL_DIR}/impl/mem.sv
+${DESIGN_RTL_DIR}/impl/axi_ram.sv
 ${DESIGN_RTL_DIR}/impl/uart.sv
 ${DESIGN_RTL_DIR}/impl/axi_subsystem.sv
 ${DESIGN_RTL_DIR}/impl/cv32e40p_axi.sv
