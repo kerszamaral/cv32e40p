@@ -34,7 +34,6 @@ module tb_axi #(
   const time RESP_ACQUISITION_DEL = CLK_PERIOD * 0.9;
   const time RESET_DEL = STIM_APPLICATION_DEL;
   const int  RESET_WAIT_CYCLES = 100;
-  byte unsigned LASTCHAR = 8'h0d; // "\r" is not working
 
   // clock and reset for tb
   logic         clk = 'b0;
@@ -122,6 +121,7 @@ module tb_axi #(
   logic [31:0] rxData;
   logic rxValid;
   logic rxInt;
+  logic receiving;
 
   uart_sim #(
       .CLOCK_FREQUENCY(25_000_000),
@@ -143,21 +143,23 @@ module tb_axi #(
       .uart_tx(rx),
 
       .uart_irq(rxInt),
-      .uart_irq_response('1)
+      .uart_irq_response('1),
+      .receiving(receiving)
   );
 
   // print to stdout pseudo peripheral
   always_ff @(posedge clk_s, negedge rst_n) begin : print_peripheral
     if (rxValid && rxData) begin
       $write("%c", rxData[7:0]);
-      // Because of the way the UART works, the string may arrive after the program has finished
-      if (rxData[7:0] == LASTCHAR) begin
-        if (exit_valid) begin
-          if (exit_zero) $display("EXIT SUCCESS");
-          else $display("EXIT FAILURE");
-          $finish;
-        end
-      end
+    end
+  end
+
+  // exit peripheral
+  always_ff @(posedge clk_s, negedge rst_n) begin : exit_peripheral
+    if (exit_valid && !receiving) begin
+      if (exit_zero) $display("EXIT SUCCESS");
+      else $display("EXIT FAILURE");
+      $finish;
     end
   end
 
@@ -217,58 +219,59 @@ endmodule  // tb_top
 **************************************************************************************************/
 module uart_sim #(
 
-  parameter CLOCK_FREQUENCY = 50000000,
-  parameter UART_BAUD_RATE  = 9600,
-  parameter WRITE_ADDRESS = 32'h10000000,
-  parameter READ_ADDRESS = 32'h10000004
-  )(
+    parameter CLOCK_FREQUENCY = 50000000,
+    parameter UART_BAUD_RATE = 9600,
+    parameter WRITE_ADDRESS = 32'h10000000,
+    parameter READ_ADDRESS = 32'h10000004
+) (
 
-  // Global signals
+    // Global signals
 
-  input   wire          clk_i,
-  input   wire          rst_ni,
+    input wire clk_i,
+    input wire rst_ni,
 
-  // IO interface
+    // IO interface
 
-  input  wire   [31:0]  rw_address,
-  output reg    [31:0]  read_data,
-  input  wire           read_request,
-  output reg            read_response,
-  input  wire   [7:0]   write_data,
-  input  wire           write_request,
-  output reg            write_response,
+    input  wire [31:0] rw_address,
+    output reg  [31:0] read_data,
+    input  wire        read_request,
+    output reg         read_response,
+    input  wire [ 7:0] write_data,
+    input  wire        write_request,
+    output reg         write_response,
 
-  // RX/TX signals
+    // RX/TX signals
 
-  input   wire          uart_rx,
-  output  wire          uart_tx,
+    input  wire uart_rx,
+    output wire uart_tx,
 
-  // Interrupt signaling
+    // Interrupt signaling
 
-  output  reg           uart_irq,
-  input   wire          uart_irq_response
+    output reg  uart_irq,
+    input  wire uart_irq_response,
 
-  );
+    output reg receiving
+
+);
 
   localparam CYCLES_PER_BAUD = CLOCK_FREQUENCY / UART_BAUD_RATE;
 
   wire reset;
   assign reset = ~rst_ni;
 
-  reg [31:0] tx_cycle_counter = 0;
-  reg [31:0] rx_cycle_counter = 0;
-  reg [3:0]  tx_bit_counter;
-  reg [3:0]  rx_bit_counter;
-  reg [9:0]  tx_register;
-  reg [7:0]  rx_register;
-  reg [7:0]  rx_data;
-  reg        rx_active;
-  reg        reset_reg;
+  reg  [31:0] tx_cycle_counter = 0;
+  reg  [31:0] rx_cycle_counter = 0;
+  reg  [ 3:0] tx_bit_counter;
+  reg  [ 3:0] rx_bit_counter;
+  reg  [ 9:0] tx_register;
+  reg  [ 7:0] rx_register;
+  reg  [ 7:0] rx_data;
+  reg         rx_active;
+  reg         reset_reg;
 
-  wire       reset_internal;
+  wire        reset_internal;
 
-  always @(posedge clk_i)
-    reset_reg <= reset;
+  always @(posedge clk_i) reset_reg <= reset;
 
   assign reset_internal = reset | reset_reg;
 
@@ -279,21 +282,16 @@ module uart_sim #(
       tx_cycle_counter <= 0;
       tx_register <= 10'b1111111111;
       tx_bit_counter <= 0;
-    end
-    else if (tx_bit_counter == 0 &&
-             rw_address == WRITE_ADDRESS &&
-             write_request == 1'b1) begin
+    end else if (tx_bit_counter == 0 && rw_address == WRITE_ADDRESS && write_request == 1'b1) begin
       tx_cycle_counter <= 0;
       tx_register <= {1'b1, write_data[7:0], 1'b0};
       tx_bit_counter <= 10;
-    end
-    else begin
+    end else begin
       if (tx_cycle_counter < CYCLES_PER_BAUD) begin
         tx_cycle_counter <= tx_cycle_counter + 1;
         tx_register <= tx_register;
         tx_bit_counter <= tx_bit_counter;
-      end
-      else begin
+      end else begin
         tx_cycle_counter <= 0;
         tx_register <= {1'b1, tx_register[9:1]};
         tx_bit_counter <= tx_bit_counter > 0 ? tx_bit_counter - 1 : 0;
@@ -309,8 +307,7 @@ module uart_sim #(
       rx_bit_counter <= 0;
       uart_irq <= 1'b0;
       rx_active <= 1'b0;
-    end
-    else if (uart_irq == 1'b1) begin
+    end else if (uart_irq == 1'b1) begin
       if (uart_irq_response == 1'b1) begin
         rx_cycle_counter <= 0;
         rx_register <= 8'h00;
@@ -318,8 +315,7 @@ module uart_sim #(
         rx_bit_counter <= 0;
         uart_irq <= 1'b0;
         rx_active <= 1'b0;
-      end
-      else begin
+      end else begin
         rx_cycle_counter <= 0;
         rx_register <= 8'h00;
         rx_data <= rx_data;
@@ -327,8 +323,7 @@ module uart_sim #(
         uart_irq <= 1'b1;
         rx_active <= 1'b0;
       end
-    end
-    else if (rx_bit_counter == 0 && rx_active == 1'b0) begin
+    end else if (rx_bit_counter == 0 && rx_active == 1'b0) begin
       if (uart_rx == 1'b1) begin
         rx_cycle_counter <= 0;
         rx_register <= 8'h00;
@@ -336,8 +331,7 @@ module uart_sim #(
         rx_bit_counter <= 0;
         uart_irq <= 1'b0;
         rx_active <= 1'b0;
-      end
-      else if (uart_rx == 1'b0) begin
+      end else if (uart_rx == 1'b0) begin
         if (rx_cycle_counter < CYCLES_PER_BAUD / 2) begin
           rx_cycle_counter <= rx_cycle_counter + 1;
           rx_register <= 8'h00;
@@ -345,8 +339,7 @@ module uart_sim #(
           rx_bit_counter <= 0;
           uart_irq <= 1'b0;
           rx_active <= 1'b0;
-        end
-        else begin
+        end else begin
           rx_cycle_counter <= 0;
           rx_register <= 8'h00;
           rx_data <= rx_data;
@@ -355,8 +348,7 @@ module uart_sim #(
           rx_active <= 1'b1;
         end
       end
-    end
-    else begin
+    end else begin
       if (rx_cycle_counter < CYCLES_PER_BAUD) begin
         rx_cycle_counter <= rx_cycle_counter + 1;
         rx_register <= rx_register;
@@ -364,8 +356,7 @@ module uart_sim #(
         rx_bit_counter <= rx_bit_counter;
         uart_irq <= 1'b0;
         rx_active <= 1'b1;
-      end
-      else begin
+      end else begin
         rx_cycle_counter <= 0;
         rx_register <= {uart_rx, rx_register[7:1]};
         rx_data <= (rx_bit_counter == 0) ? rx_register : rx_data;
@@ -380,23 +371,21 @@ module uart_sim #(
     if (reset_internal) begin
       read_response  <= 1'b0;
       write_response <= 1'b0;
-    end
-    else begin
+    end else begin
       read_response  <= read_request;
       write_response <= write_request;
     end
   end
 
   always @(posedge clk_i) begin
-    if (reset_internal)
-      read_data <= 32'h00000000;
+    if (reset_internal) read_data <= 32'h00000000;
     else if (rw_address == WRITE_ADDRESS && read_request == 1'b1)
       read_data <= {31'b0, tx_bit_counter == 0};
-    else if (rw_address == READ_ADDRESS && read_request == 1'b1)
-      read_data <= {24'b0, rx_data};
-    else
-      read_data <= 32'h00000000;
+    else if (rw_address == READ_ADDRESS && read_request == 1'b1) read_data <= {24'b0, rx_data};
+    else read_data <= 32'h00000000;
   end
+
+  assign receiving = rx_active;
 
 endmodule
 

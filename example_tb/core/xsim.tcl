@@ -1,2 +1,2 @@
-run 3000 us
+run all
 exit
