@@ -62,7 +62,11 @@ void unimplemented_syscall()
 {
   const char *p = "BSP: Unimplemented system call called!\n";
   while (*p)
+  {
+    while ((*(volatile int *)STDOUT_REG) != 1)
+      ;
     *(volatile int *)STDOUT_REG = *(p++);
+  }
 }
 
 int nanosleep(const struct timespec *rqtp, struct timespec *rmtp)
@@ -255,7 +259,11 @@ ssize_t _write(int file, const void *ptr, size_t len)
 
   const void *eptr = cptr + len;
   while (cptr != eptr)
+  {
+    while ((*(volatile int *)STDOUT_REG) != 1)
+      ;
     *(volatile int *)STDOUT_REG = *cptr++;
+  }
   return len;
 }
 
